@@ -1,0 +1,62 @@
+{
+  "name": "zenapi-node-client",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "umd:main": "dist/index.umd.js",
+  "module": "dist/index.m.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {
+    "build": "rm -rf ./dist/ && tsc",
+    "lint": "tslint --project tsconfig.json --exclude 'src/types/**/*' 'src/**/*.ts'",
+    "lint:fix": "tslint --fix --project tsconfig.json --exclude 'src/types/**/*' 'src/**/*.ts'",
+    "test": "nyc --all mocha --opts test/mocha.opts"
+  },
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^5.2.7",
+    "@types/nock": "^10.0.3",
+    "@types/node": "^12.0.8",
+    "@types/request-promise": "^4.1.44",
+    "@types/sinon-chai": "^3.2.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^6.1.4",
+    "nock": "^10.0.6",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.2.0",
+    "source-map-support": "^0.5.9",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.2.4"
+  },
+  "nyc": {
+    "cache": false,
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "src/kafka.ts",
+      "src/server.ts",
+      "src/index.ts"
+    ],
+    "reporter": [
+      "text",
+      "lcov"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "all": true
+  }
+}
