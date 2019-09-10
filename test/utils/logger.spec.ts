@@ -31,4 +31,5 @@ describe('Logger', () => {
     loggerStub.warn.should.be.calledOnce;
     loggerStub.warn.should.be.calledWith('warning message');
   });
+
 });

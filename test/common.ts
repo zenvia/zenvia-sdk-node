@@ -7,4 +7,4 @@ chai.use(chaiAsPromised);
 chai.should();
 
 process.env.NODE_ENV = 'test';
-process.env.TZ = 'America/Sao_Paulo';
+process.env.TZ = 'UTC';
