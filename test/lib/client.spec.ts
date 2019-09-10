@@ -1,12 +1,14 @@
 /* tslint:disable:no-unused-expression */
 
 import * as nock from 'nock';
-import { Client, TextContent, TemplateContent, FileContent, MessageSubscription, MessageStatusSubscription } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, MessageSubscription, MessageStatusSubscription } from '../../src';
 
 describe('Client', () => {
 
   describe('Messages', () => {
+
     describe('SMS Channel', () => {
+
       it('should send message with text content', async () => {
         const expectedMessage = {
           from: 'FROM',
@@ -85,199 +87,218 @@ describe('Client', () => {
         }
       });
 
-      describe('Facebook Channel', () => {
-        it('should send message with text content', async () => {
-          const expectedMessage = {
-            from: 'FROM',
-            to: 'TO',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
-              },
-            ],
-          };
-          const zenviaNock = nock('https://api.zenvia.com')
-          .post('/v1/channels/facebook/messages', expectedMessage)
-          .matchHeader('X-API-Token', 'SOME_TOKEN')
-          .reply(200, expectedMessage);
-
-          const client = new Client('SOME_TOKEN');
-          const facebook = client.getChannel('facebook');
-          const content = new TextContent('some text message');
-          const actualMessageResponse = await facebook.sendMessage('FROM', 'TO', content);
-          zenviaNock.isDone().should.be.true;
-          actualMessageResponse.should.be.deep.equal(expectedMessage);
-        });
-
-        it('should send message with file content', async () => {
-          const expectedMessage = {
-            from: 'FROM',
-            to: 'TO',
-            contents: [
-              {
-                type: 'file',
-                fileUrl: 'http://server.com/file.jpeg',
-                fileMimeType: 'image/jpeg',
-                fileCaption: 'some file caption',
-              },
-            ],
-          };
-          const zenviaNock = nock('https://api.zenvia.com')
-          .post('/v1/channels/facebook/messages', expectedMessage)
-          .matchHeader('X-API-Token', 'SOME_TOKEN')
-          .reply(200, expectedMessage);
-
-          const client = new Client('SOME_TOKEN');
-          const facebook = client.getChannel('facebook');
-          const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-          const actualMessageResponse = await facebook.sendMessage('FROM', 'TO', content);
-          zenviaNock.isDone().should.be.true;
-          actualMessageResponse.should.be.deep.equal(expectedMessage);
-        });
-
-        it('should fail when trying to send template content', async () => {
-          const client = new Client('SOME_TOKEN');
-          const facebook = client.getChannel('facebook');
-          const content = new TemplateContent('templateId', {});
-
-          try {
-            await facebook.sendMessage('FROM', 'TO', content);
-            throw new Error('An expected error was not throwed');
-          } catch (error) {
-            error.message.should.be.deep.equal('Content of type template is not supported in Facebook channel');
-          }
-        });
-
-        it('should fail when trying to send array with template content', async () => {
-          const client = new Client('SOME_TOKEN');
-          const facebook = client.getChannel('facebook');
-          const textContent = new TextContent('some text message');
-          const templateContent = new TemplateContent('templateId', {});
-
-          try {
-            await facebook.sendMessage('FROM', 'TO', textContent, templateContent);
-            throw new Error('An expected error was not throwed');
-          } catch (error) {
-            error.message.should.be.deep.equal('Content of type template is not supported in Facebook channel');
-          }
-        });
-      });
-
-      describe('WhatsApp Channel', () => {
-        it('should send message with text content', async () => {
-          const expectedMessage = {
-            from: 'FROM',
-            to: 'TO',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
-              },
-            ],
-          };
-          const zenviaNock = nock('https://api.zenvia.com')
-          .post('/v1/channels/whatsapp/messages', expectedMessage)
-          .matchHeader('X-API-Token', 'SOME_TOKEN')
-          .reply(200, expectedMessage);
-
-          const client = new Client('SOME_TOKEN');
-          const whatsapp = client.getChannel('whatsapp');
-          const content = new TextContent('some text message');
-          const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
-          zenviaNock.isDone().should.be.true;
-          actualMessageResponse.should.be.deep.equal(expectedMessage);
-        });
-
-        it('should send message with file content', async () => {
-          const expectedMessage = {
-            from: 'FROM',
-            to: 'TO',
-            contents: [
-              {
-                type: 'file',
-                fileUrl: 'http://server.com/file.jpeg',
-                fileMimeType: 'image/jpeg',
-                fileCaption: 'some file caption',
-              },
-            ],
-          };
-          const zenviaNock = nock('https://api.zenvia.com')
-          .post('/v1/channels/whatsapp/messages', expectedMessage)
-          .matchHeader('X-API-Token', 'SOME_TOKEN')
-          .reply(200, expectedMessage);
-
-          const client = new Client('SOME_TOKEN');
-          const whatsapp = client.getChannel('whatsapp');
-          const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-          const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
-          zenviaNock.isDone().should.be.true;
-          actualMessageResponse.should.be.deep.equal(expectedMessage);
-        });
-
-        it('should send message with array of text content and file content', async () => {
-          const expectedMessage = {
-            from: 'FROM',
-            to: 'TO',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
-              },
-              {
-                type: 'file',
-                fileUrl: 'http://server.com/file.jpeg',
-                fileMimeType: 'image/jpeg',
-                fileCaption: 'some file caption',
-              },
-            ],
-          };
-          const zenviaNock = nock('https://api.zenvia.com')
-          .post('/v1/channels/whatsapp/messages', expectedMessage)
-          .matchHeader('X-API-Token', 'SOME_TOKEN')
-          .reply(200, expectedMessage);
-
-          const client = new Client('SOME_TOKEN');
-          const whatsapp = client.getChannel('whatsapp');
-          const textContent = new TextContent('some text message');
-          const fileContent = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-          const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', textContent, fileContent);
-          zenviaNock.isDone().should.be.true;
-          actualMessageResponse.should.be.deep.equal(expectedMessage);
-        });
-
-        it('should send message with template content', async () => {
-          const expectedMessage = {
-            from: 'FROM',
-            to: 'TO',
-            contents: [
-              {
-                type: 'template',
-                templateId: 'templateId',
-                fields: {
-                  fieldA: 'value A',
-                  fieldB: 'value B',
-                },
-              },
-            ],
-          };
-          const zenviaNock = nock('https://api.zenvia.com')
-          .post('/v1/channels/whatsapp/messages', expectedMessage)
-          .matchHeader('X-API-Token', 'SOME_TOKEN')
-          .reply(200, expectedMessage);
-
-          const client = new Client('SOME_TOKEN');
-          const whatsapp = client.getChannel('whatsapp');
-          const content = new TemplateContent('templateId', { fieldA: 'value A', fieldB: 'value B' });
-          const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
-          zenviaNock.isDone().should.be.true;
-          actualMessageResponse.should.be.deep.equal(expectedMessage);
-        });
-      });
     });
+
+    describe('Facebook Channel', () => {
+
+      it('should send message with text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/facebook/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const facebook = client.getChannel('facebook');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await facebook.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with file content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'file',
+              fileUrl: 'http://server.com/file.jpeg',
+              fileMimeType: 'image/jpeg',
+              fileCaption: 'some file caption',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/facebook/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const facebook = client.getChannel('facebook');
+        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const actualMessageResponse = await facebook.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should fail when trying to send template content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const facebook = client.getChannel('facebook');
+        const content = new TemplateContent('templateId', {});
+
+        try {
+          await facebook.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not throwed');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type template is not supported in Facebook channel');
+        }
+      });
+
+      it('should fail when trying to send array with template content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const facebook = client.getChannel('facebook');
+        const textContent = new TextContent('some text message');
+        const templateContent = new TemplateContent('templateId', {});
+
+        try {
+          await facebook.sendMessage('FROM', 'TO', textContent, templateContent);
+          throw new Error('An expected error was not throwed');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type template is not supported in Facebook channel');
+        }
+      });
+
+    });
+
+    describe('WhatsApp Channel', () => {
+
+      it('should send message with text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const whatsapp = client.getChannel('whatsapp');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with file content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'file',
+              fileUrl: 'http://server.com/file.jpeg',
+              fileMimeType: 'image/jpeg',
+              fileCaption: 'some file caption',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const whatsapp = client.getChannel('whatsapp');
+        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with array of text content and file content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+            {
+              type: 'file',
+              fileUrl: 'http://server.com/file.jpeg',
+              fileMimeType: 'image/jpeg',
+              fileCaption: 'some file caption',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const whatsapp = client.getChannel('whatsapp');
+        const textContent = new TextContent('some text message');
+        const fileContent = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', textContent, fileContent);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with template content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'template',
+              templateId: 'templateId',
+              fields: {
+                fieldA: 'value A',
+                fieldB: 'value B',
+              },
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const whatsapp = client.getChannel('whatsapp');
+        const content = new TemplateContent('templateId', { fieldA: 'value A', fieldB: 'value B' });
+        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should fail when trying to send invalid content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const whatsapp = client.getChannel('whatsapp');
+
+        try {
+          await whatsapp.sendMessage('FROM', 'TO', {} as IContent);
+          throw new Error('An expected error was not throwed');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type undefined is not supported in WhatsApp channel');
+        }
+      });
+
+    });
+
   });
 
   describe('Subscription', () => {
+
     it('should list subscriptions', async () => {
       const expectedSubscription = [{
         eventType: 'MESSAGE',
@@ -447,9 +468,22 @@ describe('Client', () => {
       await client.deleteSubscription('SOME_SUBSCRIPTION_ID');
       zenviaNock.isDone().should.be.true;
     });
+
   });
 
   describe('Errors', () => {
+
+    it('should throw unsupported channel error', () => {
+      const client = new Client('SOME_TOKEN');
+
+      try {
+        client.getChannel('invalid' as Channel);
+        throw new Error('An expected error was not throwed');
+      } catch (error) {
+        error.message.should.be.equal('Unsupported channel');
+      }
+    });
+
     it('should handle request http error', async () => {
       const errorResponse = {
         code: 'AUTHENTICATION_ERROR',
@@ -487,5 +521,7 @@ describe('Client', () => {
       }
       zenviaNock.isDone().should.be.true;
     });
+
   });
+
 });
