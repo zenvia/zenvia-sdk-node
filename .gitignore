@@ -33,3 +33,6 @@ npm-debug.log
 
 # VS Code files
 .vscode
+
+# Docs
+docs
