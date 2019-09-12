@@ -1,6 +1,6 @@
 # Contributing to Zenvia SDK for Node.js
 
-Thank you for choosing to contribute to Zenvia codes.
+Thank you for choosing to contribute to this project.
 
 See our contributors [here](https://github.com/zenvia/zenvia-sdk-node/graphs/contributors).
 

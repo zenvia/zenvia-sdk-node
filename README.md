@@ -2,7 +2,7 @@
 
 This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](https://www.zenvia.com/) [API](https://zenvia.github.io/zenvia-openapi-spec/).
 
-[![License](https://img.shields.io/github/license/zenvia/zenvia-sdk-node.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/zenvia/zenvia-sdk-node.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.org/zenvia/zenvia-sdk-node.svg?branch=master)](https://travis-ci.org/zenvia/zenvia-sdk-node)
 [![Coverage Status](https://coveralls.io/repos/github/zenvia/zenvia-sdk-node/badge.svg?branch=master)](https://coveralls.io/github/zenvia/zenvia-sdk-node?branch=master)
 [![Codecov](https://codecov.io/gh/zenvia/zenvia-sdk-node/branch/master/graph/badge.svg)](https://codecov.io/gh/zenvia/zenvia-sdk-node)
@@ -44,7 +44,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 #### Obtain an API Token
 
-You need to create an `x-api-token` in the Zenvia [app](https://app.zenvia.com/).
+You need to create an API token in the Zenvia [app](https://app.zenvia.com/).
 
 
 
@@ -66,13 +66,13 @@ var zenvia = require('@zenvia/sdk');
 // ES6 or Typescript
 import * as zenvia from '@zenvia/sdk';
 
-// Initialize
+// Initialization with your API token (x-api-token)
 const client = new zenvia.Client('YOUR_API_TOKEN');
 
-// Getting the channel
+// Choosing the channel
 const whatsapp = client.getChannel('whatsapp');
 
-// Creating the text content
+// Creating a text content
 const content = new TextContent('some text message here');
 
 // ES6
@@ -100,7 +100,7 @@ try {
 
 ### Messages
 
-Use the `sendMessage` method to send text (`TextContent`), files (`FileContent`) or templates (`TemplateContent`) messages to your customers.
+Use the `sendMessage` method to send text (`TextContent`), file (`FileContent`) or template (`TemplateContent`) messages to your customers.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
@@ -109,15 +109,15 @@ const content = new TextContent('some text message');
 const response = await sms.sendMessage(from, to, content);
 ```
 
-The response can be an `IMessageResponse` object when successful or an `IError` object when error.
+The response can be an `IMessageResponse` object when successful or an `IError` object on errors.
 
 The content types can be:
 
 | Name            | Description |
 |-----------------|-------------|
-| TextContent     | Used to send a text messages to your customer.
-| FileContent     | Used to send a file messages to your customer.
-| TemplateContent | Used to send a template messages to your customer.
+| TextContent     | Used to send text messages to your customer.
+| FileContent     | Used to send file messages to your customer.
+| TemplateContent | Used to send template messages to your customer.
 
 The content support by channel is described below.
 
@@ -130,7 +130,7 @@ The content support by channel is described below.
 
 ### Subscriptions
 
-In subscription operations, you can subscribe to your webbook to receive messages or message status.
+In subscription operations, you can create a webhook to receive messages or message status.
 
 
 #### List subscriptions
@@ -142,12 +142,12 @@ const client = new Client('YOUR_API_TOKEN');
 const response = await client.listSubscriptions();
 ```
 
-The response can be an array of `ISubscription` object when successful or an `IError` object when error.
+The response can be an array of `ISubscription` object when successful or an `IError` object on errors.
 
 
 #### Create a subscription
 
-Use the `createSubscription` method to create a subscription. A subscription can be an `MessageSubscription` object when is the message or an `MessageStatusSubscription` object when is the message status.
+Use the `createSubscription` method to create a subscription. A subscription can be an `MessageSubscription` object for message subscriptions or an `MessageStatusSubscription` object for message status subscriptions.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
@@ -160,24 +160,24 @@ const subscription = new MessageSubscription({
 const response = await client.createSubscription(subscription);
 ```
 
-The response can be an `ISubscription` object when successful or an `IError` object when error.
+The response can be an `ISubscription` object when successful or an `IError` object on errors.
 
 
 #### Get a subscription
 
-Use the `getSubscription` method to get a subscription through subscription identifier.
+Use the `getSubscription` method to get a subscription using an identifier.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
 const response = await client.getSubscription('bee13bc7-9618-47a5-8089-e30dc5c385d2');
 ```
 
-The response can be an `ISubscription` object when successful or an `IError` object when error.
+The response can be an `ISubscription` object when successful or an `IError` object on errors.
 
 
 #### Update a subscription
 
-Use the `updateSubscription` method to update a subscription through subscription identifier and the `IPartialSubscription` object.
+Use the `updateSubscription` method to update a subscription using an identifier and an `IPartialSubscription` object.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
@@ -189,19 +189,19 @@ const partialSubscription = {
 const response = await client.updateSubscription('bee13bc7-9618-47a5-8089-e30dc5c385d2', partialSubscription);
 ```
 
-The response can be an `ISubscription` object when successful or an `IError` object when error.
+The response can be an `ISubscription` object when successful or an `IError` object on errors.
 
 
 #### Delete a subscription
 
-Use the `deleteSubscription` method to delete a subscription through subscription identifier.
+Use the `deleteSubscription` method to delete a subscription using an identifier.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
 const response = await client.deleteSubscription('bee13bc7-9618-47a5-8089-e30dc5c385d2');
 ```
 
-The response can be an `IError` object when error.
+The response can be an `IError` object on errors.
 
 
 
