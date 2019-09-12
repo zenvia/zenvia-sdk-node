@@ -6,14 +6,14 @@ See our contributors [here](https://github.com/zenvia/zenvia-sdk-node/graphs/con
 
 
 
-## Some tips
+## Some Tips
 
 * Knowledge with the [git](https://git-scm.com/) command is important.
 * Run and create new tests before opening pull request.
 
 
 
-## Quick Start
+## Getting Started
 
 **1.** Clone the repository.
 
