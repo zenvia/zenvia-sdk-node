@@ -1,12 +1,10 @@
 language: node_js
 
 node_js:
-  - "node"
   - "10"
-  - "8"
 
 before_script:
-  - npm run install
+  - npm ci
 
 script:
   - npm run lint
@@ -14,12 +12,13 @@ script:
   - npm run build
 
 after_success:
-  - npm run typedoc
+  - npm run test:coveralls
 
 deploy:
   provider: npm
   email: $NPM_EMAIL
   api_key: $NPM_TOKEN
+  skip_cleanup: true
   on:
     tags: true
 
