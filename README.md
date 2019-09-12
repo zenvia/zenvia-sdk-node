@@ -16,7 +16,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 ## Table of Contents
 
-- [Features:](#features)
+- [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
@@ -26,7 +26,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 
 
-## Features:
+## Features
 
 - [x] Text message sending
 - [x] File message sending
