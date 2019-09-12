@@ -1,15 +1,30 @@
-# Zenvia API
+# Zenvia SDK for Node.js
 
-> A Zenvia API client for node.js.
+This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](https://www.zenvia.com/) [API](https://zenvia.github.io/zenvia-openapi-spec/).
+
+[![License](https://img.shields.io/github/license/zenvia/zenvia-sdk-node.svg)](LICENSE.md)
+[![Build Status](https://travis-ci.org/zenvia/zenvia-sdk-node.svg?branch=master)](https://travis-ci.org/zenvia/zenvia-sdk-node)
+[![Coverage Status](https://coveralls.io/repos/github/zenvia/zenvia-sdk-node/badge.svg?branch=master)](https://coveralls.io/github/zenvia/zenvia-sdk-node?branch=master)
+[![Codecov](https://codecov.io/gh/zenvia/zenvia-sdk-node/branch/master/graph/badge.svg)](https://codecov.io/gh/zenvia/zenvia-sdk-node)
+[![Dependencies](https://img.shields.io/david/zenvia/zenvia-sdk-node.svg)](https://david-dm.org/zenvia/zenvia-sdk-node)
+
+[![NPM](https://nodei.co/npm/@zenvia/sdk.png)](https://nodei.co/npm/@zenvia/sdk/)
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/ZenviaMobile.svg?style=social)](https://twitter.com/intent/follow?screen_name=ZenviaMobile)
+
+
 
 ## Table of Contents
 
 - [Features:](#features)
-- [Install](#install)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [API Methods](#api-methods)
 - [How to Contribute](#how-to-contribute)
 - [Contributors](#contributors)
+
+
 
 ## Features:
 
@@ -19,28 +34,49 @@
 - [x] Subscription handling
 - [x] Logging support
 
-## Install
 
-Install with [npm](http://github.com/zenapi/npm):
 
+## Prerequisites
+
+* [Sign up](https://www.zenvia.com/) from a Zenvia Account
+* [Node.js](https://nodejs.org/)
+
+
+#### Obtain an API Token
+
+You need to create an API token in the Zenvia [app](https://app.zenvia.com/).
+
+
+
+## Installation
+
+```shell
+npm install @zenvia/sdk
 ```
-  npm install @zenvia/api-client
-```
+
+
 
 ## Basic Usage
 
+
 ```JS
 // ES5
-var zenapi = require('@zenvia/api');
+var zenvia = require('@zenvia/sdk');
 
 // ES6 or Typescript
-import * as zenapi from '@zenvia/api';
+import * as zenvia from '@zenvia/sdk';
 
-// Initialize
-const client = new zenapi.Client('YOUR_API_TOKEN');
+// Initialization with your API token (x-api-token)
+const client = new zenvia.Client('YOUR_API_TOKEN');
+
+// Choosing the channel
+const whatsapp = client.getChannel('whatsapp');
+
+// Creating a text content
+const content = new TextContent('some text message here');
 
 // ES6
-client.sendText('whatsapp', from, to, 'some text message here')
+whatsapp.sendMessage(from, to, content)
 .then(response => {
   // do something here
 })
@@ -50,231 +86,133 @@ client.sendText('whatsapp', from, to, 'some text message here')
 
 // ES8 or Typescript. NodeJS 7.6.0 or higher
 try {
-  const response = await client.sendText('whatsapp', from, to, 'some text message here');
+  const response = await whatsapp.sendMessage(from, to, content);
   // do something here
 } catch (error) {
   // handle error here
 }
 ```
 
+
+
 ## API Methods
+
 
 ### Messages
 
-Use the <code>sendMessage</code> method to send text messages, media/documents, and Message Templates messages to your customers.
+Use the `sendMessage` method to send text (`TextContent`), file (`FileContent`) or template (`TemplateContent`) messages to your customers.
 
-```JS
-const message = {
-  recipient_type: 'individual',
-  to: 'whatsapp-id',
-  type: 'text',
-  text: {
-    body: 'Some text message',
+```js
+const client = new Client('YOUR_API_TOKEN');
+const sms = client.getChannel('sms');
+const content = new TextContent('some text message');
+const response = await sms.sendMessage(from, to, content);
+```
+
+The response can be an `IMessageResponse` object when successful or an `IError` object on errors.
+
+The content types can be:
+
+| Name            | Description |
+|-----------------|-------------|
+| TextContent     | Used to send text messages to your customer.
+| FileContent     | Used to send file messages to your customer.
+| TemplateContent | Used to send template messages to your customer.
+
+The content support by channel is described below.
+
+| Channel  | TextContent | FileContent | TemplateContent |
+|----------|    :---:    |    :---:    |      :---:      |
+| SMS      | X           |             |                 |
+| WhatsApp | X           | X           | X               |
+| Facebook | X           | X           |                 |
+
+
+### Subscriptions
+
+In subscription operations, you can create a webhook to receive messages or message status.
+
+
+#### List subscriptions
+
+Use the `listSubscriptions` method to list subscriptions.
+
+```js
+const client = new Client('YOUR_API_TOKEN');
+const response = await client.listSubscriptions();
+```
+
+The response can be an array of `ISubscription` object when successful or an `IError` object on errors.
+
+
+#### Create a subscription
+
+Use the `createSubscription` method to create a subscription. A subscription can be an `MessageSubscription` object for message subscriptions or an `MessageStatusSubscription` object for message status subscriptions.
+
+```js
+const client = new Client('YOUR_API_TOKEN');
+const subscription = new MessageSubscription({
+  url: 'https://your-webhook.company.com'
+},
+{
+  channel: 'sms'
+});
+const response = await client.createSubscription(subscription);
+```
+
+The response can be an `ISubscription` object when successful or an `IError` object on errors.
+
+
+#### Get a subscription
+
+Use the `getSubscription` method to get a subscription using an identifier.
+
+```js
+const client = new Client('YOUR_API_TOKEN');
+const response = await client.getSubscription('bee13bc7-9618-47a5-8089-e30dc5c385d2');
+```
+
+The response can be an `ISubscription` object when successful or an `IError` object on errors.
+
+
+#### Update a subscription
+
+Use the `updateSubscription` method to update a subscription using an identifier and an `IPartialSubscription` object.
+
+```js
+const client = new Client('YOUR_API_TOKEN');
+const partialSubscription = {
+  webhook: {
+    url: 'https://your-new-webhook.company.com',
   },
 };
-const response = await client.sendMessage(message);
+const response = await client.updateSubscription('bee13bc7-9618-47a5-8089-e30dc5c385d2', partialSubscription);
 ```
 
-The response includes a combination of following components: meta, messages (payload), and errors. See the API Responses documentation for more information.
+The response can be an `ISubscription` object when successful or an `IError` object on errors.
 
-The following shows an example of payload in a response; the meta and error objects are omitted for brevity.
 
-```JS
-{
-  messages: [{ 
-    id: "message-id" 
-  }]
-}
+#### Delete a subscription
+
+Use the `deleteSubscription` method to delete a subscription using an identifier.
+
+```js
+const client = new Client('YOUR_API_TOKEN');
+const response = await client.deleteSubscription('bee13bc7-9618-47a5-8089-e30dc5c385d2');
 ```
 
-| Name  | Description |
-|-------|-------------|
-| id    |  Identifier for the newly created message.
-
-Alternatively, you can use specific type message methods to send messages, such as:
-- sendText
-- sendImage
-- sendDocument
-- sendAudio
-- sendVideo
-- sendHSM
-
-Where the first parameter is always the whatsapp-id destination and the second parameter is the specific message type structure.
-
-### sendText
-
-```JS
-const textMessage = {
-  body: 'some text message'
-};
-
-response = await client.sendImage('whatsapp-id', textMessage);
-```
-
-The textMessage parameter have the following structure:
-
-| Name      | Required  | Description |
-|-----------|-----------|-------------|
-| body      | Yes       | The text of the text message, which can contain URLs and formatting. |
-
-The third parameter is omitted in this example but is a boolean value that indicate if must include a URL preview when body message is URL. Defaul to true.
+The response can be an `IError` object on errors.
 
 
-### sendImage
 
-```JS
-const imageMessage = {
-  link: 'http(s)://the-url',
-  caption: 'your-image-caption'
-};
+## Contributing
 
-response = await client.sendImage('whatsapp-id', imageMessage);
-```
+Pull requests are always welcome!
 
-The imageMessage parameter have the following structure:
-
-| Name      | Required  | Description |
-|-----------|-----------|-------------|
-| id        | Yes, when link is not provided | The media object ID, which is returned when the media is successfully uploaded to the WhatsApp Business API Client.
-| link      | Yes, when id is not provided | The protocol and URL of the image to be sent. Use only with HTTP/HTTPS URLs. |
-| caption   | No        | Describes the specified image media. |
-
-### sendDocument
-
-```JS
-const documentMessage = {
-  link: 'http(s)://the-url',
-  caption: 'your-image-caption'
-};
-
-response = await client.sendDocument('whatsapp-id', documentMessage);
-```
-
-The documentMessage parameter have the following structure:
-
-| Name      | Required  | Description |
-|-----------|-----------|-------------|
-| id        | Yes, when link is not provided | The media object ID, which is returned when the media is successfully uploaded to the WhatsApp Business API Client.
-| link      | Yes, when id is not provided | The protocol and URL of the document to be sent. Use only with HTTP/HTTPS URLs. |
-| caption   | No        | Describes the specified document media. |
-
-### sendAudio
-
-```JS
-const audioMessage = {
-  link: 'http(s)://the-url'
-};
-
-response = await client.sendAudio('whatsapp-id', audioMessage);
-```
-
-The documentMessage parameter have the following structure:
-
-| Name      | Required  | Description |
-|-----------|-----------|-------------|
-| id        | Yes, when link is not provided | The media object ID, which is returned when the media is successfully uploaded to the WhatsApp Business API Client.
-| link      | Yes, when id is not provided | The protocol and URL of the audio to be sent. Use only with HTTP/HTTPS URLs. |
-
-### sendVideo
-
-```JS
-const videoMessage = {
-  link: 'http(s)://the-url',
-  caption: 'your-image-caption'
-};
-
-response = await client.sendVideo('whatsapp-id', videoMessage);
-```
-
-The videoMessage parameter have the following structure:
-
-| Name      | Required  | Description |
-|-----------|-----------|-------------|
-| id        | Yes, when link is not provided | The media object ID, which is returned when the media is successfully uploaded to the WhatsApp Business API Client.
-| link      | Yes, when id is not provided | The protocol and URL of the video to be sent. Use only with HTTP/HTTPS URLs. |
-| caption   | No        | Describes the specified video media. |
-
-### sendHSM
-
-```JS
-const hsmMessage = {
-  element_name: 'htk_005',
-  namespace: 'e09ca868_df66_4eb9_9536_8301ca089765',
-  language: { policy: 'deterministic', code: 'pt_BR' },
-  localizable_params: [{ default: 'Wladi' }, { default: 'Drogas Delivery' }]
-};
-
-response = await client.sendHSM('whatsapp-id', hsmMessage);
-```
-
-The hsmMessage parameter have the following structure:
-
-| Name               | Required  | Description |
-|--------------------|-----------|-------------|
-| namespace          | Yes       | The namespace that will be used. |
-| element_name       | Yes       | The element name that indicates which template to use within the namespace. |
-| language           | Yes       | Allows for the specification of a deterministic or fallback language. |
-| localizable_params | Yes       | This field is an array of values to apply to variables in the template. |
-
-The third parameter is omitted in this example but it is a number and provides the ability to set an expiration duration for messages (i.e., Time To Live). Businesses can use this to ensure that messages are delivered in a given time window. 
-
-If the message is not delivered to the customer before the expiration period the message will expire and will not be delivered. You will get a failed callback notification with error code 410 when a sent message expires, but there won't be a delivery receipt because messages that expire will not be delivered. 
-
-Default to 604800 seconds (7 days).
-
-### Media
-
-Use the media methods to upload, retrieve, or delete media.
-
-#### Uploading Media
-
-To upload media to the WhatsApp Business API client, use the <code>uploadMedia</code> method. The arguments must contain the binary media data and the string Content-Type to the type of the media being uploaded.
-
-```JS
-const mediaBuffer = readFileSync('~/sample-file.pdf');
-response = await client.uploadMedia(mediaBuffer, 'application/pdf');
-```
-
-A successful response returns the id field, which is the information you need for retrieving messages and sending a media message to your customers.
-
-```JS
-{
-  media: [{ 
-    id: "media-id" 
-  }]    
-}
-```
-
-| Name  | Description |
-|-------|-------------|
-| id    |  Identifier for the newly uploaded media.
+Please see the [Contributors' Guide](CONTRIBUTING.md) for more information on contributing.
 
 
-#### Downloading Media
-
-Retrieving media is particularly useful when a user has uploaded an image that is sent to your Webhook. When a message with media is received, the WhatsApp Business API client will download the media. Once the media is downloaded, you will receive a notification through your webhook. Use the media ID found in that notification to retrieve the media.
-
-```JS
-buffer = await client.downloadMedia('3d2618b0-3c65-428f-a03d-8ae1c36008cd');
-writeFileSync('~/dowloaded-file.pdf', buffer);
-```
-
-#### Deleting Media
-
-To delete media in the WhatsApp Business API client, you will use <code>deleteMedia</code> with the ID of the media that you want to delete.
-
-```JS
-await client.deleteMedia('3d2618b0-3c65-428f-a03d-8ae1c36008cd');
-```
-
-## How to Contribute
-
-TODO
-
-## Contributors
-
-TODO
 
 ## License
 
-MIT
+[MIT](LICENSE.md)

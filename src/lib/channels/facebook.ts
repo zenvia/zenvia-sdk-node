@@ -1,10 +1,19 @@
 import { AbstractChannel } from './abstract-channel';
 import { ContentType, IContent, ILoggerInstance } from '../../types';
 
+/**
+ * Implementation of Facebook channel.
+ */
 export class FacebookChannel extends AbstractChannel {
 
   private supportedContents: ContentType[];
 
+  /**
+   * Returns a new `FacebookChannel` that is used to set the Facebook channel.
+   *
+   * @param token Zenvia platform token.
+   * @param loggerInstance If you want, you can pass your log instance.
+   */
   constructor(token: string, loggerInstance?: ILoggerInstance) {
     super(token, 'facebook', loggerInstance);
     this.supportedContents = ['text', 'file'];
