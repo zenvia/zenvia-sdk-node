@@ -1,12 +1,13 @@
 {
-  "name": "sdk",
+  "name": "@zenvia/sdk",
   "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
-  "umd:main": "dist/index.umd.js",
-  "module": "dist/index.m.js",
   "types": "dist/index.d.ts",
-  "private": true,
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Wladimir Mangelardo <wladimir.mangelardo@zenvia.com> (https://github.com/wmangelardo)",
   "contributors": [
     "Rodrigo Kamada <rodrigo.kamada@zenvia.com> (https://github.com/rodrigokamada)",
@@ -38,7 +39,7 @@
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "^5.2.7",
     "@types/nock": "^10.0.3",
-    "@types/node": "^12.7.4",
+    "@types/node": "^10.14.18",
     "@types/request-promise": "^4.1.44",
     "@types/sinon-chai": "^3.2.3",
     "chai": "^4.2.0",
