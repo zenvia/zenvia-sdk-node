@@ -27,9 +27,9 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 ## Features
 
-- [x] Text message sending
-- [x] File message sending
-- [x] Template message sending
+- [x] Text message content
+- [x] File message content
+- [x] Template message content
 - [x] Subscription handling
 - [x] Logging support
 
@@ -37,7 +37,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 ## Prerequisites
 
-* [Sign up](https://www.zenvia.com/) from a Zenvia Account
+* [Sign up](https://www.zenvia.com/) for a Zenvia Account
 * [Node.js](https://nodejs.org/)
 
 
@@ -75,7 +75,7 @@ const whatsapp = client.getChannel('whatsapp');
 const content = new TextContent('some text message here');
 
 // ES6
-whatsapp.sendMessage(from, to, content)
+whatsapp.sendMessage('sender-identifier', 'recipient-identifier', content)
 .then(response => {
   // do something here
 })
@@ -105,7 +105,7 @@ Use the `sendMessage` method to send text (`TextContent`), file (`FileContent`) 
 const client = new Client('YOUR_API_TOKEN');
 const sms = client.getChannel('sms');
 const content = new TextContent('some text message');
-const response = await sms.sendMessage(from, to, content);
+const response = await sms.sendMessage('sender-identifier', 'recipient-identifier', content);
 ```
 
 The response can be an `IMessageResponse` object when successful or an `IError` object on errors.
@@ -162,6 +162,8 @@ const response = await client.createSubscription(subscription);
 
 The response can be an `ISubscription` object when successful or an `IError` object on errors.
 
+
+Other examples can be found [here](examples).
 
 
 ## Contributing
