@@ -8,7 +8,7 @@ export async function post(token: string, path: string, body: object, logger: IL
 }
 
 export async function get(token: string, path: string, logger: ILoggerInstance): Promise<any> {
-  return request(token, 'get', path, null, logger);
+  return request(token, 'get', path, undefined, logger);
 }
 
 export async function patch(token: string, path: string, body: object, logger: ILoggerInstance): Promise<any> {
@@ -16,7 +16,7 @@ export async function patch(token: string, path: string, body: object, logger: I
 }
 
 export async function del(token: string, path: string, logger: ILoggerInstance): Promise<any> {
-  return request(token, 'delete', path, null, logger);
+  return request(token, 'delete', path, undefined, logger);
 }
 
 async function request(token: string, method: string, path: string, body: object, logger: ILoggerInstance): Promise<any> {
