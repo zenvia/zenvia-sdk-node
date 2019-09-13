@@ -30,6 +30,12 @@
   "bugs": {
     "url": "https://github.com/zenvia/zenvia-sdk-node/issues"
   },
+  "keywords": [
+    "Facebook",
+    "SMS",
+    "WhatsApp",
+    "Zenvia"
+  ],
   "dependencies": {
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
