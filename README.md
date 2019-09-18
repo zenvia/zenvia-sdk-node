@@ -163,7 +163,35 @@ const response = await client.createSubscription(subscription);
 The response can be an `ISubscription` object when successful or an `IError` object on errors.
 
 
+### Receiving message and message status events
+
+Use the `Webhook` class to create your webhook to receive message and message status events.
+
+If you inform the `client`, `url`, and `channel` fields, a subscription will be created if it does not exist for these configurations.
+
+In the `messageEventHandler` field you will receive the message events and in the `messageStatusEventHandler` field you will receive the message status events.
+
+```js
+const client = new Client(process.env.ZENVIA_API_TOKEN);
+const webhook = new Webhook({
+  messageEventHandler: (messageEvent) => {
+    console.log('Message event:', messageEvent);
+  },
+  messageStatusEventHandler: (messageStatusEvent) => {
+    console.log('Message status event:', messageStatusEvent);
+  },
+  client,
+  url: 'https://my-webhook.company.com',
+  channel: 'whatsapp',
+});
+webhook.init();
+```
+
+To receive events running the [example](examples/webhook.js) on your machine, you can use [ngrok](https://ngrok.com/).
+
+
 Other examples can be found [here](examples).
+
 
 
 ## Contributing
