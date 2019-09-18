@@ -43,7 +43,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 #### Obtain an API Token
 
-You need to create an API token in the Zenvia [app](https://app.zenvia.com/).
+You need to create an API token in the Zenvia [API console](https://app.zenvia.com/home/api).
 
 
 
