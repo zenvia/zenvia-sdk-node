@@ -52,6 +52,7 @@ export class Client {
   /**
    * This method creates a subscription.
    *
+   * @param subscription An [[ISubscription]] object.
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async createSubscription(subscription: ISubscription): Promise<ISubscription> {
@@ -62,6 +63,7 @@ export class Client {
   /**
    * This method returns a subscription.
    *
+   * @param id Subscription identifier.
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async getSubscription(id: string): Promise<ISubscription> {
@@ -72,6 +74,8 @@ export class Client {
   /**
    * This method updates a subscription.
    *
+   * @param id Subscription identifier.
+   * @param subscription An [[IPartialSubscription]] object.
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async updateSubscription(id: string, subscription: IPartialSubscription): Promise<ISubscription> {
@@ -82,6 +86,7 @@ export class Client {
   /**
    * This method deletes a subscription.
    *
+   * @param id Subscription identifier.
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async deleteSubscription(id: string): Promise<void> {
