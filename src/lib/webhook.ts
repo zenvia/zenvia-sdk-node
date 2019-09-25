@@ -8,14 +8,41 @@ import { createServer, Server } from 'http';
 type MessageEventCallback = (event: IMessageEvent) => void;
 type MessageStatusEventCallback = (event: IMessageStatusEvent) => void;
 
+/**
+ * Webhook configuration options.
+ */
 export interface IWebhookOptions {
+  /**
+   * Port. The default port is `3000`.
+   */
   port?: number;
+  /**
+   * Path. The default path is `/`.
+   */
   path?: string;
+  /**
+   * Callback to receive a message event.
+   */
   messageEventHandler?: MessageEventCallback;
+  /**
+   * Callback to receive a message status event.
+   */
   messageStatusEventHandler?: MessageStatusEventCallback;
+  /**
+   * Client to create a subscription.
+   */
   client?: Client;
-  url: string;
+  /**
+   * URL to create a subscription.
+   */
+  url?: string;
+  /**
+   * Channel to create a subscription.
+   */
   channel?: Channel;
+  /**
+   * Log instance.
+   */
   loggerInstance?: ILoggerInstance;
 }
 
