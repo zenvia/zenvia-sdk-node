@@ -7,7 +7,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 [![Coverage Status](https://coveralls.io/repos/github/zenvia/zenvia-sdk-node/badge.svg?branch=master)](https://coveralls.io/github/zenvia/zenvia-sdk-node?branch=master)
 [![Dependencies](https://img.shields.io/david/zenvia/zenvia-sdk-node.svg)](https://david-dm.org/zenvia/zenvia-sdk-node)
 
-[![NPM](https://nodei.co/npm/@zenvia/sdk.png)](https://nodei.co/npm/@zenvia/sdk/)
+[![NPM](https://nodei.co/npm/@zenvia%2Fsdk.png)](https://nodei.co/npm/@zenvia/sdk/)
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/ZenviaMobile.svg?style=social)](https://twitter.com/intent/follow?screen_name=ZenviaMobile)
 
@@ -19,6 +19,10 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
+  - [Sending your first message](#sending-your-first-message)
+  - [Subscribe for messages](#subscribe-for-messages)
+  - [Subscribe for message status](#subscribe-for-message-status)
+  - [Receiving message and message status events](#receiving-message-and-message-status-events)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
@@ -43,7 +47,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 #### Obtain an API Token
 
-You need to create an API token in the Zenvia [app](https://app.zenvia.com/).
+You need to create an API token in the Zenvia [API console](https://app.zenvia.com/home/api).
 
 
 
@@ -163,7 +167,35 @@ const response = await client.createSubscription(subscription);
 The response can be an `ISubscription` object when successful or an `IError` object on errors.
 
 
+### Receiving message and message status events
+
+Use the `Webhook` class to create your webhook to receive message and message status events. The default port is `3000`.
+
+If you inform the `client`, `url`, and `channel` fields, a subscription will be created if it does not exist for these configurations.
+
+In the `messageEventHandler` field you will receive the message events and in the `messageStatusEventHandler` field you will receive the message status events.
+
+```js
+const client = new Client(process.env.ZENVIA_API_TOKEN);
+const webhook = new Webhook({
+  messageEventHandler: (messageEvent) => {
+    console.log('Message event:', messageEvent);
+  },
+  messageStatusEventHandler: (messageStatusEvent) => {
+    console.log('Message status event:', messageStatusEvent);
+  },
+  client,
+  url: 'https://my-webhook.company.com',
+  channel: 'whatsapp',
+});
+webhook.init();
+```
+
+To receive events running the [example](examples/webhook.js) on your machine, you can use [ngrok](https://ngrok.com/).
+
+
 Other examples can be found [here](examples).
+
 
 
 ## Contributing

@@ -1,4 +1,4 @@
-import { IChannel, IMessageRequest, IMessageResponse, Channel, IContent, ILoggerInstance } from '../../types';
+import { IChannel, IMessageRequest, IMessage, Channel, IContent, ILoggerInstance } from '../../types';
 import { Logger } from '../../utils/logger';
 import * as request from '../../utils/request';
 
@@ -23,9 +23,9 @@ export abstract class AbstractChannel implements IChannel {
    * @param from The sender identifier of the message.
    * @param to The recipient identifier of the message.
    * @param contents An array of [[IContent]] object that will be sent.
-   * @returns A promise that resolves to an [[IMessageResponse]] object.
+   * @returns A promise that resolves to an [[IMessage]] object.
    */
-  async sendMessage(from: string, to: string, ...contents: IContent[]): Promise<IMessageResponse> {
+  async sendMessage(from: string, to: string, ...contents: IContent[]): Promise<IMessage> {
     contents.forEach(content => this.contentSupportValidation(content));
     const message = this.createMessage(from, to, contents);
     this.logger.debug(`Sending message to ${to} on channel ${this.channel}`);
@@ -52,9 +52,9 @@ export abstract class AbstractChannel implements IChannel {
    * This method requests to the endpoint.
    *
    * @param message An [[IMessageRequest]] object.
-   * @returns A promise that resolves to an [[IMessageResponse]] object.
+   * @returns A promise that resolves to an [[IMessage]] object.
    */
-  private async request(message: IMessageRequest): Promise<IMessageResponse> {
+  private async request(message: IMessageRequest): Promise<IMessage> {
     const path = `/v1/channels/${this.channel}/messages`;
     return request.post(this.token, path, message, this.logger);
   }

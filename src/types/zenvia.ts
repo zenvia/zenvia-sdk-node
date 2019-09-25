@@ -11,13 +11,14 @@ import { MessageStatusSubscription } from '../lib/subscriptions/message-status';
 export { SmsChannel, FacebookChannel, WhatsAppChannel, TextContent, FileContent, TemplateContent, MessageSubscription, MessageStatusSubscription };
 
 export type Channel = 'sms' | 'whatsapp' | 'facebook';
-export type ContentType = 'text' | 'file' | 'template';
+export type ContentType = 'text' | 'file' | 'template' | 'json';
 export type MessageDirection = 'IN' | 'OUT';
 export type EventType = 'MESSAGE' | 'MESSAGE_STATUS';
 export type SubscriptionStatus = 'ACTIVE' | 'INACTIVE';
+export type MessageStatusCode = 'REJECTED' | 'SENT' | 'DELIVERED' | 'NOT_DELIVERED' | 'READ';
 
 export interface IChannel {
-  sendMessage(from: string, to: string, ...contents: IContent[]): Promise<IMessageResponse>;
+  sendMessage(from: string, to: string, ...contents: IContent[]): Promise<IMessage>;
 }
 
 export interface IContent {
@@ -41,19 +42,93 @@ export interface ITemplateContent extends IContent {
   };
 }
 
+export interface IJsonContent extends IContent {
+  payload: any;
+}
+
 export interface IMessageRequest {
   from: string;
   to: string;
   contents: IContent[];
 }
 
-export interface IMessageResponse {
+export interface IMessage extends IMessageRequest {
   id: string;
-  from: string;
-  to: string;
   direction: MessageDirection;
   channel: Channel;
-  contents: IContent[];
+}
+
+export interface IMessageStatus extends IMessageRequest {
+  timestamp: string;
+  code: MessageStatusCode;
+  description?: string;
+  cause?: string;
+}
+
+/**
+ * Interface of base event.
+ */
+export interface IEvent {
+  /**
+   * Event identifier.
+   */
+  id: string;
+  /**
+   * Timestamp of event occurrence.
+   */
+  timestamp: string;
+  /**
+   * Event type. An [[EventType]] object.
+   */
+  type: EventType;
+  /**
+   * Subscription identifier.
+   */
+  subscriptionId: string;
+  /**
+   * Message channel. An [[Channel]] object.
+   */
+  channel: Channel;
+}
+
+/**
+ * Interface of message event.
+ */
+export interface IMessageEvent extends IEvent {
+  /**
+   * Message event type. An [[EventType]] object.
+   */
+  type: 'MESSAGE';
+  /**
+   * Message direction. An [[MessageDirection]] object.
+   */
+  direction: MessageDirection;
+  /**
+   * Message event. An [[IMessage]] object.
+   */
+  message: IMessage;
+}
+
+/**
+ * Implementation of message status event.
+ */
+export interface IMessageStatusEvent extends IEvent {
+  /**
+   * Message status event type. An [[EventType]] object.
+   */
+  type: 'MESSAGE_STATUS';
+  /**
+   * Message identifier.
+   */
+  messageId: string;
+  /**
+   * Content index.
+   */
+  contentIndex: number;
+  /**
+   * Message status event. An [[IMessageStatus]] object.
+   */
+  messageStatus: IMessageStatus;
 }
 
 export interface ISubscription {
