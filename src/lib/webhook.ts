@@ -5,13 +5,14 @@ import { EventEmitter } from 'events';
 import { Client } from './client';
 import { createServer, Server } from 'http';
 
-type MessageEventCallback = (event: IEvent) => void;
+type MessageEventCallback = (event: IMessageEvent) => void;
+type MessageStatusEventCallback = (event: IMessageStatusEvent) => void;
 
 export interface IWebhookOptions {
   port?: number;
   path?: string;
   messageEventHandler?: MessageEventCallback;
-  messageStatusEventHandler?: MessageEventCallback;
+  messageStatusEventHandler?: MessageStatusEventCallback;
   client?: Client;
   url: string;
   channel?: Channel;
