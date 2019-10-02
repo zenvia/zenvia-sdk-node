@@ -5,7 +5,7 @@
  * ZENVIA_API_TOKEN=your-api-token node whatsapp-chat.js
  */
 
-// var zenvia = require('@zenvia/sdk');
+// const { Client, Webhook } = require('@zenvia/sdk');
 const { Client, Webhook } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);

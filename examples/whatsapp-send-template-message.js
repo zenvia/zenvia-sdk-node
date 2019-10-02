@@ -5,7 +5,7 @@
  * ZENVIA_API_TOKEN=your-api-token FROM=sender-identifier TO=recipient-identifier node whatsapp-send-template-message.js
  */
 
-// const { Client, TextContent } = require('@zenvia/sdk');
+// const { Client, TemplateContent } = require('@zenvia/sdk');
 const { Client, TemplateContent } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);
