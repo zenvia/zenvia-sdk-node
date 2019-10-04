@@ -89,7 +89,7 @@ whatsapp.sendMessage('sender-identifier', 'recipient-identifier', content)
 
 // ES8 or Typescript. NodeJS 7.6.0 or higher
 try {
-  const response = await whatsapp.sendMessage(from, to, content);
+  const response = await whatsapp.sendMessage('sender-identifier', 'recipient-identifier', content);
   // do something here
 } catch (error) {
   // handle error here
@@ -112,7 +112,7 @@ const content = new TextContent('some text message');
 const response = await sms.sendMessage('sender-identifier', 'recipient-identifier', content);
 ```
 
-The response can be an `IMessageResponse` object when successful or an `IError` object on errors.
+The response can be an `IMessage` object when successful or an `IError` object on errors.
 
 The content types can be:
 
