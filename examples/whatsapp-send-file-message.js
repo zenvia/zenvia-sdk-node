@@ -5,7 +5,7 @@
  * ZENVIA_API_TOKEN=your-api-token FROM=sender-identifier TO=recipient-identifier node whatsapp-send-file-message.js
  */
 
-// const { Client, TextContent } = require('@zenvia/sdk');
+// const { Client, FileContent } = require('@zenvia/sdk');
 const { Client, FileContent } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);

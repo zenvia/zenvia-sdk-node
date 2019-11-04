@@ -5,7 +5,7 @@
  * ZENVIA_API_TOKEN=your-api-token node subscription-list.js
  */
 
-// const { Client, TextContent } = require('@zenvia/sdk');
+// const { Client } = require('@zenvia/sdk');
 const { Client } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);

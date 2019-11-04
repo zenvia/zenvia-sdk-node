@@ -5,7 +5,7 @@
  * ZENVIA_API_TOKEN=your-api-token node subscription-create-message-status.js
  */
 
-// const { Client, TextContent } = require('@zenvia/sdk');
+// const { Client, MessageStatusSubscription } = require('@zenvia/sdk');
 const { Client, MessageStatusSubscription } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);
