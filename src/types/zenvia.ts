@@ -163,3 +163,18 @@ export interface IWebhook {
     [header: string]: string;
   };
 }
+
+export interface IChannels {
+  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS';
+  status: 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
+  senderId: string;
+}
+
+export interface ITemplate {
+  id?: any;
+  text: string;
+  fields: string[];
+  channels: IChannels[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}

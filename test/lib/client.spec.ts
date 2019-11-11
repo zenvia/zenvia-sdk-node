@@ -523,5 +523,58 @@ describe('Client', () => {
     });
 
   });
+  describe('Templates', () => {
 
+    it('should list templates', async () => {
+      const expectedTemplates = [{
+        text: 'Olá {{1}}, o seu chamado foi registrado no nosso atendimento através do ticket {{2}}. Em breve teremos novas informações sobre o chamado.',
+        fields: [
+          '1',
+          '2',
+        ],
+        channels: [
+          {
+            type: 'WHATSAPP',
+            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            status: 'APPROVED',
+          },
+        ],
+      }];
+      const zenviaNock = nock('https://api.zenvia.com')
+      .get('/v1/templates')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, expectedTemplates);
+
+      const client = new Client('SOME_TOKEN');
+      const actualMessageResponse = await client.listTemplates();
+      zenviaNock.isDone().should.be.true;
+      actualMessageResponse.should.be.deep.equal(expectedTemplates);
+    });
+
+    it('should get template with id', async () => {
+      const expectedTemplates = [{
+        text: 'Olá {{1}}, o seu chamado foi registrado no nosso atendimento através do ticket {{2}}. Em breve teremos novas informações sobre o chamado.',
+        fields: [
+          '1',
+          '2',
+        ],
+        channels: [
+          {
+            type: 'WHATSAPP',
+            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            status: 'APPROVED',
+          },
+        ],
+      }];
+      const zenviaNock = nock('https://api.zenvia.com')
+      .get('/v1/templates/SOME_TEMPLATE_ID')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, expectedTemplates);
+
+      const client = new Client('SOME_TOKEN');
+      const actualMessageResponse = await client.getTemplate('SOME_TEMPLATE_ID');
+      zenviaNock.isDone().should.be.true;
+      actualMessageResponse.should.be.deep.equal(expectedTemplates);
+    });
+  });
 });
