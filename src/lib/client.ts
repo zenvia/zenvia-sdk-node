@@ -4,7 +4,7 @@ import { SmsChannel } from './channels/sms';
 import { FacebookChannel } from './channels/facebook';
 import { WhatsAppChannel } from './channels/whatsapp';
 import * as request from '../utils/request';
-import { ITemplate } from '../types/zenvia';
+import { ITemplate, ITemplateChannel } from '../../dist/types/zenvia';
 
 /**
  * Client class with the features.
@@ -102,17 +102,31 @@ export class Client {
    */
   async listTemplates(): Promise<ITemplate[]> {
     const path = '/v1/templates';
-    return request.get(this.token, path, this.logger);
+    return request.get(this.token, path, this.logger)
+    .then((templates) => {
+      templates.forEach((template: ITemplate) => {
+        template.channels.forEach((channel) => {
+          (channel.type as any) = channel.type.toUpperCase();
+        });
+      });
+      return templates;
+    });
   }
 
   /**
-   * This method returns a subscription.
+   * This method returns a template.
    *
-   * @param id Subscription identifier.
-   * @returns A promise that resolves to an [[ISubscription]] object.
+   * @param id Template identifier.
+   * @returns A promise that resolves to an [[ITemplate]] object.
    */
   async getTemplate(id: string): Promise<ITemplate> {
     const path = `/v1/templates/${id}`;
-    return request.get(this.token, path, this.logger);
+    return request.get(this.token, path, this.logger)
+    .then((template: ITemplate) => {
+      template.channels.forEach((channel) => {
+        (channel.type as any) = channel.type.toUpperCase();
+      });
+      return template;
+    });
   }
 }

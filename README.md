@@ -36,6 +36,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [x] File message content
 - [x] Template message content
 - [x] Subscription handling
+- [x] Listing templates
 - [x] Logging support
 
 
