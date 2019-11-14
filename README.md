@@ -199,7 +199,7 @@ Other examples can be found [here](examples).
 
 ### Listing your templates
 
-Use the `listTemplates` method to list an `ITemplates` object.
+Use the `listTemplates` method to list an `ITemplate` object.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
