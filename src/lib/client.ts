@@ -4,7 +4,7 @@ import { SmsChannel } from './channels/sms';
 import { FacebookChannel } from './channels/facebook';
 import { WhatsAppChannel } from './channels/whatsapp';
 import * as request from '../utils/request';
-import { ITemplate, ITemplateChannel } from '../../dist/types/zenvia';
+import { ITemplate } from '../types/zenvia';
 
 /**
  * Client class with the features.

@@ -539,7 +539,7 @@ describe('Client', () => {
             status: 'APPROVED',
           },
           {
-            type: 'WHATSAPP',
+            type: 'whatsapp',
             senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
             status: 'APPROVED',
           },
