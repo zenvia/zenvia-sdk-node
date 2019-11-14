@@ -16,6 +16,7 @@ export type MessageDirection = 'IN' | 'OUT';
 export type EventType = 'MESSAGE' | 'MESSAGE_STATUS';
 export type SubscriptionStatus = 'ACTIVE' | 'INACTIVE';
 export type MessageStatusCode = 'REJECTED' | 'SENT' | 'DELIVERED' | 'NOT_DELIVERED' | 'READ';
+export type TemplateStatus = 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
 
 export interface IChannel {
   sendMessage(from: string, to: string, ...contents: IContent[]): Promise<IMessage>;
@@ -164,9 +165,9 @@ export interface IWebhook {
   };
 }
 
-export interface IChannels {
-  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS';
-  status: 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
+export interface ITemplateChannel {
+  type: Channel;
+  status: TemplateStatus;
   senderId: string;
 }
 
@@ -174,7 +175,7 @@ export interface ITemplate {
   id?: any;
   text: string;
   fields: string[];
-  channels: IChannels[];
+  channels: ITemplateChannel[];
   createdAt?: Date;
   updatedAt?: Date;
 }
