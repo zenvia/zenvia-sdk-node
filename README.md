@@ -23,6 +23,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
   - [Subscribe for messages](#subscribe-for-messages)
   - [Subscribe for message status](#subscribe-for-message-status)
   - [Receiving message and message status events](#receiving-message-and-message-status-events)
+  - [Listing your templates](#listing-your-templates)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
@@ -35,6 +36,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [x] File message content
 - [x] Template message content
 - [x] Subscription handling
+- [x] Listing templates
 - [x] Logging support
 
 
@@ -195,6 +197,17 @@ To receive events running the [example](examples/webhook.js) on your machine, yo
 
 
 Other examples can be found [here](examples).
+
+### Listing your templates
+
+Use the `listTemplates` method to list an `ITemplate` object.
+
+```js
+const client = new Client('YOUR_API_TOKEN');
+const response = await client.listTemplates();
+```
+
+The response will be an Array of `ITemplate` object.
 
 
 

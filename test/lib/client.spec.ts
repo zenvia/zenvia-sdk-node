@@ -523,5 +523,98 @@ describe('Client', () => {
     });
 
   });
+  describe('Templates', () => {
 
+    it('should list templates', async () => {
+      const requestTemplates = [{
+        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        fields: [
+          'name',
+          'ticketId',
+        ],
+        channels: [
+          {
+            type: 'WHATSAPP',
+            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            status: 'APPROVED',
+          },
+          {
+            type: 'WHATSAPP',
+            senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
+            status: 'APPROVED',
+          },
+        ],
+      }];
+      const responseTemplates = [{
+        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        fields: [
+          'name',
+          'ticketId',
+        ],
+        channels: [
+          {
+            type: 'whatsapp',
+            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            status: 'APPROVED',
+          },
+          {
+            type: 'whatsapp',
+            senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
+            status: 'APPROVED',
+          },
+        ],
+      }];
+      const zenviaNock = nock('https://api.zenvia.com')
+      .get('/v1/templates')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, requestTemplates);
+
+      const client = new Client('SOME_TOKEN');
+      const actualMessageResponse = await client.listTemplates();
+      console.log(actualMessageResponse);
+      zenviaNock.isDone().should.be.true;
+      actualMessageResponse.should.be.deep.equal(responseTemplates);
+    });
+
+    it('should get template with id', async () => {
+      const requestTemplates = {
+        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        fields: [
+          'name',
+          'ticketId',
+        ],
+        channels: [
+          {
+            type: 'WHATSAPP',
+            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            status: 'APPROVED',
+          },
+        ],
+      };
+      const responseTemplates = {
+        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        fields: [
+          'name',
+          'ticketId',
+        ],
+        channels: [
+          {
+            type: 'whatsapp',
+            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            status: 'APPROVED',
+          },
+        ],
+      };
+      const zenviaNock = nock('https://api.zenvia.com')
+      .get('/v1/templates/SOME_TEMPLATE_ID')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, requestTemplates);
+
+      const client = new Client('SOME_TOKEN');
+      const actualMessageResponse = await client.getTemplate('SOME_TEMPLATE_ID');
+      console.log(actualMessageResponse);
+      zenviaNock.isDone().should.be.true;
+      actualMessageResponse.should.be.deep.equal(responseTemplates);
+    });
+  });
 });

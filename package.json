@@ -12,7 +12,8 @@
   "contributors": [
     "Rodrigo Kamada <rodrigo.kamada@zenvia.com> (https://github.com/rodrigokamada)",
     "Henrique Magarotto <henrique.magarotto@zenvia.com> (https://github.com/hmagarotto)",
-    "Rafael Souza <rafael.souza@zenvia.com> (https://github.com/rafael-org)"
+    "Rafael Souza <rafael.souza@zenvia.com> (https://github.com/rafael-org)",
+    "Jhonnanthn Balsas <jhonnanthn.balsas@zenvia.com> (https://github.com/jhonnanthn)"
   ],
   "scripts": {
     "test": "nyc --all mocha --opts test/mocha.opts",
