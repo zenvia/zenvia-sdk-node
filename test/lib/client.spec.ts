@@ -534,12 +534,12 @@ describe('Client', () => {
         ],
         channels: [
           {
-            type: 'whatsapp',
+            type: 'WHATSAPP',
             senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
             status: 'APPROVED',
           },
           {
-            type: 'whatsapp',
+            type: 'WHATSAPP',
             senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
             status: 'APPROVED',
           },
@@ -553,12 +553,12 @@ describe('Client', () => {
         ],
         channels: [
           {
-            type: 'WHATSAPP',
+            type: 'whatsapp',
             senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
             status: 'APPROVED',
           },
           {
-            type: 'WHATSAPP',
+            type: 'whatsapp',
             senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
             status: 'APPROVED',
           },
@@ -585,7 +585,7 @@ describe('Client', () => {
         ],
         channels: [
           {
-            type: 'whatsapp',
+            type: 'WHATSAPP',
             senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
             status: 'APPROVED',
           },
@@ -599,7 +599,7 @@ describe('Client', () => {
         ],
         channels: [
           {
-            type: 'WHATSAPP',
+            type: 'whatsapp',
             senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
             status: 'APPROVED',
           },

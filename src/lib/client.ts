@@ -104,9 +104,9 @@ export class Client {
     const path = '/v1/templates';
     return request.get(this.token, path, this.logger)
     .then((templates) => {
-      templates.forEach((template: ITemplate) => {
+      templates.forEach((template) => {
         template.channels.forEach((channel) => {
-          (channel.type as any) = channel.type.toUpperCase();
+          (channel.type as any) = channel.type.toLowerCase();
         });
       });
       return templates;
@@ -124,7 +124,7 @@ export class Client {
     return request.get(this.token, path, this.logger)
     .then((template: ITemplate) => {
       template.channels.forEach((channel) => {
-        (channel.type as any) = channel.type.toUpperCase();
+        (channel.type as any) = channel.type.toLowerCase();
       });
       return template;
     });
