@@ -171,7 +171,7 @@ The response can be an `ISubscription` object when successful or an `IError` obj
 
 ### Receiving message and message status events
 
-Use the `Webhook` class to create your webhook to receive message and message status events. The default port is `3000`.
+Use the `WebhookController` class to create your webhook to receive message and message status events. The default port is `3000`.
 
 If you inform the `client`, `url`, and `channel` fields, a subscription will be created if it does not exist for these configurations.
 
@@ -179,7 +179,7 @@ In the `messageEventHandler` field you will receive the message events and in th
 
 ```js
 const client = new Client(process.env.ZENVIA_API_TOKEN);
-const webhook = new Webhook({
+const webhook = new WebhookController({
   messageEventHandler: (messageEvent) => {
     console.log('Message event:', messageEvent);
   },

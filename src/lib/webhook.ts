@@ -46,7 +46,7 @@ export interface IWebhookOptions {
   loggerInstance?: ILoggerInstance;
 }
 
-export class Webhook extends EventEmitter {
+export class WebhookController extends EventEmitter {
 
   options: IWebhookOptions;
   protected logger: Logger;

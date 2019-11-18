@@ -5,12 +5,12 @@
  * ZENVIA_API_TOKEN=your-api-token node webhook.js
  */
 
-// const { Client, Webhook } = require('@zenvia/sdk');
-const { Client, Webhook } = require('../dist');
+// const { Client, WebhookController } = require('@zenvia/sdk');
+const { Client, WebhookController } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);
 
-const webhook = new Webhook({
+const webhook = new WebhookController({
   messageEventHandler: (messageEvent) => {
     console.log('Message event:', messageEvent);
   },

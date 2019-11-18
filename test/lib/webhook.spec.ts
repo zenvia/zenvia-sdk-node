@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import * as nock from 'nock';
 import * as rp from 'request-promise';
-import { Client, Webhook, IFileContent, IJsonContent, ITextContent, IWebhookOptions, IMessageEvent, IMessageStatusEvent } from '../../src';
+import { Client, WebhookController, IFileContent, IJsonContent, ITextContent, IWebhookOptions, IMessageEvent, IMessageStatusEvent } from '../../src';
 
 const should = chai.should();
 
@@ -9,7 +9,7 @@ describe('Webook', () => {
 
   it('should receive message event with text content', async () => {
     const options = {} as IWebhookOptions;
-    const webhook = new Webhook(options);
+    const webhook = new WebhookController(options);
 
     webhook.on('error', (error) => {
       throw error;
@@ -89,7 +89,7 @@ describe('Webook', () => {
         jsonContent.payload.visitor.picture.should.be.equal('http://domain.com/some-image.png');
       },
     } as IWebhookOptions;
-    const webhook = new Webhook(options);
+    const webhook = new WebhookController(options);
 
     webhook.on('error', (error) => {
       throw error;
@@ -168,7 +168,7 @@ describe('Webook', () => {
         messageStatusEvent.messageStatus.description.should.be.equal('The message has been forwarded to the provider');
       },
     } as IWebhookOptions;
-    const webhook = new Webhook(options);
+    const webhook = new WebhookController(options);
 
     webhook.on('error', (error) => {
       throw error;
@@ -220,7 +220,7 @@ describe('Webook', () => {
       url: 'http://localhost:3000',
       channel: 'whatsapp',
     } as IWebhookOptions;
-    const webhook = new Webhook(options);
+    const webhook = new WebhookController(options);
 
     webhook.on('error', (error) => {
       throw error;
@@ -313,7 +313,7 @@ describe('Webook', () => {
       url: 'http://localhost:3000',
       channel: 'whatsapp',
     } as IWebhookOptions;
-    const webhook = new Webhook(options);
+    const webhook = new WebhookController(options);
 
     webhook.on('error', (error) => {
       throw error;
