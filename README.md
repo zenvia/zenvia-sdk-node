@@ -78,7 +78,7 @@ const client = new zenvia.Client('YOUR_API_TOKEN');
 const whatsapp = client.getChannel('whatsapp');
 
 // Creating a text content
-const content = new TextContent('some text message here');
+const content = new zenvia.TextContent('some text message here');
 
 // ES6
 whatsapp.sendMessage('sender-identifier', 'recipient-identifier', content)

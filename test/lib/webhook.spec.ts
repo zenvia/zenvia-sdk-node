@@ -1,9 +1,6 @@
-import * as chai from 'chai';
 import * as nock from 'nock';
 import * as rp from 'request-promise';
 import { Client, WebhookController, IFileContent, IJsonContent, ITextContent, IWebhookOptions, IMessageEvent, IMessageStatusEvent } from '../../src';
-
-const should = chai.should();
 
 describe('Webook', () => {
 
