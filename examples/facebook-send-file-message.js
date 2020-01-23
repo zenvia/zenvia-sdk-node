@@ -12,7 +12,7 @@ const client = new Client(process.env.ZENVIA_API_TOKEN);
 
 const facebook = client.getChannel('facebook');
 
-const content = new FileContent('https://github.com/zenvia/zenvia-openapi-spec/raw/master/assets/zenvia-logo-developers.png', 'image/png', 'Zenvia Developers');
+const content = new FileContent('https://github.com/zenvia/zenvia-openapi-spec/raw/master/assets/zenvia-logo-developers.png', 'image/png');
 
 facebook.sendMessage(process.env.FROM, process.env.TO, content)
 .then(response => {
