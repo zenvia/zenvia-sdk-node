@@ -4,19 +4,37 @@ import { FacebookChannel } from '../lib/channels/facebook';
 import { WhatsAppChannel } from '../lib/channels/whatsapp';
 import { TextContent } from '../lib/contents/text';
 import { FileContent } from '../lib/contents/file';
+import { ContactsContent } from '../lib/contents/contacts';
 import { TemplateContent } from '../lib/contents/template';
+import { LocationContent } from '../lib/contents/location';
+import { Template } from '../lib/templates/base';
+import { PartialTemplate } from '../lib/templates/partial';
 import { MessageSubscription } from '../lib/subscriptions/message';
 import { MessageStatusSubscription } from '../lib/subscriptions/message-status';
 
-export { SmsChannel, FacebookChannel, WhatsAppChannel, TextContent, FileContent, TemplateContent, MessageSubscription, MessageStatusSubscription };
+export {
+  SmsChannel,
+  FacebookChannel,
+  WhatsAppChannel,
+  TextContent,
+  FileContent,
+  Template,
+  PartialTemplate,
+  LocationContent,
+  ContactsContent,
+  TemplateContent,
+  MessageSubscription,
+  MessageStatusSubscription
+};
 
 export type Channel = 'sms' | 'whatsapp' | 'facebook';
-export type ContentType = 'text' | 'file' | 'template' | 'json';
+export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json';
+export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
 export type EventType = 'MESSAGE' | 'MESSAGE_STATUS';
 export type SubscriptionStatus = 'ACTIVE' | 'INACTIVE';
 export type MessageStatusCode = 'REJECTED' | 'SENT' | 'DELIVERED' | 'NOT_DELIVERED' | 'READ';
-export type TemplateStatus = 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
+export type TemplateStatus = 'WAITING_REVIEW' | 'REJECTED' | 'WAITING_WHATSAPP_SUBMISSION' | 'WAITING_WHATSAPP_REVIEW' | 'APPROVED' | 'CANCELED';
 
 export interface IChannel {
   sendMessage(from: string, to: string, ...contents: IContent[]): Promise<IMessage>;
@@ -28,12 +46,68 @@ export interface IContent {
 
 export interface ITextContent extends IContent {
   text: string;
+  payload?: string;
 }
 
 export interface IFileContent extends IContent {
   fileUrl: string;
   fileMimeType: string;
   fileCaption?: string;
+}
+
+export interface IContactsContent extends IContent {
+  contacts: Array<{
+    addresses?: Array<{
+      street?: string;
+      city?: string;
+      state?: string;
+      zip?: string;
+      country?: string;
+      countryCode?: string;
+      type?: 'HOME' | 'WORK';
+    }>;
+    birthday?: string;
+    contactImage?: string;
+    emails?: Array<{
+      email?: string;
+      type?: 'HOME' | 'WORK';
+    }>;
+    ims?: Array<{
+      service: string;
+      userId: string;
+    }>;
+    name?: {
+      formattedName: string;
+      firstName: string;
+      lastName?: string;
+      middleName?: string;
+      suffix?: string;
+      prefix?: string;
+    };
+    org?: {
+      company?: string;
+      department?: string;
+      title?: string;
+    };
+    phones?: Array<{
+      phone?: string;
+      type?: 'CELL' | 'MAIN' | 'IPHONE' | 'HOME' | 'WORK';
+      waId?: string;
+    }>;
+    urls?: Array<{
+      url?: string;
+      type?: 'HOME' | 'WORK';
+    }>;
+  }>;
+}
+
+
+export interface ILocationContent extends IContent {
+  longitude: number;
+  latitude: number;
+  name?: string;
+  address?: string;
+  url?: string;
 }
 
 export interface ITemplateContent extends IContent {
@@ -171,11 +245,93 @@ export interface ITemplateChannel {
   senderId: string;
 }
 
+export interface IFlowReport {
+  flowId: string;
+  dispatchId: string;
+  sessionId: string;
+  firstEventTimestamp: string;
+  lastEventTimestamp: string;
+  variables: any;
+}
+
+export interface IMessageReport {
+  channel: string;
+  type: string;
+  directionInTotal: number;
+  directionOutTotal: number;
+  total: number;
+}
+
 export interface ITemplate {
+  id?: string;
+  name: string;
+  locale: string;
+  channel: string;
+  category: string;
+  textReference?: string;
+  components: IComponents;
+  senderId: string;
+  status?: TemplateStatus;
+  notificationEmail?: string;
+  comments?: IComment[];
+  suggestions?: ISuggestions[];
+  channels?: IChannels[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface IPartialTemplate {
+  components?: IComponents;
+  notificationEmail?: string;
+}
+
+export interface IComment {
   id?: any;
+  author: string;
+  role: string;
   text: string;
-  fields: string[];
-  channels: ITemplateChannel[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ISuggestions {
+  id?: any;
+  status: string;
+  text: string;
+  createdAt: string;
+  updateAt: string;
+}
+
+export interface IComponents {
+  header?: {
+    type: string,
+    text: string,
+  }
+  body: {
+    type: string,
+    text: string,
+  },
+  footer?: {
+    type: string,
+    text: string,
+  },
+  buttons?: {
+    type: string,
+    items: IButtonsItems[];
+  }
+}
+
+export interface IButtonsItems {
+  type: string,
+  text: string,
+  url?: string,
+  phoneNumber?: string,
+  payload?: string,
+}
+
+export interface IChannels {
+  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS';
+  status: 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
+  senderId: string;
+  whatsapp: any;
 }

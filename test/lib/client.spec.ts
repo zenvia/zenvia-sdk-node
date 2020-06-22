@@ -1,7 +1,8 @@
 /* tslint:disable:no-unused-expression */
 
 import * as nock from 'nock';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, MessageSubscription, MessageStatusSubscription } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, Template, MessageSubscription, MessageStatusSubscription } from '../../src';
+import { ITemplate } from '../../src/types/zenvia';
 
 describe('Client', () => {
 
@@ -616,5 +617,72 @@ describe('Client', () => {
       zenviaNock.isDone().should.be.true;
       actualMessageResponse.should.be.deep.equal(responseTemplates);
     });
+
+    it('should create a template and return success', async () => {
+      const expectedTemplate = {
+        name: 'Name of Template - SDK',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'ACCOUNT_UPDATE',
+        senderId: 'sender_id',
+        notificationEmail: 'mail@zenvia.com',
+        components: {
+          header: {
+            type: 'MEDIA_DOCUMENT',
+          },
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. The ticket {{ticketId}} will be send to your mail.',
+          },
+          footer: {
+            type: 'TEXT_FIXED',
+            text: 'Zenvia Company.',
+          },
+        },
+      };
+      const zenviaNock = nock('https://api.zenvia.com')
+      .post('/v1/templates', expectedTemplate)
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, expectedTemplate);
+
+      const client = new Client('SOME_TOKEN');
+      const actualTemplateResponse = await client.createTemplate(
+        {
+          name: 'Name of Template - SDK',
+          locale: 'pt_BR',
+          channel: 'WHATSAPP',
+          category: 'ACCOUNT_UPDATE',
+          senderId: 'sender_id',
+          notificationEmail: 'mail@zenvia.com',
+          components: {
+            header: {
+              type: 'MEDIA_DOCUMENT',
+            },
+            body: {
+              type: 'TEXT_TEMPLATE',
+              text: 'Hello, {{name}}. The ticket {{ticketId}} will be send to your mail.',
+            },
+            footer: {
+              type: 'TEXT_FIXED',
+              text: 'Zenvia Company.',
+            },
+          },
+        } as ITemplate,
+      );
+      zenviaNock.isDone().should.be.true;
+      actualTemplateResponse.should.be.deep.equal(expectedTemplate);
+    });
+
+    it('should delete template', async () => {
+      const zenviaNock = nock('https://api.zenvia.com')
+      .delete('/v1/templates/SOME_TEMPLATE_ID')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(204);
+
+      const client = new Client('SOME_TOKEN');
+      await client.deleteTemplate('SOME_TEMPLATE_ID');
+      zenviaNock.isDone().should.be.true;
+    });
+
   });
 });
