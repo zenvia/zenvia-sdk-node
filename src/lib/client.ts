@@ -48,13 +48,21 @@ export class Client {
   async listFlowReport(startDate: string, endDate?: string, flowId?: string, dispatchId?: string, sessionId?: string): Promise<IFlowReport[]> {
     const properties = [];
 
-    if (flowId) properties.push(`flowId=${flowId}`);
-    if (endDate) properties.push(`endDate=${endDate}`);
-    if (dispatchId) properties.push(`dispatchId=${dispatchId}`);
-    if (sessionId) properties.push(`sessionId=${sessionId}`);
+    if (flowId) {
+      properties.push(`flowId=${flowId}`);
+    }
+    if (endDate) {
+      properties.push(`endDate=${endDate}`);
+    }
+    if (dispatchId) {
+      properties.push(`dispatchId=${dispatchId}`);
+    }
+    if (sessionId) {
+      properties.push(`sessionId=${sessionId}`);
+    }
 
-    const path = `/v1/reports/flow/entries?startDate=${startDate}&` + properties.join('&');
-    return request.get(this.token, path, this.logger);
+    const path = `/v1/reports/flow/entries?startDate=${startDate}&`;
+    return request.get(this.token, path + properties.join('&'), this.logger);
   }
 
   /**
@@ -65,11 +73,15 @@ export class Client {
   async listMessageReport(startDate: string, endDate: string, channels?: string, type?: MessageType): Promise<IMessageReport[]> {
     const properties = [];
 
-    if (channels) properties.push(`channels=${channels}`);
-    if (type) properties.push(`type=${type}`);
+    if (channels) {
+      properties.push(`channels=${channels}`);
+    }
+    if (type) {
+      properties.push(`type=${type}`);
+    }
 
-    const path = `/v1/reports/message/entries?startDate=${startDate}&endDate=${endDate}&` + properties.join('&');
-    return request.get(this.token, path, this.logger);
+    const path = `/v1/reports/message/entries?startDate=${startDate}&endDate=${endDate}&`;
+    return request.get(this.token, path + properties.join('&'), this.logger);
   }
 
   /**
