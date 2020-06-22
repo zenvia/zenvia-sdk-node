@@ -15,14 +15,14 @@ const content = new ContactsContent(
   [
     {
       name: {
-        formattedName: 'Jhonnanthn Balsas',
-        firstName: 'Jhonnanthn'
+        formattedName: 'Number of Contact',
+        firstName: 'First name'
       },
       phones: [
         {
-          phone: '5511982210992',
+          phone: '5511222222222',
           type: 'CELL',
-          waId: '+5511982210992',
+          waId: '+5511222222222',
         }
       ]
     }

@@ -9,7 +9,7 @@ const { Client } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);
 
-client.listMessageReport('2020-01-10', '2020-01-20')
+client.listMessageReport()
 .then(response => {
   console.log('Response:', response);
 })
