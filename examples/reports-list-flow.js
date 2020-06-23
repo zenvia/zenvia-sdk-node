@@ -8,8 +8,11 @@
 const { Client } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);
+const reportClient = client.getFlowReportClient();
 
-client.listFlowReport('2020-01-10')
+reportClient.getEntries({
+  startDate: '2020-01-10',
+})
 .then(response => {
   console.log('Response:', response);
 })

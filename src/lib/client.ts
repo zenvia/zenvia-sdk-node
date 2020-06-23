@@ -5,6 +5,8 @@ import { FacebookChannel } from './channels/facebook';
 import { WhatsAppChannel } from './channels/whatsapp';
 import * as request from '../utils/request';
 import { ITemplate, IFlowReport, IMessageReport, MessageType } from '../types/zenvia';
+import { ReportFlow } from './reports/report-flow';
+import { ReportMessages } from './reports/report-messages';
 
 /**
  * Client class with the features.
@@ -45,24 +47,8 @@ export class Client {
    *
    * @returns A promise that resolves to an array of [[IFlowReport]] objects.
    */
-  async listFlowReport(startDate: string, endDate?: string, flowId?: string, dispatchId?: string, sessionId?: string): Promise<IFlowReport[]> {
-    const properties = [];
-
-    if (flowId) {
-      properties.push(`flowId=${flowId}`);
-    }
-    if (endDate) {
-      properties.push(`endDate=${endDate}`);
-    }
-    if (dispatchId) {
-      properties.push(`dispatchId=${dispatchId}`);
-    }
-    if (sessionId) {
-      properties.push(`sessionId=${sessionId}`);
-    }
-
-    const path = `/v1/reports/flow/entries?startDate=${startDate}&`;
-    return request.get(this.token, path + properties.join('&'), this.logger);
+  getFlowReportClient(): ReportFlow {
+    return new ReportFlow(this.token, this.logger);
   }
 
   /**
@@ -70,18 +56,8 @@ export class Client {
    *
    * @returns A promise that resolves to an array of [[IMessageReport]] objects.
    */
-  async listMessageReport(startDate: string, endDate: string, channels?: string, type?: MessageType): Promise<IMessageReport[]> {
-    const properties = [];
-
-    if (channels) {
-      properties.push(`channels=${channels}`);
-    }
-    if (type) {
-      properties.push(`type=${type}`);
-    }
-
-    const path = `/v1/reports/message/entries?startDate=${startDate}&endDate=${endDate}&`;
-    return request.get(this.token, path + properties.join('&'), this.logger);
+  getMessagesReportClient(): ReportMessages  {
+    return new ReportMessages(this.token, this.logger);
   }
 
   /**
