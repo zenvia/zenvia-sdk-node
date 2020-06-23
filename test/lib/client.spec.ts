@@ -1,9 +1,7 @@
 /* tslint:disable:no-unused-expression */
 
 import * as nock from 'nock';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, Template, MessageSubscription, MessageStatusSubscription } from '../../src';
-import { ITemplate } from '../../src/types/zenvia';
-import { ContactsContent, LocationContent } from '../../dist';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription } from '../../src';
 
 describe('Client', () => {
 
