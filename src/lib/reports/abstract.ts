@@ -1,6 +1,7 @@
 import * as request from '../../utils/request';
 import { Logger } from '../../utils/logger';
 import { ILoggerInstance } from '../../types';
+// tslint:disable-next-line: no-empty-interface
 export interface IReportEntry {
 }
 export interface IReportFilters {
@@ -17,14 +18,14 @@ export class AbstractReport<E extends IReportEntry, F extends IReportFilters> {
 
   getEntries(filters: F): Promise<E[]> {
     const properties = [];
-    for (const [key, value] of (filters as any).entries()) {
+    for (const [key, value] of Object.entries(filters)) {
       properties.push(`${key}=${value}`);
     }
 
     const path = `/v1/reports/${this.reportName}/entries`;
     let queryParameters = '';
     if (properties.length > 0) {
-      queryParameters = '?' + properties.join('&');
+      queryParameters = `?${properties.join('&')}`;
     }
     return request.get(this.token, path + queryParameters, this.logger);
   }

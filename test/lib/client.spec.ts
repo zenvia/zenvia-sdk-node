@@ -2,6 +2,7 @@
 
 import * as nock from 'nock';
 import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription } from '../../src';
+import { ReportFlow } from '../../src/lib/reports/report-flow';
 
 describe('Client', () => {
 
@@ -653,7 +654,7 @@ describe('Client', () => {
       .reply(200, expectedFlow);
 
       const client = new Client('SOME_TOKEN');
-      const actualMessageResponse = await client.listFlowReport('2020-01-10');
+      const actualMessageResponse = await client.getFlowReportClient().getEntries({ startDate: '2020-01-10' });
       zenviaNock.isDone().should.be.true;
       actualMessageResponse.should.be.deep.equal(expectedFlow);
     });
@@ -681,7 +682,7 @@ describe('Client', () => {
       .reply(200, expectedMessage);
 
       const client = new Client('SOME_TOKEN');
-      const actualMessageResponse = await client.listMessageReport('2020-01-10', '2020-01-11');
+      const actualMessageResponse = await client.getMessagesReportClient().getEntries({ startDate: '2020-01-10', endDate: '2020-01-11' });
       zenviaNock.isDone().should.be.true;
       actualMessageResponse.should.be.deep.equal(expectedMessage);
     });
@@ -693,13 +694,13 @@ describe('Client', () => {
       };
 
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/reports/flow/entries?startDate=')
+      .get('/v1/reports/flow/entries')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(400, errorResponse);
 
       const client = new Client('SOME_TOKEN');
       try {
-        await client.listFlowReport('');
+        await client.getFlowReportClient().getEntries({} as any);
       } catch (error) {
         error.should.be.deep.equal({ httpStatusCode: 400, message: 'Unsuccessful request', body: errorResponse });
       }
@@ -713,13 +714,13 @@ describe('Client', () => {
       };
 
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/reports/message/entries?startDate=&endDate=')
+      .get('/v1/reports/message/entries')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(400, errorResponse);
 
       const client = new Client('SOME_TOKEN');
       try {
-        await client.listMessageReport('', '');
+        await client.getMessagesReportClient().getEntries({} as any);
       } catch (error) {
         error.should.be.deep.equal({ httpStatusCode: 400, message: 'Unsuccessful request', body: errorResponse });
       }
