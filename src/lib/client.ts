@@ -1,10 +1,12 @@
-import { Channel, IChannel, ILoggerInstance, ISubscription, IPartialSubscription } from '../types';
+import { Channel, IChannel, ILoggerInstance, ISubscription, IPartialSubscription, IPartialTemplate } from '../types';
 import { Logger } from '../utils/logger';
 import { SmsChannel } from './channels/sms';
 import { FacebookChannel } from './channels/facebook';
 import { WhatsAppChannel } from './channels/whatsapp';
 import * as request from '../utils/request';
-import { ITemplate } from '../types/zenvia';
+import { ITemplate, IFlowReport, IMessageReport, MessageType } from '../types/zenvia';
+import { ReportFlow } from './reports/report-flow';
+import { ReportMessages } from './reports/report-messages';
 
 /**
  * Client class with the features.
@@ -38,6 +40,24 @@ export class Client {
       case 'whatsapp': return new WhatsAppChannel(this.token, this.logger);
       default: throw new Error('Unsupported channel');
     }
+  }
+
+  /**
+   * This method returns a list of flow reports.
+   *
+   * @returns A promise that resolves to an array of [[IFlowReport]] objects.
+   */
+  getFlowReportClient(): ReportFlow {
+    return new ReportFlow(this.token, this.logger);
+  }
+
+  /**
+   * This method returns a list of message reports.
+   *
+   * @returns A promise that resolves to an array of [[IMessageReport]] objects.
+   */
+  getMessagesReportClient(): ReportMessages  {
+    return new ReportMessages(this.token, this.logger);
   }
 
   /**
@@ -129,4 +149,39 @@ export class Client {
       return template;
     });
   }
+
+  /**
+   * This method creates a template.
+   *
+   * @param template An [[ITemplate]] object.
+   * @returns A promise that resolves to an [[ITemplate]] object.
+   */
+  async createTemplate(template: ITemplate): Promise<ITemplate> {
+    const path = '/v1/templates';
+    return request.post(this.token, path, template, this.logger);
+  }
+
+  /**
+   * This method updates a template.
+   *
+   * @param id Template identifier.
+   * @param template An [[IPartialTemplate]] object.
+   * @returns A promise that resolves to an [[ITemplate]] object.
+   */
+  async updateTemplate(id: string, template: IPartialTemplate): Promise<ITemplate> {
+    const path = `/v1/templates/${id}`;
+    return request.patch(this.token, path, template, this.logger);
+  }
+
+  /**
+   * This method deletes a template.
+   *
+   * @param id Template identifier.
+   * @returns A promise that resolves to an [[ITemplate]] object.
+   */
+  async deleteTemplate(id: string): Promise<void> {
+    const path = `/v1/templates/${id}`;
+    return request.del(this.token, path, this.logger);
+  }
+
 }

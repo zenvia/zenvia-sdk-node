@@ -16,7 +16,7 @@ export class WhatsAppChannel extends AbstractChannel {
    */
   constructor(token: string, loggerInstance?: ILoggerInstance) {
     super(token, 'whatsapp', loggerInstance);
-    this.supportedContents = ['text', 'file', 'template'];
+    this.supportedContents = ['text', 'file', 'template', 'contacts', 'location'];
   }
 
   protected contentSupportValidation(content: IContent): void | never {

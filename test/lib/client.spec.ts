@@ -1,7 +1,8 @@
 /* tslint:disable:no-unused-expression */
 
 import * as nock from 'nock';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, MessageSubscription, MessageStatusSubscription } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription } from '../../src';
+import { ReportFlow } from '../../src/lib/reports/report-flow';
 
 describe('Client', () => {
 
@@ -87,6 +88,32 @@ describe('Client', () => {
         }
       });
 
+      it('should fail when trying to send location content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const sms = client.getChannel('sms');
+        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
+
+        try {
+          await sms.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not throwed');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type location is not supported in SMS channel');
+        }
+      });
+
+      it('should fail when trying to send contacts content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const sms = client.getChannel('sms');
+        const content = new ContactsContent([]);
+
+        try {
+          await sms.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not throwed');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in SMS channel');
+        }
+      });
+
     });
 
     describe('Facebook Channel', () => {
@@ -168,6 +195,31 @@ describe('Client', () => {
         }
       });
 
+      it('should fail when trying to send location content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const sms = client.getChannel('facebook');
+        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
+
+        try {
+          await sms.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not throwed');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type location is not supported in Facebook channel');
+        }
+      });
+
+      it('should fail when trying to send contacts content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const sms = client.getChannel('facebook');
+        const content = new ContactsContent([]);
+
+        try {
+          await sms.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not throwed');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in Facebook channel');
+        }
+      });
     });
 
     describe('WhatsApp Channel', () => {
@@ -279,6 +331,114 @@ describe('Client', () => {
         const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with contacts content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'contacts',
+              contacts: [{
+                name: {
+                  formattedName: 'Number of Contact',
+                  firstName: 'First name',
+                },
+                phones: [
+                  {
+                    phone: '5511222222222',
+                    type: 'CELL',
+                    waId: '+5511222222222',
+                  },
+                ],
+              }],
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const whatsapp = client.getChannel('whatsapp');
+        const content = new ContactsContent(
+          [
+            {
+              name: {
+                formattedName: 'Number of Contact',
+                firstName: 'First name',
+              },
+              phones: [
+                {
+                  phone: '5511222222222',
+                  type: 'CELL',
+                  waId: '+5511222222222',
+                },
+              ],
+            },
+          ],
+        );
+        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with location content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'location',
+              longitude: -46.511170,
+              latitude: -23.442930,
+              name: 'Name of location',
+              address: 'Address of location',
+              url: 'URL',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const whatsapp = client.getChannel('whatsapp');
+        const content = new LocationContent(
+          -46.511170,
+          -23.442930,
+          'Name of location',
+          'Address of location',
+          'URL',
+        );
+        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with contacts content', async () => {
+        const errorResponse = {
+          code: 'VALIDATION_ERROR',
+          message: 'Request has one or more errors\n  In body\n    For Content-Type application/json\n      Invalid value\n        Did not validate against all schemas\n          at: 1 > contents > 0 > contacts\n            Did not validate against all schemas\n              at: 1 > contacts\n                Too few items in the array. Minimum of 1. Found 0 items',
+        };
+
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v1/channels/whatsapp/messages')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(400, errorResponse);
+
+        const client = new Client('SOME_TOKEN');
+        const whatsapp = client.getChannel('whatsapp');
+        const content = new ContactsContent([]);
+        try {
+          await whatsapp.sendMessage('FROM', 'TO', content);
+        } catch (error) {
+          error.should.be.deep.equal({ httpStatusCode: 400, message: 'Unsuccessful request', body: errorResponse });
+        }
+        zenviaNock.isDone().should.be.true;
       });
 
       it('should fail when trying to send invalid content', async () => {
@@ -471,6 +631,103 @@ describe('Client', () => {
 
   });
 
+  describe('Reports', () => {
+
+    it('should list a flow reports with startDate', async () => {
+      const expectedFlow = [{
+        sessionId: 'session_id',
+        flowId: 'flow_id',
+        firstEventTimestamp: '2019-11-01T20:26:17.752Z',
+        lastEventTimestamp: '2020-01-10T02:09:26.390Z',
+        variables: {
+          tipoTelefone: 'CELULAR',
+          tel: '',
+          countTries: '1',
+          telFormatado: '',
+          user_email: 'test',
+          is_email_valid: 'false',
+        },
+      }];
+      const zenviaNock = nock('https://api.zenvia.com')
+      .get('/v1/reports/flow/entries?startDate=2020-01-10')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, expectedFlow);
+
+      const client = new Client('SOME_TOKEN');
+      const actualMessageResponse = await client.getFlowReportClient().getEntries({ startDate: '2020-01-10' });
+      zenviaNock.isDone().should.be.true;
+      actualMessageResponse.should.be.deep.equal(expectedFlow);
+    });
+
+    it('should list a message reports with startDate and endDate', async () => {
+      const expectedMessage = [
+        {
+          channel: 'whatsapp',
+          type: 'message',
+          directionInTotal: 17,
+          directionOutTotal: 0,
+          total: 17,
+        },
+        {
+          channel: 'whatsapp',
+          type: 'notification',
+          directionInTotal: 0,
+          directionOutTotal: 7,
+          total: 7,
+        },
+      ];
+      const zenviaNock = nock('https://api.zenvia.com')
+      .get('/v1/reports/message/entries?startDate=2020-01-10&endDate=2020-01-11')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, expectedMessage);
+
+      const client = new Client('SOME_TOKEN');
+      const actualMessageResponse = await client.getMessagesReportClient().getEntries({ startDate: '2020-01-10', endDate: '2020-01-11' });
+      zenviaNock.isDone().should.be.true;
+      actualMessageResponse.should.be.deep.equal(expectedMessage);
+    });
+
+    it('should fail when trying list a flow reports without startDate', async () => {
+      const errorResponse = {
+        code: 'VALIDATION_ERROR',
+        message: 'Request has one or more errors\n  In query parameters\n    Missing required parameter: startDate',
+      };
+
+      const zenviaNock = nock('https://api.zenvia.com')
+      .get('/v1/reports/flow/entries')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(400, errorResponse);
+
+      const client = new Client('SOME_TOKEN');
+      try {
+        await client.getFlowReportClient().getEntries({} as any);
+      } catch (error) {
+        error.should.be.deep.equal({ httpStatusCode: 400, message: 'Unsuccessful request', body: errorResponse });
+      }
+      zenviaNock.isDone().should.be.true;
+    });
+
+    it('should fail when trying list a message reports without startDate and endDate', async () => {
+      const errorResponse = {
+        code: 'VALIDATION_ERROR',
+        message: 'Request has one or more errors\n  In query parameters\n    Missing required parameter: startDate, endDate',
+      };
+
+      const zenviaNock = nock('https://api.zenvia.com')
+      .get('/v1/reports/message/entries')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(400, errorResponse);
+
+      const client = new Client('SOME_TOKEN');
+      try {
+        await client.getMessagesReportClient().getEntries({} as any);
+      } catch (error) {
+        error.should.be.deep.equal({ httpStatusCode: 400, message: 'Unsuccessful request', body: errorResponse });
+      }
+      zenviaNock.isDone().should.be.true;
+    });
+  });
+
   describe('Errors', () => {
 
     it('should throw unsupported channel error', () => {
@@ -527,42 +784,64 @@ describe('Client', () => {
 
     it('should list templates', async () => {
       const requestTemplates = [{
-        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        name: 'Sandbox - Shipping Update',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'SHIPPING_UPDATE',
+        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+          },
+        },
+        senderId: 'detailed-gasosaurus',
         fields: [
           'name',
-          'ticketId',
+          'productName',
+          'deliveryDate',
         ],
+        status: 'APPROVED',
+        comments: [],
         channels: [
           {
             type: 'WHATSAPP',
-            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
-            status: 'APPROVED',
-          },
-          {
-            type: 'WHATSAPP',
-            senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
+            senderId: 'detailed-gasosaurus',
             status: 'APPROVED',
           },
         ],
+        createdAt: '2020-06-22T20:35:05.491Z',
+        updatedAt: '2020-06-22T20:35:05.491Z',
       }];
       const responseTemplates = [{
-        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        name: 'Sandbox - Shipping Update',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'SHIPPING_UPDATE',
+        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+          },
+        },
+        senderId: 'detailed-gasosaurus',
         fields: [
           'name',
-          'ticketId',
+          'productName',
+          'deliveryDate',
         ],
+        status: 'APPROVED',
+        comments: [],
         channels: [
           {
             type: 'whatsapp',
-            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
-            status: 'APPROVED',
-          },
-          {
-            type: 'whatsapp',
-            senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
+            senderId: 'detailed-gasosaurus',
             status: 'APPROVED',
           },
         ],
+        createdAt: '2020-06-22T20:35:05.491Z',
+        updatedAt: '2020-06-22T20:35:05.491Z',
       }];
       const zenviaNock = nock('https://api.zenvia.com')
       .get('/v1/templates')
@@ -571,39 +850,70 @@ describe('Client', () => {
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.listTemplates();
-      console.log(actualMessageResponse);
       zenviaNock.isDone().should.be.true;
       actualMessageResponse.should.be.deep.equal(responseTemplates);
     });
 
     it('should get template with id', async () => {
       const requestTemplates = {
-        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        name: 'Sandbox - Shipping Update',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'SHIPPING_UPDATE',
+        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+          },
+        },
+        senderId: 'detailed-gasosaurus',
         fields: [
           'name',
-          'ticketId',
+          'productName',
+          'deliveryDate',
         ],
+        status: 'APPROVED',
+        comments: [],
         channels: [
           {
             type: 'WHATSAPP',
-            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            senderId: 'detailed-gasosaurus',
             status: 'APPROVED',
           },
         ],
+        createdAt: '2020-06-22T20:35:05.491Z',
+        updatedAt: '2020-06-22T20:35:05.491Z',
       };
       const responseTemplates = {
-        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        name: 'Sandbox - Shipping Update',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'SHIPPING_UPDATE',
+        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+          },
+        },
+        senderId: 'detailed-gasosaurus',
         fields: [
           'name',
-          'ticketId',
+          'productName',
+          'deliveryDate',
         ],
+        status: 'APPROVED',
+        comments: [],
         channels: [
           {
             type: 'whatsapp',
-            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            senderId: 'detailed-gasosaurus',
             status: 'APPROVED',
           },
         ],
+        createdAt: '2020-06-22T20:35:05.491Z',
+        updatedAt: '2020-06-22T20:35:05.491Z',
       };
       const zenviaNock = nock('https://api.zenvia.com')
       .get('/v1/templates/SOME_TEMPLATE_ID')
@@ -612,9 +922,176 @@ describe('Client', () => {
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.getTemplate('SOME_TEMPLATE_ID');
-      console.log(actualMessageResponse);
       zenviaNock.isDone().should.be.true;
       actualMessageResponse.should.be.deep.equal(responseTemplates);
     });
+
+    it('should create a template and return success', async () => {
+      const expectedTemplate = {
+        name: 'Name of Template - SDK',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'ACCOUNT_UPDATE',
+        senderId: 'sender_id',
+        notificationEmail: 'mail@zenvia.com',
+        components: {
+          header: {
+            type: 'MEDIA_DOCUMENT',
+          },
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. The ticket {{ticketId}} will be send to your mail.',
+          },
+          footer: {
+            type: 'TEXT_FIXED',
+            text: 'Zenvia Company.',
+          },
+        },
+      };
+      const zenviaNock = nock('https://api.zenvia.com')
+      .post('/v1/templates', expectedTemplate)
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, expectedTemplate);
+
+      const client = new Client('SOME_TOKEN');
+      const actualTemplateResponse = await client.createTemplate(
+        {
+          name: 'Name of Template - SDK',
+          locale: 'pt_BR',
+          channel: 'WHATSAPP',
+          category: 'ACCOUNT_UPDATE',
+          senderId: 'sender_id',
+          notificationEmail: 'mail@zenvia.com',
+          components: {
+            header: {
+              type: 'MEDIA_DOCUMENT',
+            },
+            body: {
+              type: 'TEXT_TEMPLATE',
+              text: 'Hello, {{name}}. The ticket {{ticketId}} will be send to your mail.',
+            },
+            footer: {
+              type: 'TEXT_FIXED',
+              text: 'Zenvia Company.',
+            },
+          },
+        } as ITemplate,
+      );
+      zenviaNock.isDone().should.be.true;
+      actualTemplateResponse.should.be.deep.equal(expectedTemplate);
+    });
+
+    it('should update template', async () => {
+      const expectedTemplate = {
+        name: 'Name of Template - SDK',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'ACCOUNT_UPDATE',
+        senderId: 'sender_id',
+        notificationEmail: 'test@zenvia.com',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. You received in your email your ticket.',
+          },
+        },
+      };
+      const zenviaNock = nock('https://api.zenvia.com')
+      .patch('/v1/templates/SOME_TEMPLATE_ID', {
+        notificationEmail: 'test@zenvia.com',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. You received in your email your ticket.',
+          },
+        },
+      })
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, expectedTemplate);
+
+      const client = new Client('SOME_TOKEN');
+      const actualMessageResponse = await client.updateTemplate('SOME_TEMPLATE_ID', {
+        notificationEmail: 'test@zenvia.com',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. You received in your email your ticket.',
+          },
+        },
+      });
+      zenviaNock.isDone().should.be.true;
+      actualMessageResponse.should.be.deep.equal(expectedTemplate);
+    });
+
+    it('should delete template', async () => {
+      const zenviaNock = nock('https://api.zenvia.com')
+      .delete('/v1/templates/SOME_TEMPLATE_ID')
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(204);
+
+      const client = new Client('SOME_TOKEN');
+      await client.deleteTemplate('SOME_TEMPLATE_ID');
+      zenviaNock.isDone().should.be.true;
+    });
+
+    it('should fail when trying create a template without required field', async () => {
+      const expectedTemplate = {
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'ACCOUNT_UPDATE',
+        senderId: 'sender_id',
+        notificationEmail: 'mail@zenvia.com',
+        components: {
+          header: {
+            type: 'MEDIA_DOCUMENT',
+          },
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. The ticket {{ticketId}} will be send to your mail.',
+          },
+          footer: {
+            type: 'TEXT_FIXED',
+            text: 'Zenvia Company.',
+          },
+        },
+      };
+
+      const errorResponse = {
+        code: 'VALIDATION_ERROR',
+        message: 'Request has one or more errors\n  In body\n    For Content-Type application/json\n      Invalid value\n        One or more required properties missing: name',
+      };
+      const zenviaNock = nock('https://api.zenvia.com')
+      .post('/v1/templates', expectedTemplate)
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(400, errorResponse);
+
+      const client = new Client('SOME_TOKEN');
+      try {
+        await client.createTemplate({
+          locale: 'pt_BR',
+          channel: 'WHATSAPP',
+          category: 'ACCOUNT_UPDATE',
+          senderId: 'sender_id',
+          notificationEmail: 'mail@zenvia.com',
+          components: {
+            header: {
+              type: 'MEDIA_DOCUMENT',
+            },
+            body: {
+              type: 'TEXT_TEMPLATE',
+              text: 'Hello, {{name}}. The ticket {{ticketId}} will be send to your mail.',
+            },
+            footer: {
+              type: 'TEXT_FIXED',
+              text: 'Zenvia Company.',
+            },
+          },
+        } as ITemplate);
+      } catch (error) {
+        error.should.be.deep.equal({ httpStatusCode: 400, message: 'Unsuccessful request', body: errorResponse });
+      }
+      zenviaNock.isDone().should.be.true;
+    });
+
   });
 });
