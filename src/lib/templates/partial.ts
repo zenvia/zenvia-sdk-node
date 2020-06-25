@@ -15,7 +15,7 @@ export abstract class PartialTemplate implements IPartialTemplate {
    * @param components An [[IComponents]] object.
    */
 
-  constructor(notificationEmail: string, components: IComponents) {
+  constructor(notificationEmail?: string, components?: IComponents) {
     this.notificationEmail = notificationEmail;
     this.components = components;
   }
