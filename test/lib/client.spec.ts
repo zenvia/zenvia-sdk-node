@@ -981,6 +981,48 @@ describe('Client', () => {
       actualTemplateResponse.should.be.deep.equal(expectedTemplate);
     });
 
+    it('should update template', async () => {
+      const expectedTemplate = {
+        name: 'Name of Template - SDK',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'ACCOUNT_UPDATE',
+        senderId: 'sender_id',
+        notificationEmail: 'test@zenvia.com',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. You received in your email your ticket.',
+          },
+        },
+      };
+      const zenviaNock = nock('https://api.zenvia.com')
+      .patch('/v1/templates/SOME_TEMPLATE_ID', {
+        notificationEmail: 'test@zenvia.com',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. You received in your email your ticket.',
+          },
+        },
+      })
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .reply(200, expectedTemplate);
+
+      const client = new Client('SOME_TOKEN');
+      const actualMessageResponse = await client.updateTemplate('SOME_TEMPLATE_ID', {
+        notificationEmail: 'test@zenvia.com',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: 'Hello, {{name}}. You received in your email your ticket.',
+          },
+        },
+      });
+      zenviaNock.isDone().should.be.true;
+      actualMessageResponse.should.be.deep.equal(expectedTemplate);
+    });
+
     it('should delete template', async () => {
       const zenviaNock = nock('https://api.zenvia.com')
       .delete('/v1/templates/SOME_TEMPLATE_ID')
