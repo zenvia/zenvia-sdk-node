@@ -24,7 +24,7 @@ export {
   ContactsContent,
   TemplateContent,
   MessageSubscription,
-  MessageStatusSubscription
+  MessageStatusSubscription,
 };
 
 export type Channel = 'sms' | 'whatsapp' | 'facebook';
@@ -100,7 +100,6 @@ export interface IContactsContent extends IContent {
     }>;
   }>;
 }
-
 
 export interface ILocationContent extends IContent {
   longitude: number;
@@ -304,29 +303,29 @@ export interface ISuggestions {
 
 export interface IComponents {
   header?: {
-    type: string,
-    text: string,
-  }
+    type: string;
+    text: string;
+  };
   body: {
-    type: string,
-    text: string,
-  },
+    type: string;
+    text: string;
+  };
   footer?: {
-    type: string,
-    text: string,
-  },
+    type: string;
+    text: string;
+  };
   buttons?: {
-    type: string,
+    type: string;
     items: IButtonsItems[];
-  }
+  };
 }
 
 export interface IButtonsItems {
-  type: string,
-  text: string,
-  url?: string,
-  phoneNumber?: string,
-  payload?: string,
+  type: string;
+  text: string;
+  url?: string;
+  phoneNumber?: string;
+  payload?: string;
 }
 
 export interface IChannels {
