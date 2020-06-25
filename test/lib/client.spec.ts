@@ -784,42 +784,64 @@ describe('Client', () => {
 
     it('should list templates', async () => {
       const requestTemplates = [{
-        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        name: 'Sandbox - Shipping Update',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'SHIPPING_UPDATE',
+        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+          },
+        },
+        senderId: 'detailed-gasosaurus',
         fields: [
           'name',
-          'ticketId',
+          'productName',
+          'deliveryDate',
         ],
+        status: 'APPROVED',
+        comments: [],
         channels: [
           {
             type: 'WHATSAPP',
-            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
-            status: 'APPROVED',
-          },
-          {
-            type: 'WHATSAPP',
-            senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
+            senderId: 'detailed-gasosaurus',
             status: 'APPROVED',
           },
         ],
+        createdAt: '2020-06-22T20:35:05.491Z',
+        updatedAt: '2020-06-22T20:35:05.491Z',
       }];
       const responseTemplates = [{
-        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        name: 'Sandbox - Shipping Update',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'SHIPPING_UPDATE',
+        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+          },
+        },
+        senderId: 'detailed-gasosaurus',
         fields: [
           'name',
-          'ticketId',
+          'productName',
+          'deliveryDate',
         ],
+        status: 'APPROVED',
+        comments: [],
         channels: [
           {
             type: 'whatsapp',
-            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
-            status: 'APPROVED',
-          },
-          {
-            type: 'whatsapp',
-            senderId: '5jh87b12-p124-112b-0b74-e6k4a2cv456c',
+            senderId: 'detailed-gasosaurus',
             status: 'APPROVED',
           },
         ],
+        createdAt: '2020-06-22T20:35:05.491Z',
+        updatedAt: '2020-06-22T20:35:05.491Z',
       }];
       const zenviaNock = nock('https://api.zenvia.com')
       .get('/v1/templates')
@@ -834,32 +856,64 @@ describe('Client', () => {
 
     it('should get template with id', async () => {
       const requestTemplates = {
-        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        name: 'Sandbox - Shipping Update',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'SHIPPING_UPDATE',
+        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+          },
+        },
+        senderId: 'detailed-gasosaurus',
         fields: [
           'name',
-          'ticketId',
+          'productName',
+          'deliveryDate',
         ],
+        status: 'APPROVED',
+        comments: [],
         channels: [
           {
             type: 'WHATSAPP',
-            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            senderId: 'detailed-gasosaurus',
             status: 'APPROVED',
           },
         ],
+        createdAt: '2020-06-22T20:35:05.491Z',
+        updatedAt: '2020-06-22T20:35:05.491Z',
       };
       const responseTemplates = {
-        text: 'Hello {{name}}, your ticket was registered in our service through ticket {{ticketId}}. Soon we will have new information about the ticket.',
+        name: 'Sandbox - Shipping Update',
+        locale: 'pt_BR',
+        channel: 'WHATSAPP',
+        category: 'SHIPPING_UPDATE',
+        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
+        components: {
+          body: {
+            type: 'TEXT_TEMPLATE',
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+          },
+        },
+        senderId: 'detailed-gasosaurus',
         fields: [
           'name',
-          'ticketId',
+          'productName',
+          'deliveryDate',
         ],
+        status: 'APPROVED',
+        comments: [],
         channels: [
           {
             type: 'whatsapp',
-            senderId: '4fa34b97-b093-445b-9b74-e62df2fd426b',
+            senderId: 'detailed-gasosaurus',
             status: 'APPROVED',
           },
         ],
+        createdAt: '2020-06-22T20:35:05.491Z',
+        updatedAt: '2020-06-22T20:35:05.491Z',
       };
       const zenviaNock = nock('https://api.zenvia.com')
       .get('/v1/templates/SOME_TEMPLATE_ID')
