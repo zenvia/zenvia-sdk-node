@@ -13,7 +13,8 @@
     "Rodrigo Kamada <rodrigo.kamada@zenvia.com> (https://github.com/rodrigokamada)",
     "Henrique Magarotto <henrique.magarotto@zenvia.com> (https://github.com/hmagarotto)",
     "Rafael Souza <rafael.souza@zenvia.com> (https://github.com/rafael-org)",
-    "Jhonnanthn Balsas <jhonnanthn.balsas@zenvia.com> (https://github.com/jhonnanthn)"
+    "Jhonnanthn Balsas <jhonnanthn.balsas@zenvia.com> (https://github.com/jhonnanthn)",
+    "Rafael Pimenta <rafael.pimenta@zenvia.com> (https://github.com/rafaelgpimenta)"
   ],
   "scripts": {
     "test": "nyc --all mocha --opts test/mocha.opts",
@@ -52,7 +53,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.6",
-    "mocha": "^6.2.0",
+    "mocha": "^8.1.1",
     "nock": "^11.3.5",
     "nyc": "^14.1.1",
     "sinon": "^7.5.0",
