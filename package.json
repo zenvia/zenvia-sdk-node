@@ -17,7 +17,7 @@
     "Rafael Pimenta <rafael.pimenta@zenvia.com> (https://github.com/rafaelgpimenta)"
   ],
   "scripts": {
-    "test": "nyc --all mocha --opts test/mocha.opts",
+    "test": "nyc --all mocha",
     "test:coveralls": "nyc --all mocha ./test && nyc report --reporter=text-lcov | coveralls",
     "build": "rm -rf ./dist/ && tsc",
     "lint": "tslint --project tsconfig.json --exclude 'src/types/**/*' 'src/**/*.ts'",
@@ -64,6 +64,12 @@
     "tslint-config-airbnb": "^5.11.2",
     "typedoc": "^0.15.0",
     "typescript": "^3.6.3"
+  },
+  "mocha": {
+    "require": ["test/ts-node-register", "source-map-support/register", "test/common.ts"],
+    "check-leaks": true,
+    "recursive": true,
+    "spec": "test/**/*.spec.ts"
   },
   "nyc": {
     "cache": false,

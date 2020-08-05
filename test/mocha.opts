@@ -1,6 +1,0 @@
---require test/ts-node-register
---require source-map-support/register
---require test/common.ts
---check-leaks
---recursive
-test/**/*.spec.ts
