@@ -1,5 +1,5 @@
 /**
- * Example to list templates.
+ * Example to show the report about current state of sessions (executions) of flows in a period.
  *
  * Run:
  * ZENVIA_API_TOKEN=your-api-token node reports-list-flow.js

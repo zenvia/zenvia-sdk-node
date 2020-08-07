@@ -45,7 +45,7 @@ export class Client {
   /**
    * This method returns a list of flow reports.
    *
-   * @returns A promise that resolves to an array of [[IFlowReport]] objects.
+   * @returns [[ReportFlow]] type instance.
    */
   getFlowReportClient(): ReportFlow {
     return new ReportFlow(this.token, this.logger);
@@ -54,7 +54,7 @@ export class Client {
   /**
    * This method returns a list of message reports.
    *
-   * @returns A promise that resolves to an array of [[IMessageReport]] objects.
+   * @returns [[ReportMessages]] type instance.
    */
   getMessagesReportClient(): ReportMessages  {
     return new ReportMessages(this.token, this.logger);
