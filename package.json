@@ -66,7 +66,11 @@
     "typescript": "^3.6.3"
   },
   "mocha": {
-    "require": ["test/ts-node-register", "source-map-support/register", "test/common.ts"],
+    "require": [
+      "test/ts-node-register",
+      "source-map-support/register",
+      "test/common.ts"
+    ],
     "check-leaks": true,
     "recursive": true,
     "spec": "test/**/*.spec.ts"
