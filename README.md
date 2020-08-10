@@ -23,6 +23,8 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
   - [Subscribe for messages](#subscribe-for-messages)
   - [Subscribe for message status](#subscribe-for-message-status)
   - [Receiving message and message status events](#receiving-message-and-message-status-events)
+  - [Getting messages report](#getting-messages-report)
+  - [Getting flow report](#getting-flow-report)
   - [Listing your templates](#listing-your-templates)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
@@ -34,9 +36,12 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 - [x] Text message content
 - [x] File message content
+- [x] Location message content
+- [x] Contacts message content
 - [x] Template message content
 - [x] Subscription handling
-- [x] Listing templates
+- [x] Get reports
+- [x] CRUD operations on templates
 - [x] Logging support
 
 
@@ -102,10 +107,11 @@ try {
 
 ## Getting Started
 
+Examples not listed on this section can be found [here](examples).
 
 ### Sending your first message
 
-Use the `sendMessage` method to send text (`TextContent`), file (`FileContent`) or template (`TemplateContent`) messages to your customers.
+Use the `sendMessage` method to send text (`TextContent`), file (`FileContent`), location (`LocationContent`), contacts (`ContactsContent`) or template (`TemplateContent`) messages to your customers.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
@@ -122,15 +128,17 @@ The content types can be:
 |-----------------|-------------|
 | TextContent     | Used to send text messages to your customer.
 | FileContent     | Used to send file messages to your customer.
+| LocationContent | Used to send location messages to your customer.
+| ContactsContent | Used to send contacts messages to your customer.
 | TemplateContent | Used to send template messages to your customer.
 
 The content support by channel is described below.
 
-| Channel  | TextContent | FileContent | TemplateContent |
-|----------|    :---:    |    :---:    |      :---:      |
-| SMS      | X           |             |                 |
-| WhatsApp | X           | X           | X               |
-| Facebook | X           | X           |                 |
+| Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent |
+|----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |
+| SMS      | X           |             |                 |                 |                 |
+| WhatsApp | X           | X           | X               | X               | X               |
+| Facebook | X           | X           |                 |                 |                 |
 
 
 ### Subscribe for messages
@@ -196,11 +204,36 @@ webhook.init();
 To receive events running the [example](examples/webhook.js) on your machine, you can use [ngrok](https://ngrok.com/).
 
 
-Other examples can be found [here](examples).
+### Getting messages report
+
+In order to get information about how many messages you sent or received during a period, use the `getEntries` method to list `IReportMessagesEntry` objects as shown below.
+
+```js
+const client = new Client('YOUR_API_TOKEN');
+const reportClient = client.getMessagesReportClient();
+const response = await reportClient.getEntries({
+  startDate: '2020-01-10',
+  endDate: '2020-01-15',
+});
+```
+
+The response can be an array of `IReportMessagesEntry` objects when successful or an `IError` object on errors.
+
+### Getting flow report
+
+In order to get information about the current state of sessions (executions) of flows in a period, use the `getEntries` method to list `IReportFlowEntry` objects as shown below.
+
+```js
+const client = new Client('YOUR_API_TOKEN');
+const reportClient = client.getFlowReportClient();
+const response = await reportClient.getEntries({ startDate: '2020-01-10' });
+```
+
+The response can be an array of `IReportFlowEntry` objects when successful or an `IError` object on errors.
 
 ### Listing your templates
 
-Use the `listTemplates` method to list an `ITemplate` object.
+You can realize CRUD operations on templates. For example, use the `listTemplates` method to list an `ITemplate` object.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
