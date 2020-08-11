@@ -1,17 +1,17 @@
 /**
  * Example to receiving message event and send text messages.
- * 
+ *
  * Run:
  * ZENVIA_API_TOKEN=your-api-token node whatsapp-chat.js
  */
 
 // const { Client, Webhook } = require('@zenvia/sdk');
-const { Client, Webhook } = require('../dist');
+const { Client, WebhookController } = require('../dist');
 
 const client = new Client(process.env.ZENVIA_API_TOKEN);
 const whatsapp = client.getChannel('whatsapp');
 
-const webhook = new Webhook({
+const webhook = new WebhookController({
   messageEventHandler: (messageEvent) => {
     // Response sender and recipient
     const sender = messageEvent.message.to;

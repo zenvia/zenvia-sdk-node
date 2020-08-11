@@ -8,6 +8,9 @@ export interface IReportFilters {
   [param: string]: string|Date|number;
 }
 
+/**
+ * Implementation of base report.
+ */
 export class AbstractReport<E extends IReportEntry, F extends IReportFilters> {
 
   protected logger: Logger;
@@ -16,6 +19,12 @@ export class AbstractReport<E extends IReportEntry, F extends IReportFilters> {
     this.logger = new Logger(loggerInstance);
   }
 
+  /**
+   * This method returns entries from an report.
+   *
+   * @param filters - An [[IReportFilters]] object to filter the request.
+   * @returns A promise that resolves to an array of [[IReportEntry]] objects.
+   */
   getEntries(filters: F): Promise<E[]> {
     const properties = [];
     for (const [key, value] of Object.entries(filters)) {
