@@ -233,7 +233,7 @@ The response can be an array of `IReportFlowEntry` objects when successful or an
 
 ### Listing your templates
 
-You can realize CRUD operations on templates. For example, use the `listTemplates` method to list an `ITemplate` object.
+You can execute CRUD operations on templates. For example, use the `listTemplates` method to list an `ITemplate` object.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
