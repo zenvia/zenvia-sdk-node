@@ -1,9 +1,11 @@
 import * as express from 'express';
-import { ILoggerInstance, IEvent, IMessageEvent, IMessageStatusEvent, ISubscription, Channel, MessageSubscription, MessageStatusSubscription } from '../types';
+import { ILoggerInstance, IMessageEvent, IMessageStatusEvent, ISubscription, Channel, MessageSubscription, MessageStatusSubscription, MessageDirection } from '../types';
 import { Logger } from '../utils/logger';
 import { EventEmitter } from 'events';
 import { Client } from './client';
 import { createServer, Server } from 'http';
+
+const HTTP_CONFLICT_ERROR = 409;
 
 type MessageEventCallback = (event: IMessageEvent) => void;
 type MessageStatusEventCallback = (event: IMessageStatusEvent) => void;
@@ -40,6 +42,10 @@ export interface IWebhookOptions {
    * Channel to create a subscription.
    */
   channel?: Channel;
+  /**
+   * Message direction to create a subscription.
+   */
+  direction?: MessageDirection;
   /**
    * Log instance.
    */
@@ -135,36 +141,29 @@ export class WebhookController extends EventEmitter {
   private async startSubscriptions(): Promise<void> {
     if (this.options.client && this.options.url && this.options.channel &&
       (this.options.messageEventHandler || this.options.messageStatusEventHandler)) {
-      const subscriptions = await this.options.client.listSubscriptions();
 
-      let messageSubscriptionAlreadySet = false;
-      let messageStatusSubscriptionAlreadySet = false;
-
-      if (subscriptions) {
-        subscriptions.map((subscription: ISubscription) => {
-          if (subscription.status === 'ACTIVE' && subscription.webhook.url === this.options.url && subscription.criteria.channel === this.options.channel) {
-            if (subscription.eventType === 'MESSAGE') {
-              messageSubscriptionAlreadySet = true;
-            } else if (subscription.eventType === 'MESSAGE_STATUS') {
-              messageStatusSubscriptionAlreadySet = true;
-            }
-          }
-        });
-      }
-
-      if (this.options.messageEventHandler && !messageSubscriptionAlreadySet) {
+      if (this.options.messageEventHandler) {
         const subscription = new MessageSubscription(
           {
             url: this.options.url,
           },
           {
             channel: this.options.channel,
+            direction: this.options.direction,
           },
         );
 
-        await this.options.client.createSubscription(subscription);
+        try {
+          await this.options.client.createSubscription(subscription);
+        } catch (error) {
+          if (error.httpStatusCode === HTTP_CONFLICT_ERROR) {
+            this.logger.debug('Message subscription already exists.');
+          } else {
+            throw error;
+          }
+        }
       }
-      if (this.options.messageStatusEventHandler && !messageStatusSubscriptionAlreadySet) {
+      if (this.options.messageStatusEventHandler) {
         const subscription = new MessageStatusSubscription(
           {
             url: this.options.url,
@@ -174,7 +173,15 @@ export class WebhookController extends EventEmitter {
           },
         );
 
-        await this.options.client.createSubscription(subscription);
+        try {
+          await this.options.client.createSubscription(subscription);
+        } catch (error) {
+          if (error.httpStatusCode === HTTP_CONFLICT_ERROR) {
+            this.logger.debug('Message status subscription already exists.');
+          } else {
+            throw error;
+          }
+        }
       }
     }
   }

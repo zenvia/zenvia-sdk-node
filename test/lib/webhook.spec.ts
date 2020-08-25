@@ -204,7 +204,7 @@ describe('Webook', () => {
     webhook.close();
   });
 
-  it('should subscribe to webhook and receive a message event', async () => {
+  it('should create subscriptions and receive a message event', async () => {
     const client = new Client('SOME_TOKEN');
 
     const options = {
@@ -297,91 +297,58 @@ describe('Webook', () => {
     webhook.close();
   });
 
-  it('should return the configured subscriptions and receive a message status event', async () => {
+  it('should create subscriptions and ignore HTTP conflict error', async () => {
     const client = new Client('SOME_TOKEN');
 
     const options = {
-      messageEventHandler: (messageEvent: IMessageEvent) => {
-        messageEvent.id.should.be.equal('3fcdb9f9-a44d-4bb2-944c-84cc104e2e9d');
+      messageEventHandler: () => {
       },
       messageStatusEventHandler: () => {
       },
       client,
       url: 'http://localhost:3000',
       channel: 'whatsapp',
+      direction: 'IN',
     } as IWebhookOptions;
+
     const webhook = new WebhookController(options);
 
     webhook.on('error', (error) => {
       throw error;
     });
 
-    webhook.init();
-
-    nock('https://api.zenvia.com')
+    const scope = nock('https://api.zenvia.com')
       .log(console.log)
-      .get('/v1/subscriptions')
+      .post('/v1/subscriptions', {
+        eventType: 'MESSAGE',
+        webhook: {
+          url: 'http://localhost:3000',
+        },
+        criteria: {
+          channel: 'whatsapp',
+          direction: 'IN',
+        },
+        status: 'ACTIVE',
+      })
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .times(1)
-      .reply(200, [
-        {
-          id: '42f191a8-a19d-4aeb-8756-d2cefdde41e6',
-          createdAt: '2019-06-07T08:58:39.730Z',
-          updatedAt: '2019-06-07T08:58:39.730Z',
-          eventType: 'MESSAGE',
-          webhook: {
-            url: 'http://localhost:3000',
-          },
-          criteria: {
-            channel: 'whatsapp',
-          },
-          status: 'ACTIVE',
+      .reply(409)
+      .post('/v1/subscriptions', {
+        eventType: 'MESSAGE_STATUS',
+        webhook: {
+          url: 'http://localhost:3000',
         },
-        {
-          id: '456edd3c-3df6-4ddc-9231-856d3d1275dc',
-          createdAt: '2019-06-11T14:48:11.759Z',
-          updatedAt: '2019-06-11T14:48:11.759Z',
-          eventType: 'MESSAGE_STATUS',
-          webhook: {
-            url: 'http://localhost:3000',
-          },
-          criteria: {
-            channel: 'whatsapp',
-          },
-          status: 'ACTIVE',
+        criteria: {
+          channel: 'whatsapp',
         },
-      ]);
+        status: 'ACTIVE',
+      })
+      .matchHeader('X-API-Token', 'SOME_TOKEN')
+      .times(1)
+      .reply(409);
 
-    const body = {
-      id: '10ce99e9-340b-4c0a-81d1-df07d94971f8',
-      timestamp: '2019-09-17T18:15:38.667Z',
-      type: 'MESSAGE_STATUS',
-      subscriptionId: '4df603ec-b37a-4ffb-9e0a-02eec57dca96',
-      channel: 'whatsapp',
-      messageId: '7391518c-e719-468c-812a-ab00a8b442e4',
-      messageStatus: {
-        timestamp: '2019-09-17T18:15:38+00:00',
-        code: 'REJECTED',
-        description: 'The message was rejected by the provider',
-        cause: '415:Template id template-identifier cannot be found or does not belongs to organizationId 8500558c-3d53-431b-8b84-b4ec54612806',
-      },
-    };
-
-    try {
-      const response = await rp.post({
-        uri: 'http://localhost:3000',
-        body,
-        json: true,
-        resolveWithFullResponse: true,
-      });
-
-      response.statusCode.should.be.equal(200);
-      response.request.uri.path.should.be.equal('/');
-    } catch (error) {
-      throw error;
-    }
-
+    await webhook.init();
+    scope.done();
     webhook.close();
   });
-
 });
