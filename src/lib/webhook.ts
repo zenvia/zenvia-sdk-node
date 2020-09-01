@@ -141,9 +141,10 @@ export class WebhookController extends EventEmitter {
   private async startSubscriptions(): Promise<void> {
     if (this.options.client && this.options.url && this.options.channel &&
       (this.options.messageEventHandler || this.options.messageStatusEventHandler)) {
+      const subscriptions: ISubscription[] = [];
 
       if (this.options.messageEventHandler) {
-        const subscription = new MessageSubscription(
+        subscriptions.push(new MessageSubscription(
           {
             url: this.options.url,
           },
@@ -151,33 +152,26 @@ export class WebhookController extends EventEmitter {
             channel: this.options.channel,
             direction: this.options.direction,
           },
-        );
-
-        try {
-          await this.options.client.createSubscription(subscription);
-        } catch (error) {
-          if (error.httpStatusCode === HTTP_CONFLICT_ERROR) {
-            this.logger.debug('Message subscription already exists.');
-          } else {
-            throw error;
-          }
-        }
+        ));
       }
+
       if (this.options.messageStatusEventHandler) {
-        const subscription = new MessageStatusSubscription(
+        subscriptions.push(new MessageStatusSubscription(
           {
             url: this.options.url,
           },
           {
             channel: this.options.channel,
           },
-        );
+        ));
+      }
 
+      for (const subscription of subscriptions) {
         try {
           await this.options.client.createSubscription(subscription);
         } catch (error) {
           if (error.httpStatusCode === HTTP_CONFLICT_ERROR) {
-            this.logger.debug('Message status subscription already exists.');
+            this.logger.debug(`Subscription already exists. ${JSON.stringify(subscription)}`);
           } else {
             throw error;
           }
