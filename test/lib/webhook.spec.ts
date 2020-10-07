@@ -211,7 +211,6 @@ describe('Webook', () => {
     webhook.init();
 
     nock('https://api.zenvia.com')
-      .log(console.log)
       .get('/v1/subscriptions')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .times(1)
@@ -303,7 +302,6 @@ describe('Webook', () => {
     });
 
     const scope = nock('https://api.zenvia.com')
-      .log(console.log)
       .post('/v1/subscriptions', {
         eventType: 'MESSAGE',
         webhook: {
