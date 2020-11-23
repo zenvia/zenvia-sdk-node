@@ -1,5 +1,6 @@
 // tslint:disable:prefer-array-literal
 import { SmsChannel } from '../lib/channels/sms';
+import { RcsChannel } from '../lib/channels/rcs';
 import { FacebookChannel } from '../lib/channels/facebook';
 import { WhatsAppChannel } from '../lib/channels/whatsapp';
 import { TextContent } from '../lib/contents/text';
@@ -14,6 +15,7 @@ import { MessageStatusSubscription } from '../lib/subscriptions/message-status';
 
 export {
   SmsChannel,
+  RcsChannel,
   FacebookChannel,
   WhatsAppChannel,
   TextContent,
@@ -27,7 +29,7 @@ export {
   MessageStatusSubscription,
 };
 
-export type Channel = 'sms' | 'whatsapp' | 'facebook';
+export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs';
 export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json';
 export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
@@ -329,7 +331,7 @@ export interface IButtonsItems {
 }
 
 export interface IChannels {
-  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS';
+  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS' | 'RCS';
   status: 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
   senderId: string;
   whatsapp: any;

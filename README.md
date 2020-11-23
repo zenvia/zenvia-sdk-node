@@ -137,6 +137,7 @@ The content support by channel is described below.
 | Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent |
 |----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |
 | SMS      | X           |             |                 |                 |                 |
+| RCS      | X           | X           |                 |                 |                 |
 | WhatsApp | X           | X           | X               | X               | X               |
 | Facebook | X           | X           |                 |                 |                 |
 
