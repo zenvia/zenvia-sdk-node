@@ -19,13 +19,14 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
-  - [Sending your first message](#sending-your-first-message)
+  - [Send your first message](#send-your-first-message)
+  - [Send a batch](#send-a-batch)
   - [Subscribe for messages](#subscribe-for-messages)
   - [Subscribe for message status](#subscribe-for-message-status)
-  - [Receiving message and message status events](#receiving-message-and-message-status-events)
-  - [Getting messages report](#getting-messages-report)
-  - [Getting flow report](#getting-flow-report)
-  - [Listing your templates](#listing-your-templates)
+  - [Receive message events and message status events](#receive-message-events-and-message-status-events)
+  - [Get a messages report](#get-a-messages-report)
+  - [Get a flow report](#get-a-flow-report)
+  - [List your templates](#list-your-templates)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
@@ -39,6 +40,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [x] Location message content
 - [x] Contacts message content
 - [x] Template message content
+- [x] Send batches
 - [x] Subscription handling
 - [x] Get reports
 - [x] CRUD operations on templates
@@ -109,7 +111,7 @@ try {
 
 Examples not listed on this section can be found [here](examples).
 
-### Sending your first message
+### Send your first message
 
 Use the `sendMessage` method to send text (`TextContent`), file (`FileContent`), location (`LocationContent`), contacts (`ContactsContent`) or template (`TemplateContent`) messages to your customers.
 
@@ -120,7 +122,7 @@ const content = new TextContent('some text message');
 const response = await sms.sendMessage('sender-identifier', 'recipient-identifier', content);
 ```
 
-The response can be an `IMessage` object when successful or an `IError` object on errors.
+The response can be an `IMessage` object when successful or an `IError` object when an error occurs.
 
 The content types can be:
 
@@ -137,13 +139,61 @@ The content support by channel is described below.
 | Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent |
 |----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |
 | SMS      | X           |             |                 |                 |                 |
+| RCS      | X           | X           |                 |                 |                 |
 | WhatsApp | X           | X           | X               | X               | X               |
 | Facebook | X           | X           |                 |                 |                 |
 
+### Send a batch
+
+Content can also be sent as a batch (I.E: sending a message with one or more content to various contacts). The following channels support the following contents to be sent as a batch:
+
+| Channel  | TextContent | TemplateContent |
+|----------|    :---:    |    :---:        |
+| SMS      | X           |                 |
+| WhatsApp |             | X               |
+
+```js
+// SMS
+
+// Setup the channel first, as we don't know when another channel will be avaiable for batch and we want to let the user to know right away if he/she is accessing an avaiable channel
+
+
+const client = new Client('YOUR_API_TOKEN');
+// The columnMapper, bla bla.
+const columnMapper = {
+  "recipient_header_name": "recipient_number_column",
+  "name": "recipient_name_column",
+  "protocol": "protocol_column"
+};
+
+const message = {
+  from: 'sender-recipient'
+  contents: [
+    'Hello {{name}} your service protocol is number {{protocol}}',
+    'text2',
+    'text3',
+  ];
+};
+
+const smsBatch = {
+  id: 'sender-recipient',
+  name: 'My batch name',
+  channel: 'sms',
+  columnMapper: columnMapper,
+  message: message,
+};
+
+const batch = client.sendBatchFile('file', smsBatch);
+// SMS batch - terá id também.
+
+// WhatsApp
+const client = new Client('YOUR_API_TOKEN');
+const batch = client.sendBatch('file', whatsappBatch);
+```
 
 ### Subscribe for messages
 
-Use the `createSubscription` method to create an `MessageSubscription` object for message subscriptions.
+Use the `createSubscription` method to create a `MessageSubscription` object for message subscriptions.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
@@ -161,7 +211,7 @@ The response can be an `ISubscription` object when successful or an `IError` obj
 
 ### Subscribe for message status
 
-Use the `createSubscription` method to create an `MessageStatusSubscription` object for message status subscriptions.
+Use the `createSubscription` method to create a `MessageStatusSubscription` object for message status subscriptions.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
@@ -174,14 +224,14 @@ const subscription = new MessageStatusSubscription({
 const response = await client.createSubscription(subscription);
 ```
 
-The response can be an `ISubscription` object when successful or an `IError` object on errors.
+The response can be an `ISubscription` object when successful or an `IError` object when an error occurs.
 
 
-### Receiving message and message status events
+### Receive message events and message status events
 
-Use the `WebhookController` class to create your webhook to receive message and message status events. The default port is `3000`.
+Use the `WebhookController` class to create your webhook so you can receive message events and message status events. The default port is `3000`.
 
-If you inform the `client`, `url`, and `channel` fields, a subscription will be created if it does not exist for these configurations.
+If you inform the `client`, `url`, and `channel` fields, a subscription will be created prefaced it does not exist for these configurations.
 
 In the `messageEventHandler` field you will receive the message events and in the `messageStatusEventHandler` field you will receive the message status events.
 
@@ -201,12 +251,12 @@ const webhook = new WebhookController({
 webhook.init();
 ```
 
-To receive events running the [example](examples/webhook.js) on your machine, you can use [ngrok](https://ngrok.com/).
+To receive events running the [example](examples/webhook.js) on your machine, we suggest [ngrok](https://ngrok.com/).
 
 
-### Getting messages report
+### Get a messages report
 
-In order to get information about how many messages you sent or received during a period, use the `getEntries` method to list `IReportMessagesEntry` objects as shown below.
+To get information on how many messages you've sent or have received during a period of time, use the `getEntries` method to list `IReportMessagesEntry` objects as shown below.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
@@ -217,11 +267,11 @@ const response = await reportClient.getEntries({
 });
 ```
 
-The response can be an array of `IReportMessagesEntry` objects when successful or an `IError` object on errors.
+The response can be an array of `IReportMessagesEntry` objects when successful or an `IError` object when an error occurs.
 
-### Getting flow report
+### Get a flow report
 
-In order to get information about the current state of sessions (executions) of flows in a period, use the `getEntries` method to list `IReportFlowEntry` objects as shown below.
+In order to get information about the current state of sessions (executions) of flows in a period of time, use the `getEntries` method to list `IReportFlowEntry` objects as shown below.
 
 ```js
 const client = new Client('YOUR_API_TOKEN');
@@ -229,9 +279,9 @@ const reportClient = client.getFlowReportClient();
 const response = await reportClient.getEntries({ startDate: '2020-01-10' });
 ```
 
-The response can be an array of `IReportFlowEntry` objects when successful or an `IError` object on errors.
+The response can be an array of `IReportFlowEntry` objects when successful or an `IError` object when an error occurs.
 
-### Listing your templates
+### List your templates
 
 You can execute CRUD operations on templates. For example, use the `listTemplates` method to list an `ITemplate` object.
 
@@ -240,7 +290,7 @@ const client = new Client('YOUR_API_TOKEN');
 const response = await client.listTemplates();
 ```
 
-The response will be an Array of `ITemplate` object.
+The response will be an array of `ITemplate` object.
 
 
 
@@ -248,7 +298,7 @@ The response will be an Array of `ITemplate` object.
 
 Pull requests are always welcome!
 
-Please see the [Contributors' Guide](CONTRIBUTING.md) for more information on contributing.
+Please consult the [Contributors' Guide](CONTRIBUTING.md) for more information on contributing.
 
 
 

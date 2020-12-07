@@ -1,5 +1,6 @@
 // tslint:disable:prefer-array-literal
 import { SmsChannel } from '../lib/channels/sms';
+import { RcsChannel } from '../lib/channels/rcs';
 import { FacebookChannel } from '../lib/channels/facebook';
 import { WhatsAppChannel } from '../lib/channels/whatsapp';
 import { TextContent } from '../lib/contents/text';
@@ -11,9 +12,12 @@ import { Template } from '../lib/templates/base';
 import { PartialTemplate } from '../lib/templates/partial';
 import { MessageSubscription } from '../lib/subscriptions/message';
 import { MessageStatusSubscription } from '../lib/subscriptions/message-status';
+import { Batch } from '../lib/batches/base';
 
 export {
+  Batch,
   SmsChannel,
+  RcsChannel,
   FacebookChannel,
   WhatsAppChannel,
   TextContent,
@@ -27,8 +31,10 @@ export {
   MessageStatusSubscription,
 };
 
-export type Channel = 'sms' | 'whatsapp' | 'facebook';
+export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs';
 export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json';
+export type BatchContentType = 'text' | 'template';
+export type BatchMessageContent = IBatchTemplateContent | IBatchTextContent;
 export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
 export type EventType = 'MESSAGE' | 'MESSAGE_STATUS';
@@ -42,6 +48,33 @@ export interface IChannel {
 
 export interface IContent {
   type: ContentType;
+}
+
+export interface IBatchContent {
+  type: BatchContentType
+}
+
+export interface IBatchTemplateContent extends IBatchContent {
+  templateId: string;
+}
+
+export interface IBatchTextContent extends IBatchContent {
+  text: string;
+}
+
+export interface IBatchMessage {
+  from: string;
+  contents: BatchMessageContent[];
+}
+
+export interface IBatch {
+  id?: string;
+  name: string;
+  channel: Channel;
+  message: IBatchMessage;
+  columnMapper: {
+    [name: string]: string;
+  };
 }
 
 export interface ITextContent extends IContent {
@@ -329,7 +362,7 @@ export interface IButtonsItems {
 }
 
 export interface IChannels {
-  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS';
+  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS' | 'RCS';
   status: 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
   senderId: string;
   whatsapp: any;
