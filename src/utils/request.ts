@@ -3,8 +3,8 @@ import { ILoggerInstance, IError } from '../types';
 
 const url = 'https://api.zenvia.com';
 
-export async function post(token: string, path: string, body: object, logger: ILoggerInstance): Promise<any> {
-  return request(token, 'post', path, body, logger);
+export async function post(token: string, path: string, body: object, logger: ILoggerInstance, formData?: any): Promise<any> {
+  return request(token, 'post', path, body, logger, formData);
 }
 
 export async function get(token: string, path: string, logger: ILoggerInstance): Promise<any> {
@@ -19,12 +19,13 @@ export async function del(token: string, path: string, logger: ILoggerInstance):
   return request(token, 'delete', path, undefined, logger);
 }
 
-async function request(token: string, method: string, path: string, body: object, logger: ILoggerInstance): Promise<any> {
+async function request(token: string, method: string, path: string, body: object, logger: ILoggerInstance, formData?: any): Promise<any> {
   const uri = `${url}${path}`;
   const data = {
     method,
     uri,
     body,
+    formData,
     headers: {
       'X-API-Token': `${token}`,
     },

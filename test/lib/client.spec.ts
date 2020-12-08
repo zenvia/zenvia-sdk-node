@@ -578,39 +578,6 @@ describe('Client', () => {
 
   });
 
-  /*describe('Batches', () => {
-
-    describe('SMS Channel', () => {
-
-      it('should send batch of messages with text content', async () => {
-        const expectedBatch = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'text',
-              text: 'some text message',
-            },
-          ],
-        };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expectedBatch)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedBatch);
-
-        const client = new Client('SOME_TOKEN');
-        const batch = client.makeBatch(/test/resources/notification_file.csv, smsBatch);
-        const content = new TextContent('some text message');
-        const actualBatchResponse = await batch.sendBatch('FROM', 'TO', content);
-        zenviaNock.isDone().should.be.true;
-        actualBatchResponse.should.be.deep.equal(expectedBatch);
-
-      });
-
-    });
-
-  });*/
-
   describe('Subscription', () => {
 
     it('should list subscriptions', async () => {

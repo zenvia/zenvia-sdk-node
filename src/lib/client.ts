@@ -48,26 +48,23 @@ export class Client {
   }
 
   sendBatchFile(contacts: string, batch: IBatch): Promise<Batch> {
-    return this.sendBatch(fs.createReadStream(contacts), batch);
+    return this.sendBatch(fs.createReadStream(contacts), batch, contacts);
   }
 
-  sendBatch(contacts: ReadStream, batch: IBatch): Promise<Batch> {
+  sendBatch(contacts: ReadStream, batch: IBatch, fileName: string): Promise<Batch> {
     const formData = {
       batch: JSON.stringify(batch),
       contacts: {
         value: contacts,
-        options: {
-          filename: 'contacts.csv',
+        options: {  
+          filename: fileName || 'contacts.csv',
           contentType: 'text/csv',
         },
       },
     };
 
     const path = '/v2/message-batches';
-    return request.post(this.token, path, formData, this.logger);
-    // contacts multipart
-    // createTransfrom + createHTTP (API CONTROL)
-    // Print batch for testing
+    return request.post(this.token, path, undefined, this.logger, formData);
   }
 
   /**
