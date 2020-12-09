@@ -47,7 +47,7 @@ export class Client {
     }
   }
 
-  sendBatchAndFile(contacts: string, batch: IBatch): Promise<Batch> {
+  sendMessageBatch(contacts: string, batch: IBatch): Promise<Batch> {
     return this.sendBatch(fs.createReadStream(contacts), batch, contacts);
   }
 

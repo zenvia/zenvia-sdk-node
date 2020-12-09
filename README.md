@@ -149,7 +149,7 @@ The following channels support the following contents to be sent as a batch:
 | SMS      | X           |                 |
 | WhatsApp |             | X               |
 
-Use the `sendBatchAndFile` method to send a batched content to your customers.
+Use the `sendMessageBatch` method to send a batched content to your customers.
 
 ```js
 // SMS batch
@@ -175,7 +175,7 @@ const smsBatch = {
   columnMapper: columnMapper,
   message: message,
 };
-const batch = client.sendBatchAndFile('file', smsBatch);
+const batch = client.sendMessageBatch('file', smsBatch);
 ```
 
 The response can be an `IBatch` object when successful or an `IError` object when an error occurs.
