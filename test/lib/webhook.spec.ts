@@ -4,7 +4,7 @@ import * as rp from 'request-promise';
 import * as sinon from 'sinon';
 import { Client, WebhookController, IFileContent, IJsonContent, ITextContent, IWebhookOptions, IMessageEvent, IMessageStatusEvent } from '../../src';
 
-describe('Webook', () => {
+describe('Webhook', () => {
 
   it('should receive message event with text content', async () => {
     const options = {} as IWebhookOptions;

@@ -7,8 +7,6 @@ import { stringify } from 'querystring';
  */
 export class SmsBatch extends Batch {
   
-  // Recebe from e templateId
-  // templatedId 1 como string | template n como array
   constructor(name: string, channel: Channel, columnMapper: {[name: string]: string}, from: string, texts: string[]) {
     super(name, channel, columnMapper, null);
     this.message = {

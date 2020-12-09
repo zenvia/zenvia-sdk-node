@@ -19,6 +19,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
+- [Getting Started](#getting-started)
   - [Send your first message](#send-your-first-message)
   - [Send a batch](#send-a-batch)
   - [Subscribe for messages](#subscribe-for-messages)
@@ -27,11 +28,8 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
   - [Get a messages report](#get-a-messages-report)
   - [Get a flow report](#get-a-flow-report)
   - [List your templates](#list-your-templates)
-- [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
-
-
 
 ## Features
 
@@ -52,11 +50,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 * [Sign up](https://www.zenvia.com/) for a Zenvia Account
 * [Node.js](https://nodejs.org/)
-
-
-#### Obtain an API Token
-
-You need to create an API token in the Zenvia [API console](https://app.zenvia.com/home/api).
+* Generate an API token in the [Zenvia API console](https://app.zenvia.com/home/api)
 
 
 
@@ -113,18 +107,7 @@ Examples not listed on this section can be found [here](examples).
 
 ### Send your first message
 
-Use the `sendMessage` method to send text (`TextContent`), file (`FileContent`), location (`LocationContent`), contacts (`ContactsContent`) or template (`TemplateContent`) messages to your customers.
-
-```js
-const client = new Client('YOUR_API_TOKEN');
-const sms = client.getChannel('sms');
-const content = new TextContent('some text message');
-const response = await sms.sendMessage('sender-identifier', 'recipient-identifier', content);
-```
-
-The response can be an `IMessage` object when successful or an `IError` object when an error occurs.
-
-The content types can be:
+The content types that can be sent are:
 
 | Name            | Description |
 |-----------------|-------------|
@@ -134,7 +117,7 @@ The content types can be:
 | ContactsContent | Used to send contacts messages to your customer.
 | TemplateContent | Used to send template messages to your customer.
 
-The content support by channel is described below.
+The channels that can be used to send the content are:
 
 | Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent |
 |----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |
@@ -143,38 +126,48 @@ The content support by channel is described below.
 | WhatsApp | X           | X           | X               | X               | X               |
 | Facebook | X           | X           |                 |                 |                 |
 
+Use the `sendMessage` method to messages to your customers.
+
+```js
+// Text message using the SMS channel
+const client = new Client('YOUR_API_TOKEN');
+const sms = client.getChannel('sms');
+const content = new TextContent('some text message');
+const response = await sms.sendMessage('sender-identifier', 'recipient-identifier', content);
+```
+
+The response can be an `IMessage` object when successful or an `IError` object when an error occurs.
+
 ### Send a batch
 
-Content can also be sent as a batch (I.E: sending a message with one or more content to various contacts). The following channels support the following contents to be sent as a batch:
+Content can be sent as a batch. In other words, sending a message with one or more content to one or multiple contacts. 
+
+The following channels support the following contents to be sent as a batch:
 
 | Channel  | TextContent | TemplateContent |
 |----------|    :---:    |    :---:        |
 | SMS      | X           |                 |
 | WhatsApp |             | X               |
 
+Use the `sendBatchAndFile` method to send a batched content to your customers.
+
 ```js
-// SMS
-
-// Setup the channel first, as we don't know when another channel will be avaiable for batch and we want to let the user to know right away if he/she is accessing an avaiable channel
-
-
+// SMS batch
 const client = new Client('YOUR_API_TOKEN');
-// The columnMapper, bla bla.
 const columnMapper = {
   "recipient_header_name": "recipient_number_column",
   "name": "recipient_name_column",
   "protocol": "protocol_column"
 };
-
 const message = {
-  from: 'sender-recipient'
+  from: '35a6b936-d1c3-4234-8d10-3e7e04a462dc',
   contents: [
-    'Hello {{name}} your service protocol is number {{protocol}}',
-    'text2',
-    'text3',
-  ];
-};
-
+    { 
+        type: 'text',
+        text: 'Hello {{name}} your service protocol is number {{protocol}}',
+    },
+  ],
+}
 const smsBatch = {
   id: 'sender-recipient',
   name: 'My batch name',
@@ -182,14 +175,10 @@ const smsBatch = {
   columnMapper: columnMapper,
   message: message,
 };
-
-const batch = client.sendBatchFile('file', smsBatch);
-// SMS batch - terá id também.
-
-// WhatsApp
-const client = new Client('YOUR_API_TOKEN');
-const batch = client.sendBatch('file', whatsappBatch);
+const batch = client.sendBatchAndFile('file', smsBatch);
 ```
+
+The response can be an `IBatch` object when successful or an `IError` object when an error occurs.
 
 ### Subscribe for messages
 
