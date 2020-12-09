@@ -20,14 +20,14 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Getting Started](#getting-started)
-  - [Send your first message](#send-your-first-message)
-  - [Send a batch](#send-a-batch)
+  - [Sending your first message](#sending-your-first-message)
+  - [Sending a batch](#sending-a-batch)
   - [Subscribe for messages](#subscribe-for-messages)
   - [Subscribe for message status](#subscribe-for-message-status)
-  - [Receive message events and message status events](#receive-message-events-and-message-status-events)
-  - [Get a messages report](#get-a-messages-report)
-  - [Get a flow report](#get-a-flow-report)
-  - [List your templates](#list-your-templates)
+  - [Receiving message events and message status events](#receiving-message-events-and-message-status-events)
+  - [Getting message reports](#getting-message-reports)
+  - [Getting flow reports](#getting-a-flow-reports)
+  - [Listing your templates](#listing-your-templates)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -105,7 +105,7 @@ try {
 
 Examples not listed on this section can be found [here](examples).
 
-### Send your first message
+### Sending your first message
 
 The content types that can be sent are:
 
@@ -138,7 +138,7 @@ const response = await sms.sendMessage('sender-identifier', 'recipient-identifie
 
 The response can be an `IMessage` object when successful or an `IError` object when an error occurs.
 
-### Send a batch
+### Sending a batch
 
 Content can be sent as a batch. In other words, sending a message with one or more content to one or multiple contacts. 
 
@@ -216,11 +216,11 @@ const response = await client.createSubscription(subscription);
 The response can be an `ISubscription` object when successful or an `IError` object when an error occurs.
 
 
-### Receive message events and message status events
+### Receiving message events and message status events
 
 Use the `WebhookController` class to create your webhook so you can receive message events and message status events. The default port is `3000`.
 
-If you inform the `client`, `url`, and `channel` fields, a subscription will be created prefaced it does not exist for these configurations.
+If you inform the `client`, `url`, and `channel` fields, a subscription will be created. That is unless the subscription matching these configuration already exists.
 
 In the `messageEventHandler` field you will receive the message events and in the `messageStatusEventHandler` field you will receive the message status events.
 
@@ -243,7 +243,7 @@ webhook.init();
 To receive events running the [example](examples/webhook.js) on your machine, we suggest [ngrok](https://ngrok.com/).
 
 
-### Get a messages report
+### Getting message reports
 
 To get information on how many messages you've sent or have received during a period of time, use the `getEntries` method to list `IReportMessagesEntry` objects as shown below.
 
@@ -258,7 +258,7 @@ const response = await reportClient.getEntries({
 
 The response can be an array of `IReportMessagesEntry` objects when successful or an `IError` object when an error occurs.
 
-### Get a flow report
+### Getting flow reports
 
 In order to get information about the current state of sessions (executions) of flows in a period of time, use the `getEntries` method to list `IReportFlowEntry` objects as shown below.
 
@@ -270,7 +270,7 @@ const response = await reportClient.getEntries({ startDate: '2020-01-10' });
 
 The response can be an array of `IReportFlowEntry` objects when successful or an `IError` object when an error occurs.
 
-### List your templates
+### Listing your templates
 
 You can execute CRUD operations on templates. For example, use the `listTemplates` method to list an `ITemplate` object.
 
