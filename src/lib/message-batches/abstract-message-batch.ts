@@ -5,6 +5,6 @@ import { IMessageBatch, Channel, MessageBatchContent, IMessageBatchColumnMapper 
  */
 export abstract class AbstractMessageBatch<C extends Channel, MBC extends MessageBatchContent> implements IMessageBatch {
 
-  constructor (public name: string, public channel: C, public message: {from: string, contents: MBC[]}, public columnMapper: IMessageBatchColumnMapper) {};
+  constructor (public name: string, public channel: C, public message: {from: string, contents: MBC[]}, public columnMapper: IMessageBatchColumnMapper) {}
 
 }

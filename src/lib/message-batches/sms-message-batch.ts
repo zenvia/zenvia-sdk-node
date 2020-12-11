@@ -5,15 +5,15 @@ import { ISmsMessageBatch, IMessageBatchColumnMapper, IBatchTextContent } from '
  * Implementation of SMS batch.
  */
 export class SmsMessageBatch extends AbstractMessageBatch<'sms', IBatchTextContent> implements ISmsMessageBatch {
-  
+
   constructor(name: string, from: string, texts: string[] | string, columnMapper: IMessageBatchColumnMapper) {
     super(name, 'sms', null, columnMapper);
     this.message = {
       from,
       contents: [],
-    }; 
+    };
 
-    (typeof texts === 'string' ? [texts] : texts).forEach(text => this.message.contents.push({type: 'text', text}));
+    (typeof texts === 'string' ? [texts] : texts).forEach(text => this.message.contents.push({ type: 'text', text }));
   }
 
 }

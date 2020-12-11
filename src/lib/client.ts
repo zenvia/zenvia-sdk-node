@@ -11,7 +11,6 @@ import { ReportMessages } from './reports/report-messages';
 import { Readable } from 'stream';
 import * as fs from 'fs';
 
-
 /**
  * Client class with the features.
  */
@@ -52,7 +51,7 @@ export class Client {
       batch: {
         value: JSON.stringify(batch),
         options: {
-          contentType: 'application/json'
+          contentType: 'application/json',
         },
       },
       contacts: {
@@ -75,7 +74,7 @@ export class Client {
   getFlowReportClient(): ReportFlow {
     return new ReportFlow(this.token, this.logger);
   }
-  
+
   /**
    * This method returns a list of message reports.
    *
@@ -163,7 +162,7 @@ export class Client {
    *
    * @param id Template identifier.
    * @returns A promise that resolves to an [[ITemplate]] object.
-   */ 
+   */
   async getTemplate(id: string): Promise<ITemplate> {
     const path = `/v1/templates/${id}`;
     return request.get(this.token, path, this.logger)

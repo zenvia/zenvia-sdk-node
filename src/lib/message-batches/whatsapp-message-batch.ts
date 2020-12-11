@@ -5,7 +5,7 @@ import { IWhatsAppMessageBatch, IMessageBatchColumnMapper, IBatchTemplateContent
  * Implementation of WhatsApp batch.
  */
 export class WhatsAppMessageBatch extends AbstractMessageBatch<'whatsapp', IBatchTemplateContent> implements IWhatsAppMessageBatch {
-  
+
   constructor(name: string, from: string, templateIds: string[] | string, columnMapper: IMessageBatchColumnMapper) {
 
     super(name, 'whatsapp', null, columnMapper);
@@ -14,7 +14,7 @@ export class WhatsAppMessageBatch extends AbstractMessageBatch<'whatsapp', IBatc
       contents: [],
     };
 
-    (typeof templateIds === 'string' ? [templateIds] : templateIds).forEach(templateId => this.message.contents.push({type: 'template', templateId}));
+    (typeof templateIds === 'string' ? [templateIds] : templateIds).forEach(templateId => this.message.contents.push({ type: 'template', templateId }));
   }
 
 }
