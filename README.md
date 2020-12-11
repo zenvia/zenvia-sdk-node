@@ -51,6 +51,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 * [Sign up](https://www.zenvia.com/) for a Zenvia Account
 * [Node.js](https://nodejs.org/)
 * Generate an API token in the [Zenvia API console](https://app.zenvia.com/home/api)
+* Use you account's User ID as the sender identifier when sending any message. You can find it at the [Zenvia Platform](https://app.zenvia.com/welcome)
 
 
 
@@ -138,9 +139,9 @@ const response = await sms.sendMessage('sender-identifier', 'recipient-identifie
 
 The response can be an `IMessage` object when successful or an `IError` object when an error occurs.
 
-### Sending a batch
+### Sending a message batch
 
-Content can be sent as a batch. In other words, sending a message with one or more content to one or multiple contacts. 
+Content can be sent as a batch. In other words, sending a message with one or more content to one or multiple contacts. You'll need to send a file and comply with the required fields for each type of batch
 
 The following channels support the following contents to be sent as a batch:
 
@@ -152,30 +153,64 @@ The following channels support the following contents to be sent as a batch:
 Use the `sendMessageBatch` method to send a batched content to your customers.
 
 ```js
-// SMS batch
+// SMS nessage batch
+
 const client = new Client('YOUR_API_TOKEN');
+const smsBatch = {
+  name: 'My first SMS batch',
+  channel: 'sms',
+  message: {
+    from: 'sender-identifier',
+    contents: [
+      {
+        type: 'text',
+        text: 'first text message',
+      },
+      {
+        type: 'text',
+        text: 'second text message',
+      },
+    ],
+  },
+  columnMapper: {
+    "recipient_header_name": "recipient_number_column",
+    "name": "recipient_name_column",
+    "protocol": "protocol_column",
+  },
+};
+const batch = client.sendMessageBatch('./path/file.csv', smsBatch);
+```
+
+You may choose to send the content as a string or an array of strings instead of an array of objects. For that, you need to instanciate the `WhatsAppMessageBatch` class to send a batched WhatsApp template message or `SmsMessageBatch` class when sending a batched SMS text message.
+
+Additionally, instead of sending a file you can send the contents of the file as a stream for both WhatsApp and SMS message batches.
+
+```js
+// WhatsApp message batch
+
+/**
+ * stream is core Node.js module
+ */
+import { Readable } from 'stream';
+
+const client = new Client('SOME_TOKEN');
+const contents = [
+  'a whatsapp template id',
+  'another whatsapp template id',
+];
 const columnMapper = {
   "recipient_header_name": "recipient_number_column",
   "name": "recipient_name_column",
-  "protocol": "protocol_column"
+  "protocol": "protocol_column",
 };
-const message = {
-  from: '35a6b936-d1c3-4234-8d10-3e7e04a462dc',
-  contents: [
-    { 
-        type: 'text',
-        text: 'Hello {{name}} your service protocol is number {{protocol}}',
-    },
-  ],
-}
-const smsBatch = {
-  id: 'sender-recipient',
-  name: 'My batch name',
-  channel: 'sms',
-  columnMapper: columnMapper,
-  message: message,
-};
-const batch = client.sendMessageBatch('file', smsBatch);
+const whatsAppBatch = new WhatsAppMessageBatch(
+  'My first WhatsApp batch',
+  'sender-identifier',
+  contents,
+  columnMapper,
+);
+const readStream = Readable.from("telefone\n5511999999999");
+const batch = client.sendMessageBatch(readstream, smsBatch);
 ```
 
 The response can be an `IBatch` object when successful or an `IError` object when an error occurs.
