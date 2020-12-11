@@ -12,10 +12,8 @@ import { Template } from '../lib/templates/base';
 import { PartialTemplate } from '../lib/templates/partial';
 import { MessageSubscription } from '../lib/subscriptions/message';
 import { MessageStatusSubscription } from '../lib/subscriptions/message-status';
-import { Batch } from '../lib/batches/base';
 
 export {
-  Batch,
   SmsChannel,
   RcsChannel,
   FacebookChannel,
@@ -33,14 +31,15 @@ export {
 
 export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs';
 export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json';
-export type BatchContentType = 'text' | 'template';
-export type BatchMessageContent = IBatchTemplateContent | IBatchTextContent;
 export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
 export type EventType = 'MESSAGE' | 'MESSAGE_STATUS';
 export type SubscriptionStatus = 'ACTIVE' | 'INACTIVE';
 export type MessageStatusCode = 'REJECTED' | 'SENT' | 'DELIVERED' | 'NOT_DELIVERED' | 'READ';
 export type TemplateStatus = 'WAITING_REVIEW' | 'REJECTED' | 'WAITING_WHATSAPP_SUBMISSION' | 'WAITING_WHATSAPP_REVIEW' | 'APPROVED' | 'CANCELED';
+type MessageBatchContentType = 'text' | 'template';
+export type MessageBatchContent = IBatchTemplateContent | IBatchTextContent;
+export type MessageBatch = ISmsMessageBatch | IWhatsAppMessageBatch;
 
 export interface IChannel {
   sendMessage(from: string, to: string, ...contents: IContent[]): Promise<IMessage>;
@@ -48,33 +47,6 @@ export interface IChannel {
 
 export interface IContent {
   type: ContentType;
-}
-
-export interface IBatchContent {
-  type: BatchContentType
-}
-
-export interface IBatchTemplateContent extends IBatchContent {
-  templateId: string;
-}
-
-export interface IBatchTextContent extends IBatchContent {
-  text: string;
-}
-
-export interface IBatchMessage {
-  from: string;
-  contents: BatchMessageContent[];
-}
-
-export interface IBatch {
-  id?: string;
-  name: string;
-  channel: Channel;
-  message: IBatchMessage;
-  columnMapper: {
-    [name: string]: string;
-  };
 }
 
 export interface ITextContent extends IContent {
@@ -366,4 +338,50 @@ export interface IChannels {
   status: 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
   senderId: string;
   whatsapp: any;
+}
+
+interface IMessageBatchContent {
+  type: MessageBatchContentType;
+}
+
+export interface IBatchTemplateContent extends IMessageBatchContent {
+  type: 'template';
+  templateId: string;
+}
+
+export interface IBatchTextContent extends IMessageBatchContent {
+  type: 'text';
+  text: string;
+}
+
+export interface IMessageBatchColumnMapper {
+  recipient_header_name: string;
+  [name: string]: string;
+}
+
+export interface IMessageBatch {
+  id?: string;
+  name: string;
+  channel: Channel;
+  message: {
+    from: string;
+    contents: MessageBatchContent[];
+  };
+  columnMapper: IMessageBatchColumnMapper;
+}
+
+export interface ISmsMessageBatch extends IMessageBatch {
+  channel: 'sms',
+  message: {
+    from: string,
+    contents: IBatchTextContent[],
+  },
+}
+
+export interface IWhatsAppMessageBatch extends IMessageBatch {
+  channel: 'whatsapp',
+  message: {
+    from: string,
+    contents: IBatchTemplateContent[],
+  },
 }

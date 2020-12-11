@@ -1,14 +1,14 @@
-import { Channel, IChannel, IBatch, ILoggerInstance, ISubscription, IPartialSubscription, IPartialTemplate } from '../types';
+import { Channel, IChannel, IMessageBatch, ILoggerInstance, ISubscription, IPartialSubscription, IPartialTemplate } from '../types';
 import { Logger } from '../utils/logger';
 import { SmsChannel } from './channels/sms';
 import { RcsChannel } from './channels/rcs';
 import { FacebookChannel } from './channels/facebook';
 import { WhatsAppChannel } from './channels/whatsapp';
 import * as request from '../utils/request';
-import { ITemplate, IFlowReport, IMessageReport, MessageType, Batch } from '../types/zenvia';
+import { ITemplate, IFlowReport, IMessageReport, MessageType, MessageBatch } from '../types/zenvia';
 import { ReportFlow } from './reports/report-flow';
 import { ReportMessages } from './reports/report-messages';
-import { ReadStream } from 'fs';
+import { Readable } from 'stream';
 import * as fs from 'fs';
 
 
@@ -47,17 +47,18 @@ export class Client {
     }
   }
 
-  sendMessageBatch(contacts: string, batch: IBatch): Promise<Batch> {
-    return this.sendBatch(fs.createReadStream(contacts), batch, contacts);
-  }
-
-  sendBatch(contacts: ReadStream, batch: IBatch, fileName: string): Promise<Batch> {
+  sendMessageBatch(contacts: Readable | string, batch: MessageBatch): Promise<IMessageBatch> {
     const formData = {
-      batch: JSON.stringify(batch),
+      batch: {
+        value: JSON.stringify(batch),
+        options: {
+          contentType: 'application/json'
+        },
+      },
       contacts: {
-        value: contacts,
-        options: {  
-          filename: fileName || 'contacts.csv',
+        value: typeof contacts === 'string' ? fs.createReadStream(contacts) : contacts,
+        options: {
+          filename: typeof contacts === 'string' ? contacts : 'contacts.csv',
           contentType: 'text/csv',
         },
       },
@@ -66,7 +67,6 @@ export class Client {
     const path = '/v2/message-batches';
     return request.post(this.token, path, undefined, this.logger, formData);
   }
-
   /**
    * This method returns a list of flow reports.
    *
