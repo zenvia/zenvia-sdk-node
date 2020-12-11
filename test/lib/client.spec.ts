@@ -2,7 +2,7 @@
 
 import * as nock from 'nock';
 import { Readable } from 'stream';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
 
 describe('Client', () => {
 
@@ -578,9 +578,63 @@ describe('Client', () => {
 
   });
 
-  describe('`Batches`', () => {
+  describe('Batches', () => {
 
-    describe('SMS Channel via object', () => {
+    describe('SMS Channel using object', () => {
+
+      it('should send message with text content', async () => {
+
+        const expectedMessageBatch = {
+          id: 'BATCH_ID',
+          name: 'SOME_BATCH',
+          channel: 'sms',
+          message: {
+            from: 'FROM',
+            contents: [
+              {
+                type: 'text',
+                text: 'some text message',
+              },
+            ],
+          },
+          columnMapper: {
+            "recipient_header_name": "recipient_number_column",
+            "name": "recipient_name_column",
+            "protocol": "protocol_column",
+          },
+        };
+
+        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
+        
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/message-batches', expected)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+        .reply(200, expectedMessageBatch);
+
+        const client = new Client('SOME_TOKEN');
+        const smsBatch: ISmsMessageBatch = {
+          name: 'SOME_BATCH',
+          channel: 'sms',
+          message: {
+            from: 'FROM',
+            contents: [
+              {
+                type: 'text',
+                text: 'some text message',
+              },
+            ],
+          },
+          columnMapper: {
+            "recipient_header_name": "recipient_number_column",
+            "name": "recipient_name_column",
+            "protocol": "protocol_column",
+          },
+        };
+        const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', smsBatch);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
+      });
 
       it('should send message with text content without using file', async () => {
 
@@ -639,61 +693,11 @@ describe('Client', () => {
         actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
       });
 
-      it('should send message with text content', async () => {
+    });
 
-        const expectedMessageBatch = {
-          id: 'BATCH_ID',
-          name: 'SOME_BATCH',
-          channel: 'sms',
-          message: {
-            from: 'FROM',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
-              },
-            ],
-          },
-          columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
-          },
-        };
+    describe('SMS Channel using SmsMessageBatch class', () => {
 
-        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
-
-        const client = new Client('SOME_TOKEN');
-        const smsBatch: ISmsMessageBatch = {
-          name: 'SOME_BATCH',
-          channel: 'sms',
-          message: {
-            from: 'FROM',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
-              },
-            ],
-          },
-          columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
-          },
-        };
-        const actualMessageResponse = await client.sendMessageBatch('./file.csv', smsBatch);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
-      });
-
-      it('should send message with text content using SmsMessageBatch class', async () => {
+      it('should send message with a string as text content', async () => {
         const expectedMessageBatch = {
           id: 'BATCH_ID',
           name: 'SOME_BATCH',
@@ -734,97 +738,12 @@ describe('Client', () => {
           contents,
           columnMapper,
         );
-        const actualMessageResponse = await client.sendMessageBatch('./file.csv', smsBatch);
+        const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', smsBatch);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
       });
 
-      it('should send message with an array of text content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'text',
-              text: 'first text message',
-            },
-            {
-              type: 'text',
-              text: 'second text message',
-            },
-          ],
-        };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/sms/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
-
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const contents = [new TextContent('first text message'), new TextContent('second text message')];
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', ...contents);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
-
-      it('should fail when trying to send template content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new TemplateContent('templateId', {});
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type template is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send file content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new FileContent('fileUrl', 'fileMimeType', 'fileCaption');
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type file is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send location content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type location is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send contacts content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new ContactsContent([]);
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type contacts is not supported in SMS channel');
-        }
-      });
-
-    });
-
-    describe('SMS Channel via SmsMessageBatch class', () => {
-
-      it('should send message with text content', async () => {
-
+      it('should send message with an array of strings as text content', async () => {
         const expectedMessageBatch = {
           id: 'BATCH_ID',
           name: 'SOME_BATCH',
@@ -834,60 +753,11 @@ describe('Client', () => {
             contents: [
               {
                 type: 'text',
-                text: 'some text message',
+                text: 'first text message',
               },
-            ],
-          },
-          columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
-          },
-        };
-
-        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
-
-        const client = new Client('SOME_TOKEN');
-        const smsBatch: ISmsMessageBatch = {
-          name: 'SOME_BATCH',
-          channel: 'sms',
-          message: {
-            from: 'FROM',
-            contents: [
               {
                 type: 'text',
-                text: 'some text message',
-              },
-            ],
-          },
-          columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
-          },
-        };
-        const actualMessageResponse = await client.sendMessageBatch('./file.csv', smsBatch);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
-      });
-
-      it('should send message with text content using SmsMessageBatch class', async () => {
-        const expectedMessageBatch = {
-          id: 'BATCH_ID',
-          name: 'SOME_BATCH',
-          channel: 'sms',
-          message: {
-            from: 'FROM',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
+                text: 'second text message',
               },
             ],
           },
@@ -898,7 +768,7 @@ describe('Client', () => {
           },
         };
 
-        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
+        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"first text message"},{"type":"text","text":"second text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -911,513 +781,241 @@ describe('Client', () => {
           "name": "recipient_name_column",
           "protocol": "protocol_column",
         };
-        const contents = 'some text message';
+        const contents = [
+          'first text message',
+          'second text message',
+        ];
         const smsBatch = new SmsMessageBatch(
           'SOME_BATCH',
           'FROM',
           contents,
           columnMapper,
         );
-        const actualMessageResponse = await client.sendMessageBatch('./file.csv', smsBatch);
+        const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', smsBatch);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
-      });
-
-      it('should send message with an array of text content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'text',
-              text: 'first text message',
-            },
-            {
-              type: 'text',
-              text: 'second text message',
-            },
-          ],
-        };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/sms/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
-
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const contents = [new TextContent('first text message'), new TextContent('second text message')];
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', ...contents);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
-
-      it('should fail when trying to send template content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new TemplateContent('templateId', {});
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type template is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send file content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new FileContent('fileUrl', 'fileMimeType', 'fileCaption');
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type file is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send location content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type location is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send contacts content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new ContactsContent([]);
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type contacts is not supported in SMS channel');
-        }
       });
 
     });
 
-    describe('WhatsApp Channel via object', () => {
-
-      it('should send message with text content', async () => {
-
-        const expectedMessageBatch = {
-          id: 'BATCH_ID',
-          name: 'SOME_BATCH',
-          channel: 'sms',
-          message: {
-            from: 'FROM',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
-              },
-            ],
-          },
-          columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
-          },
-        };
-
-        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
-
-        const client = new Client('SOME_TOKEN');
-        const smsBatch: ISmsMessageBatch = {
-          name: 'SOME_BATCH',
-          channel: 'sms',
-          message: {
-            from: 'FROM',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
-              },
-            ],
-          },
-          columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
-          },
-        };
-        const actualMessageResponse = await client.sendMessageBatch('./file.csv', smsBatch);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
-      });
-
-      it('should send message with text content using SmsMessageBatch class', async () => {
-        const expectedMessageBatch = {
-          id: 'BATCH_ID',
-          name: 'SOME_BATCH',
-          channel: 'sms',
-          message: {
-            from: 'FROM',
-            contents: [
-              {
-                type: 'text',
-                text: 'some text message',
-              },
-            ],
-          },
-          columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
-          },
-        };
-
-        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
-
-        const client = new Client('SOME_TOKEN');
-        const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
-        };
-        const contents = 'some text message';
-        const smsBatch = new SmsMessageBatch(
-          'SOME_BATCH',
-          'FROM',
-          contents,
-          columnMapper,
-        );
-        const actualMessageResponse = await client.sendMessageBatch('./file.csv', smsBatch);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
-      });
-
-      it('should send message with an array of text content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'text',
-              text: 'first text message',
-            },
-            {
-              type: 'text',
-              text: 'second text message',
-            },
-          ],
-        };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/sms/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
-
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const contents = [new TextContent('first text message'), new TextContent('second text message')];
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', ...contents);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
-
-      it('should fail when trying to send template content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new TemplateContent('templateId', {});
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type template is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send file content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new FileContent('fileUrl', 'fileMimeType', 'fileCaption');
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type file is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send location content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type location is not supported in SMS channel');
-        }
-      });
-
-      it('should fail when trying to send contacts content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new ContactsContent([]);
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type contacts is not supported in SMS channel');
-        }
-      });
-
-    });
-
-    describe('WhatsApp Channel via WhatsAppMessageBatch class', () => {
-
-      it('should send message with text content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'text',
-              text: 'some text message',
-            },
-          ],
-        };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
-
-        const client = new Client('SOME_TOKEN');
-        const whatsapp = client.getChannel('whatsapp');
-        const content = new TextContent('some text message');
-        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
-
-      it('should send message with file content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'file',
-              fileUrl: 'http://server.com/file.jpeg',
-              fileMimeType: 'image/jpeg',
-              fileCaption: 'some file caption',
-            },
-          ],
-        };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
-
-        const client = new Client('SOME_TOKEN');
-        const whatsapp = client.getChannel('whatsapp');
-        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
-
-      it('should send message with array of text content and file content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'text',
-              text: 'some text message',
-            },
-            {
-              type: 'file',
-              fileUrl: 'http://server.com/file.jpeg',
-              fileMimeType: 'image/jpeg',
-              fileCaption: 'some file caption',
-            },
-          ],
-        };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
-
-        const client = new Client('SOME_TOKEN');
-        const whatsapp = client.getChannel('whatsapp');
-        const textContent = new TextContent('some text message');
-        const fileContent = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', textContent, fileContent);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
+    describe('WhatsApp Channel using object', () => {
 
       it('should send message with template content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'template',
-              templateId: 'templateId',
-              fields: {
-                fieldA: 'value A',
-                fieldB: 'value B',
+
+        const expectedMessageBatch = {
+          id: 'BATCH_ID',
+          name: 'SOME_BATCH',
+          channel: 'whatsapp',
+          message: {
+            from: 'FROM',
+            contents: [
+              {
+                type: 'template',
+                templateId: 'a whatsapp template id',
               },
-            },
-          ],
+            ],
+          },
+          columnMapper: {
+            "recipient_header_name": "recipient_number_column",
+            "name": "recipient_name_column",
+            "protocol": "protocol_column",
+          },
         };
+
+        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
+        
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+        .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
-        const whatsapp = client.getChannel('whatsapp');
-        const content = new TemplateContent('templateId', { fieldA: 'value A', fieldB: 'value B' });
-        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
-
-      it('should send message with contacts content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'contacts',
-              contacts: [{
-                name: {
-                  formattedName: 'Number of Contact',
-                  firstName: 'First name',
-                },
-                phones: [
-                  {
-                    phone: '5511222222222',
-                    type: 'CELL',
-                    waId: '+5511222222222',
-                  },
-                ],
-              }],
-            },
-          ],
-        };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
-
-        const client = new Client('SOME_TOKEN');
-        const whatsapp = client.getChannel('whatsapp');
-        const content = new ContactsContent(
-          [
-            {
-              name: {
-                formattedName: 'Number of Contact',
-                firstName: 'First name',
+        const whatsAppBatch: IWhatsAppMessageBatch = {
+          name: 'SOME_BATCH',
+          channel: 'whatsapp',
+          message: {
+            from: 'FROM',
+            contents: [
+              {
+                type: 'template',
+                templateId: 'a whatsapp template id',
               },
-              phones: [
-                {
-                  phone: '5511222222222',
-                  type: 'CELL',
-                  waId: '+5511222222222',
-                },
-              ],
-            },
-          ],
-        );
-        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
-        zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
-
-      it('should send message with location content', async () => {
-        const expectedMessage = {
-          from: 'FROM',
-          to: 'TO',
-          contents: [
-            {
-              type: 'location',
-              longitude: -46.511170,
-              latitude: -23.442930,
-              name: 'Name of location',
-              address: 'Address of location',
-              url: 'URL',
-            },
-          ],
+            ],
+          },
+          columnMapper: {
+            "recipient_header_name": "recipient_number_column",
+            "name": "recipient_name_column",
+            "protocol": "protocol_column",
+          },
         };
-        const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
-
-        const client = new Client('SOME_TOKEN');
-        const whatsapp = client.getChannel('whatsapp');
-        const content = new LocationContent(
-          -46.511170,
-          -23.442930,
-          'Name of location',
-          'Address of location',
-          'URL',
-        );
-        const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', whatsAppBatch);
         zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
+        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
       });
 
-      it('should send message with contacts content', async () => {
-        const errorResponse = {
-          code: 'VALIDATION_ERROR',
-          message: 'Request has one or more errors\n  In body\n    For Content-Type application/json\n      Invalid value\n        Did not validate against all schemas\n          at: 1 > contents > 0 > contacts\n            Did not validate against all schemas\n              at: 1 > contacts\n                Too few items in the array. Minimum of 1. Found 0 items',
+      it('should send message with template content without using file', async () => {
+
+        const expectedMessageBatch = {
+          id: 'BATCH_ID',
+          name: 'SOME_BATCH',
+          channel: 'whatsapp',
+          message: {
+            from: 'FROM',
+            contents: [
+              {
+                type: 'template',
+                templateId: 'a whatsapp template id',
+              },
+            ],
+          },
+          columnMapper: {
+            "recipient_header_name": "recipient_number_column",
+            "name": "recipient_name_column",
+            "protocol": "protocol_column",
+          },
         };
 
+        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="contacts\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
+        
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages')
+        .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(400, errorResponse);
+        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+        .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
-        const whatsapp = client.getChannel('whatsapp');
-        const content = new ContactsContent([]);
-        try {
-          await whatsapp.sendMessage('FROM', 'TO', content);
-        } catch (error) {
-          error.should.be.deep.equal({ httpStatusCode: 400, message: 'Unsuccessful request', body: errorResponse });
-        }
+        const whatsAppBatch: IWhatsAppMessageBatch = {
+          name: 'SOME_BATCH',
+          channel: 'whatsapp',
+          message: {
+            from: 'FROM',
+            contents: [
+              {
+                type: 'template',
+                templateId: 'a whatsapp template id',
+              },
+            ],
+          },
+          columnMapper: {
+            "recipient_header_name": "recipient_number_column",
+            "name": "recipient_name_column",
+            "protocol": "protocol_column",
+          },
+        };
+
+        const readStream = Readable.from("telefone\n5511999999999");
+
+        const actualMessageResponse = await client.sendMessageBatch(readStream, whatsAppBatch);
         zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
       });
 
-      it('should fail when trying to send invalid content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const whatsapp = client.getChannel('whatsapp');
+    });
 
-        try {
-          await whatsapp.sendMessage('FROM', 'TO', {} as IContent);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type undefined is not supported in WhatsApp channel');
-        }
+    describe('WhatsApp Channel using WhatsAppMessageBatch class', () => {
+
+      it('should send message with a string as template content', async () => {
+
+        const expectedMessageBatch = {
+          id: 'BATCH_ID',
+          name: 'SOME_BATCH',
+          channel: 'whatsapp',
+          message: {
+            from: 'FROM',
+            contents: [
+              {
+                type: 'template',
+                templateId: 'a whatsapp template id',
+              },
+            ],
+          },
+          columnMapper: {
+            "recipient_header_name": "recipient_number_column",
+            "name": "recipient_name_column",
+            "protocol": "protocol_column",
+          },
+        };
+
+        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
+
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/message-batches', expected)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+        .reply(200, expectedMessageBatch);
+
+        const client = new Client('SOME_TOKEN');
+        const columnMapper = {
+          "recipient_header_name": "recipient_number_column",
+          "name": "recipient_name_column",
+          "protocol": "protocol_column",
+        };
+        const contents = 'a whatsapp template id';
+        const whatsAppBatch = new WhatsAppMessageBatch(
+          'SOME_BATCH',
+          'FROM',
+          contents,
+          columnMapper,
+        );
+        const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', whatsAppBatch);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
+      });
+
+      it('should send message with an array of strings as template content', async () => {
+
+        const expectedMessageBatch = {
+          id: 'BATCH_ID',
+          name: 'SOME_BATCH',
+          channel: 'whatsapp',
+          message: {
+            from: 'FROM',
+            contents: [
+              {
+                type: 'template',
+                templateId: 'a whatsapp template id',
+              },
+              {
+                type: 'template',
+                templateId: 'another whatsapp template id',
+              },
+            ],
+          },
+          columnMapper: {
+            "recipient_header_name": "recipient_number_column",
+            "name": "recipient_name_column",
+            "protocol": "protocol_column",
+          },
+        };
+
+        const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"},{"type":"template","templateId":"another whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
+
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/message-batches', expected)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+        .reply(200, expectedMessageBatch);
+
+        const client = new Client('SOME_TOKEN');
+        const columnMapper = {
+          "recipient_header_name": "recipient_number_column",
+          "name": "recipient_name_column",
+          "protocol": "protocol_column",
+        };
+        const contents = [
+          'a whatsapp template id',
+          'another whatsapp template id',
+        ];
+        const whatsAppBatch = new WhatsAppMessageBatch(
+          'SOME_BATCH',
+          'FROM',
+          contents,
+          columnMapper,
+        );
+        const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', whatsAppBatch);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessageBatch);
       });
 
     });
