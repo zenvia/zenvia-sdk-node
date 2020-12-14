@@ -255,7 +255,7 @@ The response can be an `ISubscription` object when successful or an `IError` obj
 
 Use the `WebhookController` class to create your webhook so you can receive message events and message status events. The default port is `3000`.
 
-If you inform the `client`, `url`, and `channel` fields, a subscription will be created. That is unless the subscription matching these configuration already exists.
+If you inform the `client`, `url`, and `channel` fields, a subscription will be created, unless a subscription matching these configuration already exists.
 
 In the `messageEventHandler` field you will receive the message events and in the `messageStatusEventHandler` field you will receive the message status events.
 
