@@ -46,6 +46,13 @@ export class Client {
     }
   }
 
+  /**
+   * This method creates a message batch.
+   *
+   * @param contacts A [[Readable]] object.
+   * @param batch Either an [[ISmsMessageBatch]] object or a [[IWhatsAppMessageBatch]] object.
+   * @returns A promise that resolves an [[IMessageBatch]] object
+   */
   sendMessageBatch(contacts: Readable | string, batch: MessageBatch): Promise<IMessageBatch> {
     const formData = {
       batch: {
@@ -66,6 +73,7 @@ export class Client {
     const path = '/v2/message-batches';
     return request.post(this.token, path, undefined, this.logger, formData);
   }
+
   /**
    * This method returns a list of flow reports.
    *
