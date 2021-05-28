@@ -130,7 +130,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/rcs/messages', expectedMessage)
+        .post('/v2/channels/rcs/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -158,7 +158,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/rcs/messages', expectedMessage)
+        .post('/v2/channels/rcs/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -184,7 +184,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/rcs/messages', expectedMessage)
+        .post('/v2/channels/rcs/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
