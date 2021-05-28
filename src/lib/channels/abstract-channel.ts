@@ -1,4 +1,4 @@
-import { IChannel, IMessageRequest, IMessage, Channel, IContent, ILoggerInstance, RcsChannel } from '../../types';
+import { IChannel, IMessageRequest, IMessage, Channel, IContent, ILoggerInstance } from '../../types';
 import { Logger } from '../../utils/logger';
 import * as request from '../../utils/request';
 
