@@ -22,7 +22,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/sms/messages', expectedMessage)
+        .post('/v2/channels/sms/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -50,7 +50,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/sms/messages', expectedMessage)
+        .post('/v2/channels/sms/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -251,7 +251,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/facebook/messages', expectedMessage)
+        .post('/v2/channels/facebook/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -277,7 +277,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/facebook/messages', expectedMessage)
+        .post('/v2/channels/facebook/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -357,7 +357,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .post('/v2/channels/whatsapp/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -383,7 +383,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .post('/v2/channels/whatsapp/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -413,7 +413,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .post('/v2/channels/whatsapp/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -442,7 +442,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .post('/v2/channels/whatsapp/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -478,7 +478,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .post('/v2/channels/whatsapp/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -522,7 +522,7 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages', expectedMessage)
+        .post('/v2/channels/whatsapp/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
 
@@ -547,7 +547,7 @@ describe('Client', () => {
         };
 
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v1/channels/whatsapp/messages')
+        .post('/v2/channels/whatsapp/messages')
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(400, errorResponse);
 

@@ -14,7 +14,8 @@
     "Henrique Magarotto <henrique.magarotto@zenvia.com> (https://github.com/hmagarotto)",
     "Rafael Souza <rafael.souza@zenvia.com> (https://github.com/rafael-org)",
     "Jhonnanthn Balsas <jhonnanthn.balsas@zenvia.com> (https://github.com/jhonnanthn)",
-    "Rafael Pimenta <rafael.pimenta@zenvia.com> (https://github.com/rafaelgpimenta)"
+    "Rafael Pimenta <rafael.pimenta@zenvia.com> (https://github.com/rafaelgpimenta)",
+    "Victor Park <victor.park@zenvia.com> (https://github.com/victorshp)"
   ],
   "scripts": {
     "test": "nyc --all mocha",

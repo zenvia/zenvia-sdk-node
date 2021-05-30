@@ -55,13 +55,7 @@ export abstract class AbstractChannel implements IChannel {
    * @returns A promise that resolves to an [[IMessage]] object.
    */
   private async request(message: IMessageRequest): Promise<IMessage> {
-    let path = '';
-    const v2Channels = ['rcs'];
-    if (v2Channels.includes(this.channel)) {
-      path = `/v2/channels/${this.channel}/messages`;
-    } else {
-      path = `/v1/channels/${this.channel}/messages`;
-    }
+    const path = `/v2/channels/${this.channel}/messages`;
     return request.post(this.token, path, message, this.logger);
   }
 
