@@ -1036,7 +1036,7 @@ describe('Client', () => {
         status: 'ACTIVE',
       }];
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/subscriptions')
+      .get('/v2/subscriptions')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedSubscription);
 
@@ -1058,7 +1058,7 @@ describe('Client', () => {
         status: 'ACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v1/subscriptions', expectedSubscription)
+      .post('/v2/subscriptions', expectedSubscription)
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedSubscription);
 
@@ -1082,7 +1082,7 @@ describe('Client', () => {
         status: 'ACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v1/subscriptions', expectedSubscription)
+      .post('/v2/subscriptions', expectedSubscription)
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedSubscription);
 
@@ -1105,7 +1105,7 @@ describe('Client', () => {
         status: 'ACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v1/subscriptions', expectedSubscription)
+      .post('/v2/subscriptions', expectedSubscription)
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedSubscription);
 
@@ -1128,7 +1128,7 @@ describe('Client', () => {
         status: 'INACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v1/subscriptions', expectedSubscription)
+      .post('/v2/subscriptions', expectedSubscription)
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedSubscription);
 
@@ -1151,7 +1151,7 @@ describe('Client', () => {
         status: 'INACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/subscriptions/SOME_SUBSCRIPTION_ID')
+      .get('/v2/subscriptions/SOME_SUBSCRIPTION_ID')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedSubscription);
 
@@ -1173,7 +1173,7 @@ describe('Client', () => {
         status: 'INACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .patch('/v1/subscriptions/SOME_SUBSCRIPTION_ID', { status: 'INACTIVE' })
+      .patch('/v2/subscriptions/SOME_SUBSCRIPTION_ID', { status: 'INACTIVE' })
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedSubscription);
 
@@ -1185,7 +1185,7 @@ describe('Client', () => {
 
     it('should delete subscription', async () => {
       const zenviaNock = nock('https://api.zenvia.com')
-      .delete('/v1/subscriptions/SOME_SUBSCRIPTION_ID')
+      .delete('/v2/subscriptions/SOME_SUBSCRIPTION_ID')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(204);
 
@@ -1313,7 +1313,7 @@ describe('Client', () => {
       };
 
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/subscriptions')
+      .get('/v2/subscriptions')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(400, errorResponse);
 
@@ -1329,7 +1329,7 @@ describe('Client', () => {
 
     it('should handle technical error', async () => {
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/subscriptions')
+      .get('/v2/subscriptions')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .replyWithError('getaddrinfo ENOTFOUND api.zenvia.com');
 

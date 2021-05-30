@@ -98,7 +98,7 @@ export class Client {
    * @returns A promise that resolves to an array of [[ISubscription]] objects.
    */
   async listSubscriptions(): Promise<ISubscription[]> {
-    const path = '/v1/subscriptions';
+    const path = '/v2/subscriptions';
     return request.get(this.token, path, this.logger);
   }
 
@@ -109,7 +109,7 @@ export class Client {
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async createSubscription(subscription: ISubscription): Promise<ISubscription> {
-    const path = '/v1/subscriptions';
+    const path = '/v2/subscriptions';
     return request.post(this.token, path, subscription, this.logger);
   }
 
@@ -120,7 +120,7 @@ export class Client {
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async getSubscription(id: string): Promise<ISubscription> {
-    const path = `/v1/subscriptions/${id}`;
+    const path = `/v2/subscriptions/${id}`;
     return request.get(this.token, path, this.logger);
   }
 
@@ -132,7 +132,7 @@ export class Client {
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async updateSubscription(id: string, subscription: IPartialSubscription): Promise<ISubscription> {
-    const path = `/v1/subscriptions/${id}`;
+    const path = `/v2/subscriptions/${id}`;
     return request.patch(this.token, path, subscription, this.logger);
   }
 
@@ -143,7 +143,7 @@ export class Client {
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async deleteSubscription(id: string): Promise<void> {
-    const path = `/v1/subscriptions/${id}`;
+    const path = `/v2/subscriptions/${id}`;
     return request.del(this.token, path, this.logger);
   }
 
