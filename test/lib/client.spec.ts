@@ -1214,7 +1214,7 @@ describe('Client', () => {
         },
       }];
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/reports/flow/entries?startDate=2020-01-10')
+      .get('/v2/reports/flow/entries?startDate=2020-01-10')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedFlow);
 
@@ -1242,7 +1242,7 @@ describe('Client', () => {
         },
       ];
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/reports/message/entries?startDate=2020-01-10&endDate=2020-01-11')
+      .get('/v2/reports/message/entries?startDate=2020-01-10&endDate=2020-01-11')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedMessage);
 
@@ -1259,7 +1259,7 @@ describe('Client', () => {
       };
 
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/reports/flow/entries')
+      .get('/v2/reports/flow/entries')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(400, errorResponse);
 
@@ -1279,7 +1279,7 @@ describe('Client', () => {
       };
 
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/reports/message/entries')
+      .get('/v2/reports/message/entries')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(400, errorResponse);
 
@@ -1409,7 +1409,7 @@ describe('Client', () => {
         updatedAt: '2020-06-22T20:35:05.491Z',
       }];
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/templates')
+      .get('/v2/templates')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, requestTemplates);
 
@@ -1481,7 +1481,7 @@ describe('Client', () => {
         updatedAt: '2020-06-22T20:35:05.491Z',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v1/templates/SOME_TEMPLATE_ID')
+      .get('/v2/templates/SOME_TEMPLATE_ID')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, requestTemplates);
 
@@ -1514,7 +1514,7 @@ describe('Client', () => {
         },
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v1/templates', expectedTemplate)
+      .post('/v2/templates', expectedTemplate)
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(200, expectedTemplate);
 
@@ -1562,7 +1562,7 @@ describe('Client', () => {
         },
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .patch('/v1/templates/SOME_TEMPLATE_ID', {
+      .patch('/v2/templates/SOME_TEMPLATE_ID', {
         notificationEmail: 'test@zenvia.com',
         components: {
           body: {
@@ -1590,7 +1590,7 @@ describe('Client', () => {
 
     it('should delete template', async () => {
       const zenviaNock = nock('https://api.zenvia.com')
-      .delete('/v1/templates/SOME_TEMPLATE_ID')
+      .delete('/v2/templates/SOME_TEMPLATE_ID')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(204);
 
@@ -1626,7 +1626,7 @@ describe('Client', () => {
         message: 'Request has one or more errors\n  In body\n    For Content-Type application/json\n      Invalid value\n        One or more required properties missing: name',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v1/templates', expectedTemplate)
+      .post('/v2/templates', expectedTemplate)
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .reply(400, errorResponse);
 
