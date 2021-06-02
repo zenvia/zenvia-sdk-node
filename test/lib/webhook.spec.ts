@@ -211,11 +211,11 @@ describe('Webhook', () => {
     webhook.init();
 
     nock('https://api.zenvia.com')
-      .get('/v1/subscriptions')
+      .get('/v2/subscriptions')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .times(1)
       .reply(200)
-      .post('/v1/subscriptions', {
+      .post('/v2/subscriptions', {
         eventType: 'MESSAGE',
         webhook: {
           url: 'http://localhost:3000',
@@ -228,7 +228,7 @@ describe('Webhook', () => {
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .times(1)
       .reply(200)
-      .post('/v1/subscriptions', {
+      .post('/v2/subscriptions', {
         eventType: 'MESSAGE_STATUS',
         webhook: {
           url: 'http://localhost:3000',
@@ -302,7 +302,7 @@ describe('Webhook', () => {
     });
 
     const scope = nock('https://api.zenvia.com')
-      .post('/v1/subscriptions', {
+      .post('/v2/subscriptions', {
         eventType: 'MESSAGE',
         webhook: {
           url: 'http://localhost:3000',
@@ -316,7 +316,7 @@ describe('Webhook', () => {
       .matchHeader('X-API-Token', 'SOME_TOKEN')
       .times(1)
       .reply(409)
-      .post('/v1/subscriptions', {
+      .post('/v2/subscriptions', {
         eventType: 'MESSAGE_STATUS',
         webhook: {
           url: 'http://localhost:3000',

@@ -31,7 +31,7 @@ export class AbstractReport<E extends IReportEntry, F extends IReportFilters> {
       properties.push(`${key}=${value}`);
     }
 
-    const path = `/v1/reports/${this.reportName}/entries`;
+    const path = `/v2/reports/${this.reportName}/entries`;
     let queryParameters = '';
     if (properties.length > 0) {
       queryParameters = `?${properties.join('&')}`;

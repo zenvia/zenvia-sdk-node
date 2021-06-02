@@ -100,7 +100,7 @@ export class Client {
    * @returns A promise that resolves to an array of [[ISubscription]] objects.
    */
   async listSubscriptions(): Promise<ISubscription[]> {
-    const path = '/v1/subscriptions';
+    const path = '/v2/subscriptions';
     return request.get(this.token, path, this.logger);
   }
 
@@ -111,7 +111,7 @@ export class Client {
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async createSubscription(subscription: ISubscription): Promise<ISubscription> {
-    const path = '/v1/subscriptions';
+    const path = '/v2/subscriptions';
     return request.post(this.token, path, subscription, this.logger);
   }
 
@@ -122,7 +122,7 @@ export class Client {
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async getSubscription(id: string): Promise<ISubscription> {
-    const path = `/v1/subscriptions/${id}`;
+    const path = `/v2/subscriptions/${id}`;
     return request.get(this.token, path, this.logger);
   }
 
@@ -134,7 +134,7 @@ export class Client {
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async updateSubscription(id: string, subscription: IPartialSubscription): Promise<ISubscription> {
-    const path = `/v1/subscriptions/${id}`;
+    const path = `/v2/subscriptions/${id}`;
     return request.patch(this.token, path, subscription, this.logger);
   }
 
@@ -145,7 +145,7 @@ export class Client {
    * @returns A promise that resolves to an [[ISubscription]] object.
    */
   async deleteSubscription(id: string): Promise<void> {
-    const path = `/v1/subscriptions/${id}`;
+    const path = `/v2/subscriptions/${id}`;
     return request.del(this.token, path, this.logger);
   }
 
@@ -155,7 +155,7 @@ export class Client {
    * @returns A promise that resolves to an array of [[ITemplate]] objects.
    */
   async listTemplates(): Promise<ITemplate[]> {
-    const path = '/v1/templates';
+    const path = '/v2/templates';
     return request.get(this.token, path, this.logger)
     .then((templates) => {
       templates.forEach((template) => {
@@ -174,7 +174,7 @@ export class Client {
    * @returns A promise that resolves to an [[ITemplate]] object.
    */
   async getTemplate(id: string): Promise<ITemplate> {
-    const path = `/v1/templates/${id}`;
+    const path = `/v2/templates/${id}`;
     return request.get(this.token, path, this.logger)
     .then((template: ITemplate) => {
       template.channels.forEach((channel) => {
@@ -191,7 +191,7 @@ export class Client {
    * @returns A promise that resolves to an [[ITemplate]] object.
    */
   async createTemplate(template: ITemplate): Promise<ITemplate> {
-    const path = '/v1/templates';
+    const path = '/v2/templates';
     return request.post(this.token, path, template, this.logger);
   }
 
@@ -203,7 +203,7 @@ export class Client {
    * @returns A promise that resolves to an [[ITemplate]] object.
    */
   async updateTemplate(id: string, template: IPartialTemplate): Promise<ITemplate> {
-    const path = `/v1/templates/${id}`;
+    const path = `/v2/templates/${id}`;
     return request.patch(this.token, path, template, this.logger);
   }
 
@@ -214,7 +214,7 @@ export class Client {
    * @returns A promise that resolves to an [[ITemplate]] object.
    */
   async deleteTemplate(id: string): Promise<void> {
-    const path = `/v1/templates/${id}`;
+    const path = `/v2/templates/${id}`;
     return request.del(this.token, path, this.logger);
   }
 
