@@ -1,15 +1,12 @@
 import { AbstractChannel } from './abstract-channel';
 import { ContentType, IContent, ILoggerInstance } from '../../types';
 
-/**
- * Implementation of RCS channel.
- */
 export class InstagramChannel extends AbstractChannel {
 
   private supportedContents: ContentType[];
 
   /**
-   * Returns a new `RCSChannel` that is used to set the RCS channel.
+   * Returns a new `InstagramChannel` that is used to set the Instagram channel.
    *
    * @param token Zenvia platform token.
    * @param loggerInstance If you want, you can pass your log instance.
