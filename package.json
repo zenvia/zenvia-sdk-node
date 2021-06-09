@@ -1,6 +1,6 @@
 {
   "name": "@zenvia/sdk",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,8 @@
     "Rafael Souza <rafael.souza@zenvia.com> (https://github.com/rafael-org)",
     "Jhonnanthn Balsas <jhonnanthn.balsas@zenvia.com> (https://github.com/jhonnanthn)",
     "Rafael Pimenta <rafael.pimenta@zenvia.com> (https://github.com/rafaelgpimenta)",
-    "Victor Park <victor.park@zenvia.com> (https://github.com/victorshp)"
+    "Victor Park <victor.park@zenvia.com> (https://github.com/victorshp)",
+    "Marcelo Vedroni <marcelo.vedroni@zenvia.com> (https://github.com/Marcelovqvd)"
   ],
   "scripts": {
     "test": "nyc --all mocha",
