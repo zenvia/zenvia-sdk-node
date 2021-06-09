@@ -126,6 +126,7 @@ The channels that can be used to send the content are:
 | RCS      | X           | X           |                 |                 |                 |
 | WhatsApp | X           | X           | X               | X               | X               |
 | Facebook | X           | X           |                 |                 |                 |
+| Instagram| X           | X           |                 |                 |                 |
 
 Use the `sendMessage` method to messages to your customers.
 

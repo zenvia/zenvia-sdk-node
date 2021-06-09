@@ -2,6 +2,7 @@ import { Channel, IChannel, IMessageBatch, ILoggerInstance, ISubscription, IPart
 import { Logger } from '../utils/logger';
 import { SmsChannel } from './channels/sms';
 import { RcsChannel } from './channels/rcs';
+import { InstagramChannel } from './channels/instagram';
 import { FacebookChannel } from './channels/facebook';
 import { WhatsAppChannel } from './channels/whatsapp';
 import * as request from '../utils/request';
@@ -42,6 +43,7 @@ export class Client {
       case 'rcs': return new RcsChannel(this.token, this.logger);
       case 'facebook': return new FacebookChannel(this.token, this.logger);
       case 'whatsapp': return new WhatsAppChannel(this.token, this.logger);
+      case 'instagram': return new InstagramChannel(this.token, this.logger);
       default: throw new Error('Unsupported channel');
     }
   }
