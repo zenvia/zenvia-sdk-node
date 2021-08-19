@@ -281,7 +281,6 @@ export interface ITemplate {
   notificationEmail?: string;
   comments?: IComment[];
   suggestions?: ISuggestions[];
-  channels?: IChannels[];
   createdAt?: string;
   updatedAt?: string;
 }

@@ -156,10 +156,7 @@ export class Client {
    */
   async listTemplates(): Promise<ITemplate[]> {
     const path = '/v2/templates';
-    return request.get(this.token, path, this.logger)
-    .then((templates) => {
-      return templates;
-    });
+    return request.get(this.token, path, this.logger);
   }
 
   /**
@@ -170,10 +167,7 @@ export class Client {
    */
   async getTemplate(id: string): Promise<ITemplate> {
     const path = `/v2/templates/${id}`;
-    return request.get(this.token, path, this.logger)
-    .then((template: ITemplate) => {
-      return template;
-    });
+    return request.get(this.token, path, this.logger);
   }
 
   /**
