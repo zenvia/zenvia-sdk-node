@@ -158,11 +158,6 @@ export class Client {
     const path = '/v2/templates';
     return request.get(this.token, path, this.logger)
     .then((templates) => {
-      templates.forEach((template) => {
-        template.channels.forEach((channel) => {
-          (channel.type as any) = channel.type.toLowerCase();
-        });
-      });
       return templates;
     });
   }
@@ -177,9 +172,6 @@ export class Client {
     const path = `/v2/templates/${id}`;
     return request.get(this.token, path, this.logger)
     .then((template: ITemplate) => {
-      template.channels.forEach((channel) => {
-        (channel.type as any) = channel.type.toLowerCase();
-      });
       return template;
     });
   }

@@ -727,7 +727,7 @@ describe('Client', () => {
         };
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -781,7 +781,7 @@ describe('Client', () => {
         };
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="contacts\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -945,7 +945,7 @@ describe('Client', () => {
         };
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -999,7 +999,7 @@ describe('Client', () => {
         };
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="contacts\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -1490,13 +1490,6 @@ describe('Client', () => {
         ],
         status: 'APPROVED',
         comments: [],
-        channels: [
-          {
-            type: 'WHATSAPP',
-            senderId: 'detailed-gasosaurus',
-            status: 'APPROVED',
-          },
-        ],
         createdAt: '2020-06-22T20:35:05.491Z',
         updatedAt: '2020-06-22T20:35:05.491Z',
       }];
@@ -1520,13 +1513,6 @@ describe('Client', () => {
         ],
         status: 'APPROVED',
         comments: [],
-        channels: [
-          {
-            type: 'whatsapp',
-            senderId: 'detailed-gasosaurus',
-            status: 'APPROVED',
-          },
-        ],
         createdAt: '2020-06-22T20:35:05.491Z',
         updatedAt: '2020-06-22T20:35:05.491Z',
       }];
@@ -1562,13 +1548,6 @@ describe('Client', () => {
         ],
         status: 'APPROVED',
         comments: [],
-        channels: [
-          {
-            type: 'WHATSAPP',
-            senderId: 'detailed-gasosaurus',
-            status: 'APPROVED',
-          },
-        ],
         createdAt: '2020-06-22T20:35:05.491Z',
         updatedAt: '2020-06-22T20:35:05.491Z',
       };
@@ -1592,13 +1571,6 @@ describe('Client', () => {
         ],
         status: 'APPROVED',
         comments: [],
-        channels: [
-          {
-            type: 'whatsapp',
-            senderId: 'detailed-gasosaurus',
-            status: 'APPROVED',
-          },
-        ],
         createdAt: '2020-06-22T20:35:05.491Z',
         updatedAt: '2020-06-22T20:35:05.491Z',
       };
