@@ -268,41 +268,32 @@ export interface IMessageReport {
   total: number;
 }
 
-export interface ITemplate {
+interface IAbstractTemplate {
   id?: string;
   name: string;
   locale: string;
   channel: string;
   category: string;
-  textReference?: string;
   components: IComponents;
   senderId: string;
   status?: TemplateStatus;
   notificationEmail?: string;
   comments?: IComment[];
-  suggestions?: ISuggestions[];
   createdAt?: string;
   updatedAt?: string;
 }
 
-export interface IResponseTemplate {
-  id?: string;
-  name: string;
-  locale: string;
-  channel: string;
-  category: string;
+export interface ITemplate extends IAbstractTemplate {
+  textReference?: string;
+  suggestions?: ISuggestions[];
+}
+
+export interface IResponseTemplate extends IAbstractTemplate {
   text: string;
-  components: IComponents;
   examples?: {
     [fieldName: string]: string;
   };
-  senderId: string;
   fields: string[];
-  status?: TemplateStatus;
-  notificationEmail?: string;
-  comments?: IComment[];
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 export interface IPartialTemplate {
