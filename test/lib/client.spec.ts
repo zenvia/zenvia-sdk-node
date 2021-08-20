@@ -2,7 +2,7 @@
 
 import * as nock from 'nock';
 import { Readable } from 'stream';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, IResponseTemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
 
 describe('Client', () => {
 
@@ -1470,7 +1470,7 @@ describe('Client', () => {
   describe('Templates', () => {
 
     it('should list templates', async () => {
-      const requestTemplates = [{
+      const requestTemplates: IResponseTemplate[] = [{
         name: 'Sandbox - Shipping Update',
         locale: 'pt_BR',
         channel: 'WHATSAPP',
@@ -1493,7 +1493,7 @@ describe('Client', () => {
         createdAt: '2020-06-22T20:35:05.491Z',
         updatedAt: '2020-06-22T20:35:05.491Z',
       }];
-      const responseTemplates = [{
+      const responseTemplates: IResponseTemplate[] = [{
         name: 'Sandbox - Shipping Update',
         locale: 'pt_BR',
         channel: 'WHATSAPP',
@@ -1528,7 +1528,7 @@ describe('Client', () => {
     });
 
     it('should get template with id', async () => {
-      const requestTemplates = {
+      const requestTemplates: IResponseTemplate = {
         name: 'Sandbox - Shipping Update',
         locale: 'pt_BR',
         channel: 'WHATSAPP',
@@ -1551,7 +1551,7 @@ describe('Client', () => {
         createdAt: '2020-06-22T20:35:05.491Z',
         updatedAt: '2020-06-22T20:35:05.491Z',
       };
-      const responseTemplates = {
+      const responseTemplates: IResponseTemplate = {
         name: 'Sandbox - Shipping Update',
         locale: 'pt_BR',
         channel: 'WHATSAPP',
