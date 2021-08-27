@@ -2,7 +2,7 @@
 
 import * as nock from 'nock';
 import { Readable } from 'stream';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, IResponseTemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
 
 describe('Client', () => {
 
@@ -1470,30 +1470,8 @@ describe('Client', () => {
   describe('Templates', () => {
 
     it('should list templates', async () => {
-      const requestTemplates: IResponseTemplate[] = [{
-        name: 'Sandbox - Shipping Update',
-        locale: 'pt_BR',
-        channel: 'WHATSAPP',
-        category: 'SHIPPING_UPDATE',
-        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
-        components: {
-          body: {
-            type: 'TEXT_TEMPLATE',
-            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
-          },
-        },
-        senderId: 'detailed-gasosaurus',
-        fields: [
-          'name',
-          'productName',
-          'deliveryDate',
-        ],
-        status: 'APPROVED',
-        comments: [],
-        createdAt: '2020-06-22T20:35:05.491Z',
-        updatedAt: '2020-06-22T20:35:05.491Z',
-      }];
-      const responseTemplates: IResponseTemplate[] = [{
+      const responseTemplates: ITemplate[] = [{
+        id: 'SOME_ID',
         name: 'Sandbox - Shipping Update',
         locale: 'pt_BR',
         channel: 'WHATSAPP',
@@ -1519,7 +1497,7 @@ describe('Client', () => {
       const zenviaNock = nock('https://api.zenvia.com')
       .get('/v2/templates')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, requestTemplates);
+      .reply(200, responseTemplates);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.listTemplates();
@@ -1528,30 +1506,8 @@ describe('Client', () => {
     });
 
     it('should get template with id', async () => {
-      const requestTemplates: IResponseTemplate = {
-        name: 'Sandbox - Shipping Update',
-        locale: 'pt_BR',
-        channel: 'WHATSAPP',
-        category: 'SHIPPING_UPDATE',
-        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
-        components: {
-          body: {
-            type: 'TEXT_TEMPLATE',
-            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
-          },
-        },
-        senderId: 'detailed-gasosaurus',
-        fields: [
-          'name',
-          'productName',
-          'deliveryDate',
-        ],
-        status: 'APPROVED',
-        comments: [],
-        createdAt: '2020-06-22T20:35:05.491Z',
-        updatedAt: '2020-06-22T20:35:05.491Z',
-      };
-      const responseTemplates: IResponseTemplate = {
+      const responseTemplates: ITemplate = {
+        id: 'SOME_ID',
         name: 'Sandbox - Shipping Update',
         locale: 'pt_BR',
         channel: 'WHATSAPP',
@@ -1577,7 +1533,7 @@ describe('Client', () => {
       const zenviaNock = nock('https://api.zenvia.com')
       .get('/v2/templates/SOME_TEMPLATE_ID')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, requestTemplates);
+      .reply(200, responseTemplates);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.getTemplate('SOME_TEMPLATE_ID');
