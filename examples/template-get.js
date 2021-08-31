@@ -8,9 +8,9 @@
 // const { Client } = require('@zenvia/sdk');
 const { Client } = require('../dist');
 
-const client = new Client(process.env.ZENVIA_API_TOKEN);
+const client = new Client('GKkj0dSHDN60yLdkZzVyj4-osKlMQXQj-5d4');
 
-client.getTemplate('template-identifier')
+client.getTemplate('eb5f5a45-c4f2-4086-8f41-6cc423d4fac8')
 .then(response => {
   console.log('Response:', response);
 })

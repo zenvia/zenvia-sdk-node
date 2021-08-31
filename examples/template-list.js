@@ -7,7 +7,7 @@
 
 const { Client } = require('../dist');
 
-const client = new Client(process.env.ZENVIA_API_TOKEN);
+const client = new Client('GKkj0dSHDN60yLdkZzVyj4-osKlMQXQj-5d4');
 
 client.listTemplates()
 .then(response => {

@@ -332,7 +332,9 @@ export interface IComponents {
 export interface IButtonsItems {
   type: string;
   text: string;
-  url: string;
+  url?: string;
+  phoneNumber?: string;
+  payload?: string;
 }
 
 export interface IChannels {
