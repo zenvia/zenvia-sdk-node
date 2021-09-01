@@ -273,15 +273,17 @@ export interface ITemplate {
   name: string;
   locale: string;
   channel: string;
-  category: string;
-  textReference?: string;
-  components: IComponents;
   senderId: string;
-  status?: TemplateStatus;
+  category: string;
+  components: IComponents;
+  examples?: {
+    [fieldName: string]: string;
+  };
   notificationEmail?: string;
+  text?: string;
+  fields?: string[];
+  status?: TemplateStatus;
   comments?: IComment[];
-  suggestions?: ISuggestions[];
-  channels?: IChannels[];
   createdAt?: string;
   updatedAt?: string;
 }

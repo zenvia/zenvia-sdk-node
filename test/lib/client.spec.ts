@@ -727,7 +727,7 @@ describe('Client', () => {
         };
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -781,7 +781,7 @@ describe('Client', () => {
         };
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="contacts\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -945,7 +945,7 @@ describe('Client', () => {
         };
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -999,7 +999,7 @@ describe('Client', () => {
         };
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="contacts\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
-        
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/message-batches', expected)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -1470,7 +1470,8 @@ describe('Client', () => {
   describe('Templates', () => {
 
     it('should list templates', async () => {
-      const requestTemplates = [{
+      const responseTemplates: ITemplate[] = [{
+        id: 'SOME_ID',
         name: 'Sandbox - Shipping Update',
         locale: 'pt_BR',
         channel: 'WHATSAPP',
@@ -1490,50 +1491,13 @@ describe('Client', () => {
         ],
         status: 'APPROVED',
         comments: [],
-        channels: [
-          {
-            type: 'WHATSAPP',
-            senderId: 'detailed-gasosaurus',
-            status: 'APPROVED',
-          },
-        ],
-        createdAt: '2020-06-22T20:35:05.491Z',
-        updatedAt: '2020-06-22T20:35:05.491Z',
-      }];
-      const responseTemplates = [{
-        name: 'Sandbox - Shipping Update',
-        locale: 'pt_BR',
-        channel: 'WHATSAPP',
-        category: 'SHIPPING_UPDATE',
-        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
-        components: {
-          body: {
-            type: 'TEXT_TEMPLATE',
-            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
-          },
-        },
-        senderId: 'detailed-gasosaurus',
-        fields: [
-          'name',
-          'productName',
-          'deliveryDate',
-        ],
-        status: 'APPROVED',
-        comments: [],
-        channels: [
-          {
-            type: 'whatsapp',
-            senderId: 'detailed-gasosaurus',
-            status: 'APPROVED',
-          },
-        ],
         createdAt: '2020-06-22T20:35:05.491Z',
         updatedAt: '2020-06-22T20:35:05.491Z',
       }];
       const zenviaNock = nock('https://api.zenvia.com')
       .get('/v2/templates')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, requestTemplates);
+      .reply(200, responseTemplates);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.listTemplates();
@@ -1542,7 +1506,8 @@ describe('Client', () => {
     });
 
     it('should get template with id', async () => {
-      const requestTemplates = {
+      const responseTemplates: ITemplate = {
+        id: 'SOME_ID',
         name: 'Sandbox - Shipping Update',
         locale: 'pt_BR',
         channel: 'WHATSAPP',
@@ -1562,50 +1527,13 @@ describe('Client', () => {
         ],
         status: 'APPROVED',
         comments: [],
-        channels: [
-          {
-            type: 'WHATSAPP',
-            senderId: 'detailed-gasosaurus',
-            status: 'APPROVED',
-          },
-        ],
-        createdAt: '2020-06-22T20:35:05.491Z',
-        updatedAt: '2020-06-22T20:35:05.491Z',
-      };
-      const responseTemplates = {
-        name: 'Sandbox - Shipping Update',
-        locale: 'pt_BR',
-        channel: 'WHATSAPP',
-        category: 'SHIPPING_UPDATE',
-        text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
-        components: {
-          body: {
-            type: 'TEXT_TEMPLATE',
-            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
-          },
-        },
-        senderId: 'detailed-gasosaurus',
-        fields: [
-          'name',
-          'productName',
-          'deliveryDate',
-        ],
-        status: 'APPROVED',
-        comments: [],
-        channels: [
-          {
-            type: 'whatsapp',
-            senderId: 'detailed-gasosaurus',
-            status: 'APPROVED',
-          },
-        ],
         createdAt: '2020-06-22T20:35:05.491Z',
         updatedAt: '2020-06-22T20:35:05.491Z',
       };
       const zenviaNock = nock('https://api.zenvia.com')
       .get('/v2/templates/SOME_TEMPLATE_ID')
       .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, requestTemplates);
+      .reply(200, responseTemplates);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.getTemplate('SOME_TEMPLATE_ID');
