@@ -1,33 +1,38 @@
 import * as rp from 'request-promise';
-import { ILoggerInstance, IError } from '../types';
+import { ILoggerInstance, IError, IClientOptions } from '../types';
 
 const url = 'https://api.zenvia.com';
 
-export async function post(token: string, path: string, body: object, logger: ILoggerInstance, formData?: any): Promise<any> {
-  return request(token, 'post', path, body, logger, formData);
+export interface IRequestOptions extends IClientOptions {
+  formData?: any;
 }
 
-export async function get(token: string, path: string, logger: ILoggerInstance): Promise<any> {
-  return request(token, 'get', path, undefined, logger);
+export async function post(token: string, path: string, body: object, logger: ILoggerInstance, options: IRequestOptions): Promise<any> {
+  return request(token, 'post', path, body, logger, options);
 }
 
-export async function patch(token: string, path: string, body: object, logger: ILoggerInstance): Promise<any> {
-  return request(token, 'patch', path, body, logger);
+export async function get(token: string, path: string, logger: ILoggerInstance, options: IRequestOptions): Promise<any> {
+  return request(token, 'get', path, undefined, logger, options);
 }
 
-export async function del(token: string, path: string, logger: ILoggerInstance): Promise<any> {
-  return request(token, 'delete', path, undefined, logger);
+export async function patch(token: string, path: string, body: object, logger: ILoggerInstance, options: IRequestOptions): Promise<any> {
+  return request(token, 'patch', path, body, logger, options);
 }
 
-async function request(token: string, method: string, path: string, body: object, logger: ILoggerInstance, formData?: any): Promise<any> {
+export async function del(token: string, path: string, logger: ILoggerInstance, options: IRequestOptions): Promise<any> {
+  return request(token, 'delete', path, undefined, logger, options);
+}
+
+async function request(token: string, method: string, path: string, body: object, logger: ILoggerInstance, options: IRequestOptions): Promise<any> {
   const uri = `${url}${path}`;
   const data = {
     method,
     uri,
     body,
-    formData,
+    formData: options?.formData,
     headers: {
       'X-API-Token': `${token}`,
+      ...options?.customHeaders,
     },
     json: true,
     forever: true,

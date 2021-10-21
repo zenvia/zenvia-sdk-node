@@ -1,4 +1,4 @@
-import { IChannel, IMessageRequest, IMessage, Channel, IContent, ILoggerInstance } from '../../types';
+import { IChannel, IMessageRequest, IMessage, Channel, IContent, ILoggerInstance, IClientOptions } from '../../types';
 import { Logger } from '../../utils/logger';
 import * as request from '../../utils/request';
 
@@ -11,7 +11,7 @@ export abstract class AbstractChannel implements IChannel {
   private channel: Channel;
   protected logger: Logger;
 
-  constructor(token: string, channel: Channel, loggerInstance?: ILoggerInstance) {
+  constructor(token: string, channel: Channel, loggerInstance: ILoggerInstance, private options: IClientOptions) {
     this.token = token;
     this.channel = channel;
     this.logger = new Logger(loggerInstance);
@@ -56,7 +56,7 @@ export abstract class AbstractChannel implements IChannel {
    */
   private async request(message: IMessageRequest): Promise<IMessage> {
     const path = `/v2/channels/${this.channel}/messages`;
-    return request.post(this.token, path, message, this.logger);
+    return request.post(this.token, path, message, this.logger, this.options);
   }
 
   protected abstract contentSupportValidation(content: IContent): void | never;

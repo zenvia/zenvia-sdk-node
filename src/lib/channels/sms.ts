@@ -1,5 +1,5 @@
 import { AbstractChannel } from './abstract-channel';
-import { ContentType, IContent, ILoggerInstance } from '../../types';
+import { ContentType, IContent, ILoggerInstance, IClientOptions } from '../../types';
 
 /**
  * Implementation of SMS channel.
@@ -14,8 +14,8 @@ export class SmsChannel extends AbstractChannel {
    * @param token Zenvia platform token.
    * @param loggerInstance If you want, you can pass your log instance.
    */
-  constructor(token: string, loggerInstance?: ILoggerInstance) {
-    super(token, 'sms', loggerInstance);
+  constructor(token: string, loggerInstance: ILoggerInstance, options: IClientOptions) {
+    super(token, 'sms', loggerInstance, options);
     this.supportedContents = ['text'];
   }
 

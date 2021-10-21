@@ -1,6 +1,6 @@
 
 import { AbstractReport, IReportFilters, IReportEntry } from './abstract';
-import { ILoggerInstance } from '../../types';
+import { ILoggerInstance, IClientOptions } from '../../types';
 
 interface IReportFlowFilters extends IReportFilters {
   startDate: string;
@@ -20,7 +20,7 @@ interface IReportFlowEntry extends IReportEntry {
 }
 
 export class ReportFlow extends AbstractReport<IReportFlowEntry, IReportFlowFilters> {
-  constructor(token: string, loggerInstance?: ILoggerInstance) {
-    super('flow', token, loggerInstance);
+  constructor(token: string, loggerInstance: ILoggerInstance, options: IClientOptions) {
+    super('flow', token, loggerInstance, options);
   }
 }
