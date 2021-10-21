@@ -1,11 +1,7 @@
 import * as rp from 'request-promise';
-import { ILoggerInstance, IError, IClientOptions } from '../types';
+import { ILoggerInstance, IError, IRequestOptions } from '../types';
 
 const url = 'https://api.zenvia.com';
-
-export interface IRequestOptions extends IClientOptions {
-  formData?: any;
-}
 
 export async function post(token: string, path: string, body: object, logger: ILoggerInstance, options: IRequestOptions): Promise<any> {
   return request(token, 'post', path, body, logger, options);
