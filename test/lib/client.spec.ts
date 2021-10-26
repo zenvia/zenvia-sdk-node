@@ -34,6 +34,31 @@ describe('Client', () => {
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
 
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/sms/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const sms = client.getChannel('sms');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
       it('should send message with an array of text content', async () => {
         const expectedMessage = {
           from: 'FROM',
@@ -138,6 +163,31 @@ describe('Client', () => {
         const rcs = client.getChannel('rcs');
         const content = new TextContent('some text message');
         const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/rcs/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const sms = client.getChannel('rcs');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -259,6 +309,31 @@ describe('Client', () => {
         const rcs = client.getChannel('instagram');
         const content = new TextContent('some text message');
         const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/instagram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const sms = client.getChannel('instagram');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -385,6 +460,31 @@ describe('Client', () => {
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
 
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/facebook/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const sms = client.getChannel('facebook');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
       it('should send message with file content', async () => {
         const expectedMessage = {
           from: 'FROM',
@@ -487,6 +587,31 @@ describe('Client', () => {
         const whatsapp = client.getChannel('whatsapp');
         const content = new TextContent('some text message');
         const actualMessageResponse = await whatsapp.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/whatsapp/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const sms = client.getChannel('whatsapp');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });

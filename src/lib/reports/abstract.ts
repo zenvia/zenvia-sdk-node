@@ -1,6 +1,6 @@
 import * as request from '../../utils/request';
 import { Logger } from '../../utils/logger';
-import { ILoggerInstance } from '../../types';
+import { ILoggerInstance, IClientOptions } from '../../types';
 // tslint:disable-next-line: no-empty-interface
 export interface IReportEntry {
 }
@@ -15,7 +15,7 @@ export class AbstractReport<E extends IReportEntry, F extends IReportFilters> {
 
   protected logger: Logger;
 
-  constructor(private reportName: string, private token: string, loggerInstance?: ILoggerInstance) {
+  constructor(private reportName: string, private token: string, loggerInstance: ILoggerInstance, private options: IClientOptions) {
     this.logger = new Logger(loggerInstance);
   }
 
@@ -36,7 +36,7 @@ export class AbstractReport<E extends IReportEntry, F extends IReportFilters> {
     if (properties.length > 0) {
       queryParameters = `?${properties.join('&')}`;
     }
-    return request.get(this.token, path + queryParameters, this.logger);
+    return request.get(this.token, path + queryParameters, this.logger, this.options);
   }
 
 }

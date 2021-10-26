@@ -1,5 +1,5 @@
 import { AbstractChannel } from './abstract-channel';
-import { ContentType, IContent, ILoggerInstance } from '../../types';
+import { ContentType, IContent, ILoggerInstance, IClientOptions } from '../../types';
 
 export class InstagramChannel extends AbstractChannel {
 
@@ -11,8 +11,8 @@ export class InstagramChannel extends AbstractChannel {
    * @param token Zenvia platform token.
    * @param loggerInstance If you want, you can pass your log instance.
    */
-  constructor(token: string, loggerInstance?: ILoggerInstance) {
-    super(token, 'instagram', loggerInstance);
+  constructor(token: string, loggerInstance: ILoggerInstance, options: IClientOptions) {
+    super(token, 'instagram', loggerInstance, options);
     this.supportedContents = ['text', 'file'];
   }
 
