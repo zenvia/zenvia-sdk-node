@@ -15,6 +15,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 ## Table of Contents
 
+- [Changelog](#changelog)
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -31,6 +32,36 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [Contributing](#contributing)
 - [License](#license)
 
+
+
+## Changelog
+
+### 2.3.0
+* Added
+    * Email content
+    * Email channel
+    * Google Business Messages (GBM) channel
+    * Telegram channel
+    * Attribute fileName to file content
+
+### 2.2.0
+* Added
+    * Support to custom request headers
+
+### 2.1.1
+* Changed
+    * Fixed template listing
+
+### 2.1.0
+* Added
+    * Instagram channel
+
+### 2.0.0
+* Changed
+    * API endpoint to v2
+
+
+
 ## Features
 
 - [x] Text message content
@@ -38,6 +69,7 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [x] Location message content
 - [x] Contacts message content
 - [x] Template message content
+- [x] Email message content
 - [x] Send batches
 - [x] Subscription handling
 - [x] Get reports
@@ -110,23 +142,27 @@ Examples not listed on this section can be found [here](examples).
 
 The content types that can be sent are:
 
-| Name            | Description |
-|-----------------|-------------|
-| TextContent     | Used to send text messages to your customer.
-| FileContent     | Used to send file messages to your customer.
-| LocationContent | Used to send location messages to your customer.
-| ContactsContent | Used to send contacts messages to your customer.
-| TemplateContent | Used to send template messages to your customer.
+| Name            | Description                                      |
+|-----------------|--------------------------------------------------|
+| TextContent     | Used to send text messages to your customer.     |
+| FileContent     | Used to send file messages to your customer.     |
+| LocationContent | Used to send location messages to your customer. |
+| ContactsContent | Used to send contacts messages to your customer. |
+| TemplateContent | Used to send template messages to your customer. |
+| EmailContent    | Used to send e-mail messages to your customer.   |
 
 The channels that can be used to send the content are:
 
-| Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent |
-|----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |
-| SMS      | X           |             |                 |                 |                 |
-| RCS      | X           | X           |                 |                 |                 |
-| WhatsApp | X           | X           | X               | X               | X               |
-| Facebook | X           | X           |                 |                 |                 |
-| Instagram| X           | X           |                 |                 |                 |
+| Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent | EmailContent |
+|----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |     :---:    |
+| SMS      | X           |             |                 |                 |                 |              |
+| RCS      | X           | X           |                 |                 |                 |              |
+| WhatsApp | X           | X           | X               | X               | X               |              |
+| Facebook | X           | X           |                 |                 |                 |              |
+| Instagram| X           | X           |                 |                 |                 |              |
+| Email    |             |             |                 |                 |                 | X            |
+| GBM      | X           | X           |                 |                 |                 |              |
+| Telegram | X           | X           |                 |                 |                 |              |
 
 Use the `sendMessage` method to messages to your customers.
 

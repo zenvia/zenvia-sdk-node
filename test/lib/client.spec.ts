@@ -2,7 +2,7 @@
 
 import * as nock from 'nock';
 import { Readable } from 'stream';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, EmailContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
 
 describe('Client', () => {
 
@@ -185,9 +185,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
-        const sms = client.getChannel('rcs');
+        const rcs = client.getChannel('rcs');
         const content = new TextContent('some text message');
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -306,9 +306,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new TextContent('some text message');
-        const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -331,9 +331,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
-        const sms = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new TextContent('some text message');
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -359,9 +359,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const contents = [new TextContent('first text message'), new TextContent('second text message')];
-        const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', ...contents);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -385,20 +385,20 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-        const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
 
       it('should fail when trying to send template content', async () => {
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new TemplateContent('templateId', {});
 
         try {
-          await rcs.sendMessage('FROM', 'TO', content);
+          await channel.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type template is not supported in Instagram channel');
@@ -407,11 +407,11 @@ describe('Client', () => {
 
       it('should fail when trying to send location content', async () => {
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
 
         try {
-          await rcs.sendMessage('FROM', 'TO', content);
+          await channel.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type location is not supported in Instagram channel');
@@ -420,11 +420,11 @@ describe('Client', () => {
 
       it('should fail when trying to send contacts content', async () => {
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new ContactsContent([]);
 
         try {
-          await rcs.sendMessage('FROM', 'TO', content);
+          await channel.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type contacts is not supported in Instagram channel');
@@ -432,7 +432,6 @@ describe('Client', () => {
       });
 
     });
-
 
     describe('Facebook Channel', () => {
 
@@ -478,9 +477,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
-        const sms = client.getChannel('facebook');
+        const facebook = client.getChannel('facebook');
         const content = new TextContent('some text message');
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await facebook.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -540,11 +539,11 @@ describe('Client', () => {
 
       it('should fail when trying to send location content', async () => {
         const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('facebook');
+        const facebook = client.getChannel('facebook');
         const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
 
         try {
-          await sms.sendMessage('FROM', 'TO', content);
+          await facebook.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type location is not supported in Facebook channel');
@@ -553,11 +552,11 @@ describe('Client', () => {
 
       it('should fail when trying to send contacts content', async () => {
         const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('facebook');
+        const facebook = client.getChannel('facebook');
         const content = new ContactsContent([]);
 
         try {
-          await sms.sendMessage('FROM', 'TO', content);
+          await facebook.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type contacts is not supported in Facebook channel');
@@ -823,6 +822,398 @@ describe('Client', () => {
 
     });
 
+    describe('Telegram Channel', () => {
+
+      it('should send message with text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/telegram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/telegram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const channel = client.getChannel('telegram');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with an array of text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'first text message',
+            },
+            {
+              type: 'text',
+              text: 'second text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/telegram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const contents = [new TextContent('first text message'), new TextContent('second text message')];
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with file content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'file',
+              fileUrl: 'http://server.com/file.jpeg',
+              fileMimeType: 'image/jpeg',
+              fileCaption: 'some file caption',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/telegram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should fail when trying to send template content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new TemplateContent('templateId', {});
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type template is not supported in Telegram channel');
+        }
+      });
+
+      it('should fail when trying to send location content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type location is not supported in Telegram channel');
+        }
+      });
+
+      it('should fail when trying to send contacts content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new ContactsContent([]);
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in Telegram channel');
+        }
+      });
+
+    });
+
+    describe('GBM Channel', () => {
+
+      it('should send message with text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const channel = client.getChannel('gbm');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with an array of text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'first text message',
+            },
+            {
+              type: 'text',
+              text: 'second text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const contents = [new TextContent('first text message'), new TextContent('second text message')];
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with file content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'file',
+              fileUrl: 'http://server.com/file.jpeg',
+              fileMimeType: 'image/jpeg',
+              fileCaption: 'some file caption',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should fail when trying to send template content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new TemplateContent('templateId', {});
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type template is not supported in Google Business Messages channel');
+        }
+      });
+
+      it('should fail when trying to send location content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type location is not supported in Google Business Messages channel');
+        }
+      });
+
+      it('should fail when trying to send contacts content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new ContactsContent([]);
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in Google Business Messages channel');
+        }
+      });
+
+    });
+
+    describe('Email Channel', () => {
+
+      it('should send message with email content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'email',
+              subject: 'SUBJECT',
+              attachments: [{ fileUrl: 'URL', fileMimeType: 'TYPE', fileName: 'NAME' }],
+              html: 'HTML',
+              text: 'TEXT',
+              cc: ['CC'],
+              bcc: ['BCC'],
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/email/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+        const content = new EmailContent('SUBJECT', [{ fileUrl: 'URL', fileMimeType: 'TYPE', fileName: 'NAME' }], 'HTML', 'TEXT');
+        content.cc = ['CC'];
+        content.bcc = ['BCC'];
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should fail when trying send message with text content', async () => {
+        const content = new TextContent('some text message');
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type text is not supported in E-mail channel');
+        }
+      });
+
+      it('should send message with file content', async () => {
+        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type file is not supported in E-mail channel');
+        }
+      });
+
+      it('should fail when trying to send template content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+        const content = new TemplateContent('templateId', {});
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type template is not supported in E-mail channel');
+        }
+      });
+
+      it('should fail when trying to send location content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type location is not supported in E-mail channel');
+        }
+      });
+
+      it('should fail when trying to send contacts content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+        const content = new ContactsContent([]);
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in E-mail channel');
+        }
+      });
+
+    });
+
   });
 
   describe('Batches', () => {
@@ -845,9 +1236,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -873,9 +1264,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
         const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', smsBatch);
@@ -899,9 +1290,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -927,13 +1318,13 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
-        const readStream = Readable.from("telefone\n5511999999999");
+        const readStream = Readable.from('telefone\n5511999999999');
 
         const actualMessageResponse = await client.sendMessageBatch(readStream, smsBatch);
         zenviaNock.isDone().should.be.true;
@@ -959,9 +1350,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -974,9 +1365,9 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
+          recipient_header_name: 'recipient_number_column',
+          name: 'recipient_name_column',
+          protocol: 'protocol_column',
         };
         const contents = 'some text message';
         const smsBatch = new SmsMessageBatch(
@@ -1009,9 +1400,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1024,9 +1415,9 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
+          recipient_header_name: 'recipient_number_column',
+          name: 'recipient_name_column',
+          protocol: 'protocol_column',
         };
         const contents = [
           'first text message',
@@ -1063,9 +1454,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1091,9 +1482,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
         const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', whatsAppBatch);
@@ -1117,9 +1508,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1145,13 +1536,13 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
-        const readStream = Readable.from("telefone\n5511999999999");
+        const readStream = Readable.from('telefone\n5511999999999');
 
         const actualMessageResponse = await client.sendMessageBatch(readStream, whatsAppBatch);
         zenviaNock.isDone().should.be.true;
@@ -1178,9 +1569,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1194,9 +1585,9 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
+          recipient_header_name: 'recipient_number_column',
+          name: 'recipient_name_column',
+          protocol: 'protocol_column',
         };
         const contents = 'a whatsapp template id';
         const whatsAppBatch = new WhatsAppMessageBatch(
@@ -1230,9 +1621,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1246,9 +1637,9 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
+          recipient_header_name: 'recipient_number_column',
+          name: 'recipient_name_column',
+          protocol: 'protocol_column',
         };
         const contents = [
           'a whatsapp template id',
@@ -1605,7 +1996,7 @@ describe('Client', () => {
         components: {
           body: {
             type: 'TEXT_TEMPLATE',
-            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
           },
         },
         senderId: 'detailed-gasosaurus',
@@ -1641,7 +2032,7 @@ describe('Client', () => {
         components: {
           body: {
             type: 'TEXT_TEMPLATE',
-            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
           },
         },
         senderId: 'detailed-gasosaurus',

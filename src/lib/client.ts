@@ -5,6 +5,9 @@ import { RcsChannel } from './channels/rcs';
 import { InstagramChannel } from './channels/instagram';
 import { FacebookChannel } from './channels/facebook';
 import { WhatsAppChannel } from './channels/whatsapp';
+import { TelegramChannel } from './channels/telegram';
+import { GbmChannel } from './channels/gbm';
+import { EmailChannel } from './channels/email';
 import * as request from '../utils/request';
 import { ITemplate, MessageBatch } from '../types/zenvia';
 import { ReportFlow } from './reports/report-flow';
@@ -44,6 +47,9 @@ export class Client {
       case 'facebook': return new FacebookChannel(this.token, this.logger, this.options);
       case 'whatsapp': return new WhatsAppChannel(this.token, this.logger, this.options);
       case 'instagram': return new InstagramChannel(this.token, this.logger, this.options);
+      case 'telegram': return new TelegramChannel(this.token, this.logger, this.options);
+      case 'gbm': return new GbmChannel(this.token, this.logger, this.options);
+      case 'email': return new EmailChannel(this.token, this.logger, this.options);
       default: throw new Error('Unsupported channel');
     }
   }
