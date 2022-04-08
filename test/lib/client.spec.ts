@@ -185,9 +185,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
-        const sms = client.getChannel('rcs');
+        const rcs = client.getChannel('rcs');
         const content = new TextContent('some text message');
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -306,9 +306,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new TextContent('some text message');
-        const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -331,9 +331,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
-        const sms = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new TextContent('some text message');
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -359,9 +359,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const contents = [new TextContent('first text message'), new TextContent('second text message')];
-        const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', ...contents);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -385,20 +385,20 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-        const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
 
       it('should fail when trying to send template content', async () => {
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new TemplateContent('templateId', {});
 
         try {
-          await rcs.sendMessage('FROM', 'TO', content);
+          await channel.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type template is not supported in Instagram channel');
@@ -407,11 +407,11 @@ describe('Client', () => {
 
       it('should fail when trying to send location content', async () => {
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
 
         try {
-          await rcs.sendMessage('FROM', 'TO', content);
+          await channel.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type location is not supported in Instagram channel');
@@ -420,11 +420,11 @@ describe('Client', () => {
 
       it('should fail when trying to send contacts content', async () => {
         const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('instagram');
+        const channel = client.getChannel('instagram');
         const content = new ContactsContent([]);
 
         try {
-          await rcs.sendMessage('FROM', 'TO', content);
+          await channel.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type contacts is not supported in Instagram channel');
@@ -432,7 +432,6 @@ describe('Client', () => {
       });
 
     });
-
 
     describe('Facebook Channel', () => {
 
@@ -478,9 +477,9 @@ describe('Client', () => {
         .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
-        const sms = client.getChannel('facebook');
+        const facebook = client.getChannel('facebook');
         const content = new TextContent('some text message');
-        const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await facebook.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
@@ -540,11 +539,11 @@ describe('Client', () => {
 
       it('should fail when trying to send location content', async () => {
         const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('facebook');
+        const facebook = client.getChannel('facebook');
         const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
 
         try {
-          await sms.sendMessage('FROM', 'TO', content);
+          await facebook.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type location is not supported in Facebook channel');
@@ -553,11 +552,11 @@ describe('Client', () => {
 
       it('should fail when trying to send contacts content', async () => {
         const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('facebook');
+        const facebook = client.getChannel('facebook');
         const content = new ContactsContent([]);
 
         try {
-          await sms.sendMessage('FROM', 'TO', content);
+          await facebook.sendMessage('FROM', 'TO', content);
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type contacts is not supported in Facebook channel');
