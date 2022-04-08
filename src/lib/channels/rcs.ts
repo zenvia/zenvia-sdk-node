@@ -9,7 +9,7 @@ export class RcsChannel extends AbstractChannel {
   private supportedContents: ContentType[];
 
   /**
-   * Returns a new `RCSChannel` that is used to set the RCS channel.
+   * Returns a new `RcsChannel` that is used to set the RCS channel.
    *
    * @param token Zenvia platform token.
    * @param loggerInstance If you want, you can pass your log instance.

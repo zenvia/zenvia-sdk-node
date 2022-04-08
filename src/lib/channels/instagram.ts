@@ -1,6 +1,9 @@
 import { AbstractChannel } from './abstract-channel';
 import { ContentType, IContent, ILoggerInstance, IClientOptions } from '../../types';
 
+/**
+ * Implementation of Instagram channel.
+ */
 export class InstagramChannel extends AbstractChannel {
 
   private supportedContents: ContentType[];
