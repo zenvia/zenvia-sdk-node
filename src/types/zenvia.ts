@@ -4,11 +4,15 @@ import { RcsChannel } from '../lib/channels/rcs';
 import { InstagramChannel } from '../lib/channels/instagram';
 import { FacebookChannel } from '../lib/channels/facebook';
 import { WhatsAppChannel } from '../lib/channels/whatsapp';
+import { TelegramChannel } from '../lib/channels/telegram';
+import { GbmChannel } from '../lib/channels/gbm';
+import { EmailChannel } from '../lib/channels/email';
 import { TextContent } from '../lib/contents/text';
 import { FileContent } from '../lib/contents/file';
 import { ContactsContent } from '../lib/contents/contacts';
 import { TemplateContent } from '../lib/contents/template';
 import { LocationContent } from '../lib/contents/location';
+import { EmailContent } from '../lib/contents/email';
 import { Template } from '../lib/templates/base';
 import { PartialTemplate } from '../lib/templates/partial';
 import { MessageSubscription } from '../lib/subscriptions/message';
@@ -20,8 +24,12 @@ export {
   InstagramChannel,
   FacebookChannel,
   WhatsAppChannel,
+  TelegramChannel,
+  GbmChannel,
+  EmailChannel,
   TextContent,
   FileContent,
+  EmailContent,
   Template,
   PartialTemplate,
   LocationContent,
@@ -31,8 +39,8 @@ export {
   MessageStatusSubscription,
 };
 
-export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs' | 'instagram';
-export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json';
+export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs' | 'instagram' | 'telegram' | 'gbm' | 'email';
+export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email';
 export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
 export type EventType = 'MESSAGE' | 'MESSAGE_STATUS';
@@ -56,15 +64,19 @@ export interface ITextContent extends IContent {
   payload?: string;
 }
 
-export interface IFileContent extends IContent {
+export interface IFile {
   fileUrl: string;
-  fileMimeType: string;
+  fileMimeType?: string;
+  fileName?: string;
+}
+
+export interface IFileContent extends IContent, IFile {
   fileCaption?: string;
 }
 
 export interface IContactsContent extends IContent {
-  contacts: Array<{
-    addresses?: Array<{
+  contacts: {
+    addresses?: {
       street?: string;
       city?: string;
       state?: string;
@@ -72,17 +84,17 @@ export interface IContactsContent extends IContent {
       country?: string;
       countryCode?: string;
       type?: 'HOME' | 'WORK';
-    }>;
+    }[];
     birthday?: string;
     contactImage?: string;
-    emails?: Array<{
+    emails?: {
       email?: string;
       type?: 'HOME' | 'WORK';
-    }>;
-    ims?: Array<{
+    }[];
+    ims?: {
       service: string;
       userId: string;
-    }>;
+    }[];
     name?: {
       formattedName: string;
       firstName: string;
@@ -96,16 +108,16 @@ export interface IContactsContent extends IContent {
       department?: string;
       title?: string;
     };
-    phones?: Array<{
+    phones?: {
       phone?: string;
       type?: 'CELL' | 'MAIN' | 'IPHONE' | 'HOME' | 'WORK';
       waId?: string;
-    }>;
-    urls?: Array<{
+    }[];
+    urls?: {
       url?: string;
       type?: 'HOME' | 'WORK';
-    }>;
-  }>;
+    }[];
+  }[];
 }
 
 export interface ILocationContent extends IContent {
@@ -125,6 +137,15 @@ export interface ITemplateContent extends IContent {
 
 export interface IJsonContent extends IContent {
   payload: any;
+}
+
+export interface IEmailContent extends IContent {
+  subject: string;
+  html?: string;
+  text?: string;
+  attachments?: IFile[];
+  cc?: string[];
+  bcc?: string[];
 }
 
 export interface IMessageRequest {
@@ -338,7 +359,7 @@ export interface IButtonsItems {
 }
 
 export interface IChannels {
-  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS' | 'RCS' | 'INSTAGRAM';
+  type: 'WHATSAPP' | 'FACEBOOK' | 'SMS' | 'RCS' | 'INSTAGRAM' | 'TELEGRAM' | 'GBM' | 'EMAIL';
   status: 'APPROVED' | 'REFUSED' | 'PENDING' | 'CANCELED';
   senderId: string;
   whatsapp: any;
@@ -375,17 +396,17 @@ export interface IMessageBatch {
 }
 
 export interface ISmsMessageBatch extends IMessageBatch {
-  channel: 'sms',
+  channel: 'sms';
   message: {
     from: string,
     contents: IBatchTextContent[],
-  },
+  };
 }
 
 export interface IWhatsAppMessageBatch extends IMessageBatch {
-  channel: 'whatsapp',
+  channel: 'whatsapp';
   message: {
     from: string,
     contents: IBatchTemplateContent[],
-  },
+  };
 }

@@ -2,7 +2,7 @@
 
 import * as nock from 'nock';
 import { Readable } from 'stream';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, EmailContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
 
 describe('Client', () => {
 
@@ -818,6 +818,398 @@ describe('Client', () => {
           throw new Error('An expected error was not thrown');
         } catch (error) {
           error.message.should.be.deep.equal('Content of type undefined is not supported in WhatsApp channel');
+        }
+      });
+
+    });
+
+    describe('Telegram Channel', () => {
+
+      it('should send message with text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/telegram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/telegram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const channel = client.getChannel('telegram');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with an array of text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'first text message',
+            },
+            {
+              type: 'text',
+              text: 'second text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/telegram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const contents = [new TextContent('first text message'), new TextContent('second text message')];
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with file content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'file',
+              fileUrl: 'http://server.com/file.jpeg',
+              fileMimeType: 'image/jpeg',
+              fileCaption: 'some file caption',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/telegram/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should fail when trying to send template content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new TemplateContent('templateId', {});
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type template is not supported in Telegram channel');
+        }
+      });
+
+      it('should fail when trying to send location content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type location is not supported in Telegram channel');
+        }
+      });
+
+      it('should fail when trying to send contacts content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('telegram');
+        const content = new ContactsContent([]);
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in Telegram channel');
+        }
+      });
+
+    });
+
+    describe('GBM Channel', () => {
+
+      it('should send message with text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with text content using custom headers', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'some text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .matchHeader('CUSTOM', 'SOME_VALUE')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const channel = client.getChannel('gbm');
+        const content = new TextContent('some text message');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with an array of text content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'text',
+              text: 'first text message',
+            },
+            {
+              type: 'text',
+              text: 'second text message',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const contents = [new TextContent('first text message'), new TextContent('second text message')];
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should send message with file content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'file',
+              fileUrl: 'http://server.com/file.jpeg',
+              fileMimeType: 'image/jpeg',
+              fileCaption: 'some file caption',
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should fail when trying to send template content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new TemplateContent('templateId', {});
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type template is not supported in Google Business Messages channel');
+        }
+      });
+
+      it('should fail when trying to send location content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type location is not supported in Google Business Messages channel');
+        }
+      });
+
+      it('should fail when trying to send contacts content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new ContactsContent([]);
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in Google Business Messages channel');
+        }
+      });
+
+    });
+
+    describe('Email Channel', () => {
+
+      it('should send message with email content', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'email',
+              subject: 'SUBJECT',
+              attachments: [{ fileUrl: 'URL', fileMimeType: 'TYPE', fileName: 'NAME' }],
+              html: 'HTML',
+              text: 'TEXT',
+              cc: ['CC'],
+              bcc: ['BCC'],
+            },
+          ],
+        };
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/email/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+        const content = new EmailContent('SUBJECT', [{ fileUrl: 'URL', fileMimeType: 'TYPE', fileName: 'NAME' }], 'HTML', 'TEXT');
+        content.cc = ['CC'];
+        content.bcc = ['BCC'];
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      });
+
+      it('should fail when trying send message with text content', async () => {
+        const content = new TextContent('some text message');
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type text is not supported in E-mail channel');
+        }
+      });
+
+      it('should send message with file content', async () => {
+        const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type file is not supported in E-mail channel');
+        }
+      });
+
+      it('should fail when trying to send template content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+        const content = new TemplateContent('templateId', {});
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type template is not supported in E-mail channel');
+        }
+      });
+
+      it('should fail when trying to send location content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+        const content = new LocationContent(-46.511170, -23.442930, 'Name of location', 'Address of location', 'URL');
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type location is not supported in E-mail channel');
+        }
+      });
+
+      it('should fail when trying to send contacts content', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('email');
+        const content = new ContactsContent([]);
+
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not thrown');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in E-mail channel');
         }
       });
 
