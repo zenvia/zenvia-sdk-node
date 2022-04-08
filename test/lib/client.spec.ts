@@ -1237,9 +1237,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1265,9 +1265,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
         const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', smsBatch);
@@ -1291,9 +1291,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1319,13 +1319,13 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
-        const readStream = Readable.from("telefone\n5511999999999");
+        const readStream = Readable.from('telefone\n5511999999999');
 
         const actualMessageResponse = await client.sendMessageBatch(readStream, smsBatch);
         zenviaNock.isDone().should.be.true;
@@ -1351,9 +1351,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1366,9 +1366,9 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
+          recipient_header_name: 'recipient_number_column',
+          name: 'recipient_name_column',
+          protocol: 'protocol_column',
         };
         const contents = 'some text message';
         const smsBatch = new SmsMessageBatch(
@@ -1401,9 +1401,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1416,9 +1416,9 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
+          recipient_header_name: 'recipient_number_column',
+          name: 'recipient_name_column',
+          protocol: 'protocol_column',
         };
         const contents = [
           'first text message',
@@ -1455,9 +1455,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1483,9 +1483,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
         const actualMessageResponse = await client.sendMessageBatch('./test/resources/file.csv', whatsAppBatch);
@@ -1509,9 +1509,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1537,13 +1537,13 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
-        const readStream = Readable.from("telefone\n5511999999999");
+        const readStream = Readable.from('telefone\n5511999999999');
 
         const actualMessageResponse = await client.sendMessageBatch(readStream, whatsAppBatch);
         zenviaNock.isDone().should.be.true;
@@ -1570,9 +1570,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1586,9 +1586,9 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
+          recipient_header_name: 'recipient_number_column',
+          name: 'recipient_name_column',
+          protocol: 'protocol_column',
         };
         const contents = 'a whatsapp template id';
         const whatsAppBatch = new WhatsAppMessageBatch(
@@ -1622,9 +1622,9 @@ describe('Client', () => {
             ],
           },
           columnMapper: {
-            "recipient_header_name": "recipient_number_column",
-            "name": "recipient_name_column",
-            "protocol": "protocol_column",
+            recipient_header_name: 'recipient_number_column',
+            name: 'recipient_name_column',
+            protocol: 'protocol_column',
           },
         };
 
@@ -1638,9 +1638,9 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
-          "recipient_header_name": "recipient_number_column",
-          "name": "recipient_name_column",
-          "protocol": "protocol_column",
+          recipient_header_name: 'recipient_number_column',
+          name: 'recipient_name_column',
+          protocol: 'protocol_column',
         };
         const contents = [
           'a whatsapp template id',
@@ -1997,7 +1997,7 @@ describe('Client', () => {
         components: {
           body: {
             type: 'TEXT_TEMPLATE',
-            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
           },
         },
         senderId: 'detailed-gasosaurus',
@@ -2033,7 +2033,7 @@ describe('Client', () => {
         components: {
           body: {
             type: 'TEXT_TEMPLATE',
-            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.'
+            text: '{{name}}, informamos que o seu produto {{productName}} foi enviado para a transportadora e tem previsão de chegada em {{deliveryDate}}.',
           },
         },
         senderId: 'detailed-gasosaurus',
