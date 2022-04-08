@@ -9,6 +9,7 @@ export class FileContent extends AbstractContent implements IFileContent {
   fileUrl: string;
   fileMimeType: string;
   fileCaption: string;
+  fileName: string;
 
   /**
    * Returns a new `FileContent` that can be used to send audio, image, video, or document media to your customer.
@@ -16,12 +17,14 @@ export class FileContent extends AbstractContent implements IFileContent {
    * @param url The protocol and URL of the media to be sent. Use only with HTTP/HTTPS URLs.
    * @param mimeType A media type to indicates the nature and format of a media.
    * @param caption Describes the specified audio, image, video, or document media.
+   * @param name The file name of the specified audio, image, video, or document media.
    */
-  constructor(url: string, mimeType: string, caption?: string) {
+  constructor(url: string, mimeType: string, caption?: string, name?: string) {
     super('file');
     this.fileUrl = url;
     this.fileMimeType = mimeType;
     this.fileCaption = caption;
+    this.fileName = name;
   }
 
 }
