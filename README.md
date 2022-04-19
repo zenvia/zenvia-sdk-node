@@ -247,7 +247,7 @@ const whatsAppBatch = new WhatsAppMessageBatch(
   columnMapper,
 );
 const readStream = Readable.from("telefone\n5511999999999");
-const batch = client.sendMessageBatch(readstream, smsBatch);
+const batch = client.sendMessageBatch(readstream, whatsAppBatch);
 ```
 
 The response can be an `IBatch` object when successful or an `IError` object when an error occurs.
