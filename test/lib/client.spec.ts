@@ -2,7 +2,7 @@
 
 import * as nock from 'nock';
 import { Readable } from 'stream';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, EmailContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, EmailContent, CardContent, CarouselContent, ReplyableTextContent , MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
 
 describe('Client', () => {
 
@@ -1111,6 +1111,18 @@ describe('Client', () => {
           error.message.should.be.deep.equal('Content of type contacts is not supported in Google Business Messages channel');
         }
       });
+
+      it('should send image card', async () => {
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new CardContent();
+        try {
+          await channel.sendMessage('FROM', 'TO', content);
+          throw new Error('An expected error was not throw');
+        } catch (error) {
+          error.message.should.be.deep.equal('Content of type contacts is not supported in Google Business Messages channel')
+        }
+      }) 
 
     });
 
