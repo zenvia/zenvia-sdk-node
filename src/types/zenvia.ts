@@ -13,6 +13,9 @@ import { ContactsContent } from '../lib/contents/contacts';
 import { TemplateContent } from '../lib/contents/template';
 import { LocationContent } from '../lib/contents/location';
 import { EmailContent } from '../lib/contents/email';
+import { CardContent } from '../lib/contents/card';
+import { CarouselContent } from '../lib/contents/carousel';
+import { ReplyableTextContent } from '../lib/contents/replyable-text';
 import { Template } from '../lib/templates/base';
 import { PartialTemplate } from '../lib/templates/partial';
 import { MessageSubscription } from '../lib/subscriptions/message';
@@ -30,6 +33,9 @@ export {
   TextContent,
   FileContent,
   EmailContent,
+  CardContent,
+  CarouselContent,
+  ReplyableTextContent,
   Template,
   PartialTemplate,
   LocationContent,
@@ -40,7 +46,9 @@ export {
 };
 
 export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs' | 'instagram' | 'telegram' | 'gbm' | 'email';
-export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email';
+export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email' | 'card' | 'carousel' | 'replyable_text';
+export type ButtonType = 'text' | 'link' | 'calendar_event' | 'dial' | 'share_location' | 'view_location' | 'search_location';
+export type CardWidthType = 'MEDIUM' | 'SMALL'
 export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
 export type EventType = 'MESSAGE' | 'MESSAGE_STATUS';
@@ -57,6 +65,22 @@ export interface IChannel {
 
 export interface IContent {
   type: ContentType;
+}
+
+export interface IQuickReplyButtons {
+  type: ButtonType;
+  text: string;
+  playload: string;
+}
+
+export interface IButtons extends IQuickReplyButtons {
+  phoneNumber: string;
+}
+
+export interface IMedia {
+  url: string;
+  disposition?: string;
+  caption?: string
 }
 
 export interface ITextContent extends IContent {
@@ -146,6 +170,25 @@ export interface IEmailContent extends IContent {
   attachments?: IFile[];
   cc?: string[];
   bcc?: string[];
+}
+
+export interface ICardContent extends IContent {
+  title?: string;
+  text?: string;
+  media?: IMedia;
+  buttons?: IButtons[];
+  quickReplyButtons?: IQuickReplyButtons[];
+}
+
+export interface ICarouselContent extends IContent {
+  cardWidth?: CardWidthType;
+  cards: ICardContent[];
+  quickReplyButtons?: IQuickReplyButtons[];
+}
+
+export interface IReplyableText extends IContent {
+  text: string;
+  quickReplyButtons?: IQuickReplyButtons[];
 }
 
 export interface IMessageRequest {
