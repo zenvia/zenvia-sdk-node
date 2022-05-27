@@ -15,9 +15,9 @@ export class CarouselContent extends AbstractContent implements ICarouselContent
      * @param quickReplyButtons Horizontal list of buttons displayed after the content.
      */
     constructor(cards: ICardContent[], cardWidth?: CardWidthType, quickReplyButtons?: IButtons[]) {
-        super('carousel');
-        this.cardWidth = cardWidth;
+        super('carousel');        
         this.cards = cards;
+        this.cardWidth = cardWidth;
         this.quickReplyButtons = quickReplyButtons;
     }
 

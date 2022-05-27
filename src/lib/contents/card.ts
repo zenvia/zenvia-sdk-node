@@ -1,4 +1,3 @@
-import { type } from "os";
 import { Buttons, IButtons, ICardContent, IMedia } from "../../types";
 import { AbstractContent } from "./abstract-content";
 

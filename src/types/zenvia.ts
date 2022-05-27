@@ -71,7 +71,7 @@ export interface IContent {
 export interface IButtons {
   type: ButtonType;
   text: string;
-  playload?: string;
+  payload?: string;
 }
 
 export interface IButtonLink extends IButtons {
