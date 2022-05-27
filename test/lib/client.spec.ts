@@ -2,7 +2,7 @@
 
 import * as nock from 'nock';
 import { Readable } from 'stream';
-import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, EmailContent, CardContent, CarouselContent, ReplyableTextContent , MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
+import { IContent, Channel, Client, TextContent, TemplateContent, FileContent, ITemplate, ContactsContent, LocationContent, EmailContent, CardContent, CarouselContent, ReplyableTextContent, MessageSubscription, MessageStatusSubscription, ISmsMessageBatch, SmsMessageBatch, IWhatsAppMessageBatch, WhatsAppMessageBatch } from '../../src';
 
 describe('Client', () => {
 
@@ -22,9 +22,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/sms/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/sms/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const sms = client.getChannel('sms');
@@ -46,10 +46,10 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/sms/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('CUSTOM', 'SOME_VALUE')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/sms/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('CUSTOM', 'SOME_VALUE')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const sms = client.getChannel('sms');
@@ -75,9 +75,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/sms/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/sms/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const sms = client.getChannel('sms');
@@ -155,9 +155,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/rcs/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/rcs/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const rcs = client.getChannel('rcs');
@@ -179,10 +179,10 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/rcs/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('CUSTOM', 'SOME_VALUE')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/rcs/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('CUSTOM', 'SOME_VALUE')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const rcs = client.getChannel('rcs');
@@ -208,9 +208,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/rcs/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/rcs/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const rcs = client.getChannel('rcs');
@@ -234,9 +234,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/rcs/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/rcs/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const rcs = client.getChannel('rcs');
@@ -301,9 +301,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/instagram/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/instagram/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('instagram');
@@ -325,10 +325,10 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/instagram/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('CUSTOM', 'SOME_VALUE')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/instagram/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('CUSTOM', 'SOME_VALUE')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const channel = client.getChannel('instagram');
@@ -354,9 +354,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/instagram/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/instagram/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('instagram');
@@ -380,9 +380,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/instagram/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/instagram/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('instagram');
@@ -447,9 +447,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/facebook/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/facebook/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const facebook = client.getChannel('facebook');
@@ -471,10 +471,10 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/facebook/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('CUSTOM', 'SOME_VALUE')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/facebook/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('CUSTOM', 'SOME_VALUE')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const facebook = client.getChannel('facebook');
@@ -498,9 +498,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/facebook/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/facebook/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const facebook = client.getChannel('facebook');
@@ -578,9 +578,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/whatsapp/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const whatsapp = client.getChannel('whatsapp');
@@ -602,10 +602,10 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('CUSTOM', 'SOME_VALUE')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/whatsapp/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('CUSTOM', 'SOME_VALUE')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const sms = client.getChannel('whatsapp');
@@ -629,9 +629,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/whatsapp/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const whatsapp = client.getChannel('whatsapp');
@@ -659,9 +659,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/whatsapp/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const whatsapp = client.getChannel('whatsapp');
@@ -688,9 +688,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/whatsapp/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const whatsapp = client.getChannel('whatsapp');
@@ -724,9 +724,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/whatsapp/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const whatsapp = client.getChannel('whatsapp');
@@ -768,9 +768,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/whatsapp/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/whatsapp/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const whatsapp = client.getChannel('whatsapp');
@@ -793,9 +793,9 @@ describe('Client', () => {
         };
 
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/whatsapp/messages')
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(400, errorResponse);
+          .post('/v2/channels/whatsapp/messages')
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(400, errorResponse);
 
         const client = new Client('SOME_TOKEN');
         const whatsapp = client.getChannel('whatsapp');
@@ -836,9 +836,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/telegram/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/telegram/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('telegram');
@@ -860,10 +860,10 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/telegram/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('CUSTOM', 'SOME_VALUE')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/telegram/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('CUSTOM', 'SOME_VALUE')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const channel = client.getChannel('telegram');
@@ -889,9 +889,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/telegram/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/telegram/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('telegram');
@@ -915,9 +915,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/telegram/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/telegram/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('telegram');
@@ -982,9 +982,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/gbm/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/gbm/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
@@ -1006,10 +1006,10 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/gbm/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('CUSTOM', 'SOME_VALUE')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/gbm/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('CUSTOM', 'SOME_VALUE')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const channel = client.getChannel('gbm');
@@ -1035,9 +1035,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/gbm/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/gbm/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
@@ -1061,9 +1061,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/gbm/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/gbm/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
@@ -1072,6 +1072,74 @@ describe('Client', () => {
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
+
+      it('should send an image card', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'card',
+              title: 'Card Image test',
+              text: 'Any image',
+              media: {
+                url: 'https://ibb.co/4JqMKMc',
+                disposition: 'ON_THE_TOP_SHORT_HEIGHT',
+                caption: 'Background'
+              },
+              buttons: [
+                {
+                  type: 'dial',
+                  text: 'background-zenvia',
+                  playload: 'This is a background',
+                  phoneNumber: '5535988856834'
+                }
+              ],
+              quickReplyButtons: [
+                {
+                  type: 'text',
+                  text: 'background-zenvia',
+                  playload: 'This is a background',
+                }
+              ]
+            }
+          ]
+        }
+        const zenviaNock = nock('https://api.zenvia.com')
+          .post('/v2/channels/gbm/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
+        const client = new Client('SOME_TOKEN');
+        const channel = client.getChannel('gbm');
+        const content = new CardContent(
+          'Card image test',
+          'Any image',
+          {
+            url: 'https://ibb.co/1nyBwhM',
+            disposition: 'ON_THE_TOP_SHORT_HEIGHT',
+            caption: 'Background'
+          }
+          ,
+          [
+            {
+              type: 'dial',
+              text: 'background-zenvia',
+              playload: 'This is a background',
+              phoneNumber: '5535997096113'
+            }
+          ],
+          [
+            {
+              type: 'link',
+              text: 'another text',
+              playload: 'new payload'
+            }
+          ]
+        );
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+      })
 
       it('should fail when trying to send template content', async () => {
         const client = new Client('SOME_TOKEN');
@@ -1112,18 +1180,6 @@ describe('Client', () => {
         }
       });
 
-      it('should send image card', async () => {
-        const client = new Client('SOME_TOKEN');
-        const channel = client.getChannel('gbm');
-        const content = new CardContent();
-        try {
-          await channel.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not throw');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type contacts is not supported in Google Business Messages channel')
-        }
-      }) 
-
     });
 
     describe('Email Channel', () => {
@@ -1145,9 +1201,9 @@ describe('Client', () => {
           ],
         };
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/channels/email/messages', expectedMessage)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .reply(200, expectedMessage);
+          .post('/v2/channels/email/messages', expectedMessage)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .reply(200, expectedMessage);
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('email');
@@ -1257,10 +1313,10 @@ describe('Client', () => {
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
 
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
+          .post('/v2/message-batches', expected)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+          .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
         const smsBatch: ISmsMessageBatch = {
@@ -1311,10 +1367,10 @@ describe('Client', () => {
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="contacts\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
 
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
+          .post('/v2/message-batches', expected)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+          .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
         const smsBatch: ISmsMessageBatch = {
@@ -1370,10 +1426,10 @@ describe('Client', () => {
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"some text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
+          .post('/v2/message-batches', expected)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+          .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
@@ -1420,10 +1476,10 @@ describe('Client', () => {
 
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"sms","message":{"from":"FROM","contents":\[{"type":"text","text":"first text message"},{"type":"text","text":"second text message"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
+          .post('/v2/message-batches', expected)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+          .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
@@ -1475,10 +1531,10 @@ describe('Client', () => {
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
 
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
+          .post('/v2/message-batches', expected)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+          .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
         const whatsAppBatch: IWhatsAppMessageBatch = {
@@ -1529,10 +1585,10 @@ describe('Client', () => {
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="contacts\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
 
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
+          .post('/v2/message-batches', expected)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+          .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
         const whatsAppBatch: IWhatsAppMessageBatch = {
@@ -1590,10 +1646,10 @@ describe('Client', () => {
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
 
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
+          .post('/v2/message-batches', expected)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+          .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
@@ -1642,10 +1698,10 @@ describe('Client', () => {
         const expected = /^----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="batch"\r\nContent-Type: application\/json\r\n\r\n{"name":"SOME_BATCH","channel":"whatsapp","message":{"from":"FROM","contents":\[{"type":"template","templateId":"a whatsapp template id"},{"type":"template","templateId":"another whatsapp template id"}\]},"columnMapper":{"recipient_header_name":"recipient_number_column","name":"recipient_name_column","protocol":"protocol_column"}}\r\n----------------------------[0-9]{24}\r\nContent-Disposition: form-data; name="contacts"; filename="file\.csv"\r\nContent-Type: text\/csv\r\n\r\ntelefone\n5511999999999\r\n----------------------------[0-9]{24}--\r\n$/m;
 
         const zenviaNock = nock('https://api.zenvia.com')
-        .post('/v2/message-batches', expected)
-        .matchHeader('X-API-Token', 'SOME_TOKEN')
-        .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
-        .reply(200, expectedMessageBatch);
+          .post('/v2/message-batches', expected)
+          .matchHeader('X-API-Token', 'SOME_TOKEN')
+          .matchHeader('Content-Type', /^multipart\/form-data; boundary=--------------------------[0-9]{24}$/m)
+          .reply(200, expectedMessageBatch);
 
         const client = new Client('SOME_TOKEN');
         const columnMapper = {
@@ -1686,9 +1742,9 @@ describe('Client', () => {
         status: 'ACTIVE',
       }];
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/subscriptions')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedSubscription);
+        .get('/v2/subscriptions')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedSubscription);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.listSubscriptions();
@@ -1708,9 +1764,9 @@ describe('Client', () => {
         status: 'ACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v2/subscriptions', expectedSubscription)
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedSubscription);
+        .post('/v2/subscriptions', expectedSubscription)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedSubscription);
 
       const client = new Client('SOME_TOKEN');
       const subscription = new MessageSubscription({ url: 'https://my-webhook.com' }, { channel: 'whatsapp' });
@@ -1732,9 +1788,9 @@ describe('Client', () => {
         status: 'ACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v2/subscriptions', expectedSubscription)
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedSubscription);
+        .post('/v2/subscriptions', expectedSubscription)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedSubscription);
 
       const client = new Client('SOME_TOKEN');
       const subscription = new MessageSubscription({ url: 'https://my-webhook.com' }, { channel: 'whatsapp', direction: 'IN' });
@@ -1755,9 +1811,9 @@ describe('Client', () => {
         status: 'ACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v2/subscriptions', expectedSubscription)
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedSubscription);
+        .post('/v2/subscriptions', expectedSubscription)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedSubscription);
 
       const client = new Client('SOME_TOKEN');
       const subscription = new MessageStatusSubscription({ url: 'https://my-webhook.com' }, { channel: 'whatsapp' });
@@ -1778,9 +1834,9 @@ describe('Client', () => {
         status: 'INACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v2/subscriptions', expectedSubscription)
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedSubscription);
+        .post('/v2/subscriptions', expectedSubscription)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedSubscription);
 
       const client = new Client('SOME_TOKEN');
       const subscription = new MessageSubscription({ url: 'https://my-webhook.com' }, { channel: 'whatsapp' }, 'INACTIVE');
@@ -1801,9 +1857,9 @@ describe('Client', () => {
         status: 'INACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/subscriptions/SOME_SUBSCRIPTION_ID')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedSubscription);
+        .get('/v2/subscriptions/SOME_SUBSCRIPTION_ID')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedSubscription);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.getSubscription('SOME_SUBSCRIPTION_ID');
@@ -1823,9 +1879,9 @@ describe('Client', () => {
         status: 'INACTIVE',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .patch('/v2/subscriptions/SOME_SUBSCRIPTION_ID', { status: 'INACTIVE' })
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedSubscription);
+        .patch('/v2/subscriptions/SOME_SUBSCRIPTION_ID', { status: 'INACTIVE' })
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedSubscription);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.updateSubscription('SOME_SUBSCRIPTION_ID', { status: 'INACTIVE' });
@@ -1835,9 +1891,9 @@ describe('Client', () => {
 
     it('should delete subscription', async () => {
       const zenviaNock = nock('https://api.zenvia.com')
-      .delete('/v2/subscriptions/SOME_SUBSCRIPTION_ID')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(204);
+        .delete('/v2/subscriptions/SOME_SUBSCRIPTION_ID')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(204);
 
       const client = new Client('SOME_TOKEN');
       await client.deleteSubscription('SOME_SUBSCRIPTION_ID');
@@ -1864,9 +1920,9 @@ describe('Client', () => {
         },
       }];
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/reports/flow/entries?startDate=2020-01-10')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedFlow);
+        .get('/v2/reports/flow/entries?startDate=2020-01-10')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedFlow);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.getFlowReportClient().getEntries({ startDate: '2020-01-10' });
@@ -1892,9 +1948,9 @@ describe('Client', () => {
         },
       ];
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/reports/message/entries?startDate=2020-01-10&endDate=2020-01-11')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedMessage);
+        .get('/v2/reports/message/entries?startDate=2020-01-10&endDate=2020-01-11')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.getMessagesReportClient().getEntries({ startDate: '2020-01-10', endDate: '2020-01-11' });
@@ -1909,9 +1965,9 @@ describe('Client', () => {
       };
 
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/reports/flow/entries')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(400, errorResponse);
+        .get('/v2/reports/flow/entries')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(400, errorResponse);
 
       const client = new Client('SOME_TOKEN');
       try {
@@ -1929,9 +1985,9 @@ describe('Client', () => {
       };
 
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/reports/message/entries')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(400, errorResponse);
+        .get('/v2/reports/message/entries')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(400, errorResponse);
 
       const client = new Client('SOME_TOKEN');
       try {
@@ -1963,9 +2019,9 @@ describe('Client', () => {
       };
 
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/subscriptions')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(400, errorResponse);
+        .get('/v2/subscriptions')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(400, errorResponse);
 
       const client = new Client('SOME_TOKEN');
       try {
@@ -1979,9 +2035,9 @@ describe('Client', () => {
 
     it('should handle technical error', async () => {
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/subscriptions')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .replyWithError('getaddrinfo ENOTFOUND api.zenvia.com');
+        .get('/v2/subscriptions')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .replyWithError('getaddrinfo ENOTFOUND api.zenvia.com');
 
       const client = new Client('SOME_TOKEN');
       try {
@@ -2023,9 +2079,9 @@ describe('Client', () => {
         updatedAt: '2020-06-22T20:35:05.491Z',
       }];
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/templates')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, responseTemplates);
+        .get('/v2/templates')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, responseTemplates);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.listTemplates();
@@ -2059,9 +2115,9 @@ describe('Client', () => {
         updatedAt: '2020-06-22T20:35:05.491Z',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .get('/v2/templates/SOME_TEMPLATE_ID')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, responseTemplates);
+        .get('/v2/templates/SOME_TEMPLATE_ID')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, responseTemplates);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.getTemplate('SOME_TEMPLATE_ID');
@@ -2092,9 +2148,9 @@ describe('Client', () => {
         },
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v2/templates', expectedTemplate)
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedTemplate);
+        .post('/v2/templates', expectedTemplate)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedTemplate);
 
       const client = new Client('SOME_TOKEN');
       const actualTemplateResponse = await client.createTemplate(
@@ -2140,17 +2196,17 @@ describe('Client', () => {
         },
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .patch('/v2/templates/SOME_TEMPLATE_ID', {
-        notificationEmail: 'test@zenvia.com',
-        components: {
-          body: {
-            type: 'TEXT_TEMPLATE',
-            text: 'Hello, {{name}}. You received in your email your ticket.',
+        .patch('/v2/templates/SOME_TEMPLATE_ID', {
+          notificationEmail: 'test@zenvia.com',
+          components: {
+            body: {
+              type: 'TEXT_TEMPLATE',
+              text: 'Hello, {{name}}. You received in your email your ticket.',
+            },
           },
-        },
-      })
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(200, expectedTemplate);
+        })
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedTemplate);
 
       const client = new Client('SOME_TOKEN');
       const actualMessageResponse = await client.updateTemplate('SOME_TEMPLATE_ID', {
@@ -2168,9 +2224,9 @@ describe('Client', () => {
 
     it('should delete template', async () => {
       const zenviaNock = nock('https://api.zenvia.com')
-      .delete('/v2/templates/SOME_TEMPLATE_ID')
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(204);
+        .delete('/v2/templates/SOME_TEMPLATE_ID')
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(204);
 
       const client = new Client('SOME_TOKEN');
       await client.deleteTemplate('SOME_TEMPLATE_ID');
@@ -2204,9 +2260,9 @@ describe('Client', () => {
         message: 'Request has one or more errors\n  In body\n    For Content-Type application/json\n      Invalid value\n        One or more required properties missing: name',
       };
       const zenviaNock = nock('https://api.zenvia.com')
-      .post('/v2/templates', expectedTemplate)
-      .matchHeader('X-API-Token', 'SOME_TOKEN')
-      .reply(400, errorResponse);
+        .post('/v2/templates', expectedTemplate)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(400, errorResponse);
 
       const client = new Client('SOME_TOKEN');
       try {

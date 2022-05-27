@@ -48,6 +48,7 @@ export {
 export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs' | 'instagram' | 'telegram' | 'gbm' | 'email';
 export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email' | 'card' | 'carousel' | 'replyable_text';
 export type ButtonType = 'text' | 'link' | 'calendar_event' | 'dial' | 'share_location' | 'view_location' | 'search_location';
+export type Buttons = IButtons[] | IButtonLink[] | IButtonCalendarEvent[] | IButtonDial[] | IButtonSearchLocation[] | IButtonViewLocation[]
 export type CardWidthType = 'MEDIUM' | 'SMALL'
 export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
@@ -67,14 +68,34 @@ export interface IContent {
   type: ContentType;
 }
 
-export interface IQuickReplyButtons {
+export interface IButtons {
   type: ButtonType;
   text: string;
-  playload: string;
+  playload?: string;
 }
 
-export interface IButtons extends IQuickReplyButtons {
+export interface IButtonLink extends IButtons {
+  url: string;
+}
+
+export interface IButtonCalendarEvent extends IButtons {
+  startTime: string;
+  endTime: string;
+  title: string;
+}
+
+export interface IButtonDial extends IButtons {
   phoneNumber: string;
+}
+
+export interface IButtonViewLocation extends IButtons {
+  latitude: string;
+  longitude: string;
+  label?: string;
+}
+
+export interface IButtonSearchLocation extends IButtons {
+  query: string;
 }
 
 export interface IMedia {
@@ -177,18 +198,18 @@ export interface ICardContent extends IContent {
   text?: string;
   media?: IMedia;
   buttons?: IButtons[];
-  quickReplyButtons?: IQuickReplyButtons[];
+  quickReplyButtons?: IButtons[];
 }
 
 export interface ICarouselContent extends IContent {
   cardWidth?: CardWidthType;
   cards: ICardContent[];
-  quickReplyButtons?: IQuickReplyButtons[];
+  quickReplyButtons?: IButtons[];
 }
 
 export interface IReplyableText extends IContent {
   text: string;
-  quickReplyButtons?: IQuickReplyButtons[];
+  quickReplyButtons?: IButtons[];
 }
 
 export interface IMessageRequest {

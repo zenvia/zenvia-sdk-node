@@ -1,4 +1,4 @@
-import { CardWidthType, ICardContent, ICarouselContent, IQuickReplyButtons } from "../../types";
+import { CardWidthType, ICardContent, ICarouselContent, IButtons } from "../../types";
 import { AbstractContent } from "./abstract-content";
 
 /**
@@ -7,14 +7,14 @@ import { AbstractContent } from "./abstract-content";
 export class CarouselContent extends AbstractContent implements ICarouselContent {
     cardWidth?: CardWidthType;
     cards: ICardContent[];
-    quickReplyButtons?: IQuickReplyButtons[];
+    quickReplyButtons?: IButtons[];
 
     /**
      * @param cards The sequente of cards to be shown in the carousel
      * @param cardWidth The card width, enum: SMALL, MEDIUM, default: MEDIUM
      * @param quickReplyButtons Horizontal list of buttons displayed after the content.
      */
-    constructor(cards: ICardContent[], cardWidth?: CardWidthType, quickReplyButtons?: IQuickReplyButtons[]) {
+    constructor(cards: ICardContent[], cardWidth?: CardWidthType, quickReplyButtons?: IButtons[]) {
         super('carousel');
         this.cardWidth = cardWidth;
         this.cards = cards;

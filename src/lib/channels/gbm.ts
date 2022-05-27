@@ -16,7 +16,7 @@ export class GbmChannel extends AbstractChannel {
    */
   constructor(token: string, loggerInstance: ILoggerInstance, options: IClientOptions) {
     super(token, 'gbm', loggerInstance, options);
-    this.supportedContents = ['text', 'file', 'card'];
+    this.supportedContents = ['text', 'file', 'card', 'replyable_text', 'carousel'];
   }
 
   protected contentSupportValidation(content: IContent): void | never {
