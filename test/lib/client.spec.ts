@@ -1294,6 +1294,46 @@ describe('Client', () => {
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       })
 
+      it('should send replyable text', async () => {
+        const expectedMessage = {
+          from: 'FROM',
+          to: 'TO',
+          contents: [
+            {
+              type: 'replyable_text',
+              text: 'Replyable text ex',
+              quickReplyButtons: [
+                {
+                  type: 'text',
+                  text: 'Test',
+                  payload: 'Test payload'
+                }
+              ]
+            }
+          ]
+        }
+        const zenviaNock = nock('https://api.zenvia.com')
+        .post('/v2/channels/gbm/messages', expectedMessage)
+        .matchHeader('X-API-Token', 'SOME_TOKEN')
+        .reply(200, expectedMessage);
+      const client = new Client('SOME_TOKEN');
+      const channel = client.getChannel('gbm');
+      const contents = [new ReplyableTextContent(
+        'Replyable text',
+        [
+          {
+              type: 'text',
+              text: 'Test',
+              payload: 'Test payload'
+  
+          }
+      ])]
+      const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
+        zenviaNock.isDone().should.be.true;
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
+
+      })
+
       it('should fail when trying to send template content', async () => {
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
