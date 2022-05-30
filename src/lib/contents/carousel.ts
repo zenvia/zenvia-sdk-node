@@ -10,6 +10,8 @@ export class CarouselContent extends AbstractContent implements ICarouselContent
     quickReplyButtons?: IButtons[];
 
     /**
+     * Returns a new `CarouselContent` that can be used to send a carousel of images, GIF, or videos to your customer.
+     * 
      * @param cards The sequente of cards to be shown in the carousel
      * @param cardWidth The card width, enum: SMALL, MEDIUM, default: MEDIUM
      * @param quickReplyButtons Horizontal list of buttons displayed after the content.

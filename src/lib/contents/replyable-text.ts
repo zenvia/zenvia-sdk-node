@@ -9,6 +9,7 @@ export class ReplyableTextContent extends AbstractContent implements IReplyableT
     quickReplyButtons?: IButtons[];
 
     /**
+     * Returns a new `ReplyableTextContent` that can be used to send text and reply buttons to your customer.
      * 
      * @param text Text to be sent.
      * @param quickReployButtons Horizontal list of buttons displayed after the content.
