@@ -1073,14 +1073,14 @@ describe('Client', () => {
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
 
-      it('should send an image card', async () => {
+      it('should send a card that displays media', async () => {
         const expectedMessage = {
           from: 'FROM',
           to: 'TO',
           contents: [
             {
               type: 'card',
-              title: 'Card Image test',
+              title: 'Card Image Test',
               text: 'Any image',
               media: {
                 url: 'https://ibb.co/4JqMKMc',
@@ -1112,7 +1112,7 @@ describe('Client', () => {
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
         const contents = [new CardContent(
-          'Card image test',
+          'Card image Test',
           'Any image',
           {
             url: 'https://ibb.co/4JqMKMc',
@@ -1141,7 +1141,7 @@ describe('Client', () => {
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       })
 
-      it('should send a carousel of image cards', async () => {
+      it('should send a carousel of media cards', async () => {
         const expectedMessage = {
           from: 'FROM',
           to: 'TO',
