@@ -47,8 +47,9 @@ export {
 
 export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs' | 'instagram' | 'telegram' | 'gbm' | 'email';
 export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email' | 'card' | 'carousel' | 'replyable_text';
-export type ButtonType = 'text' | 'link' | 'calendar_event' | 'dial' | 'share_location' | 'view_location' | 'search_location';
-export type Buttons = IButtons[] | IButtonLink[] | IButtonCalendarEvent[] | IButtonDial[] | IButtonSearchLocation[] | IButtonViewLocation[]
+export type ButtonType = 'text' | 'link' | 'dial' | 'share_location' | 'view_location' | 'search_location';
+export type Button = (IButtonText | IButtonLink | IButtonCalendarEvent | IButtonDial | IButtonSearchLocation | IButtonViewLocation)[]
+export type MediaDispositionType = 'ON_THE_TOP_SHORT_HEIGHT' | 'ON_THE_TOP_MEDIUM_HEIGHT' | 'ON_THE_TOP_TALL_HEIGHT' | 'ON_THE_LEFT' | 'ON_THE_RIGHT'
 export type CardWidthType = 'MEDIUM' | 'SMALL'
 export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
@@ -68,39 +69,39 @@ export interface IContent {
   type: ContentType;
 }
 
-export interface IButtons {
+export interface IButtonText {
   type: ButtonType;
   text: string;
   payload?: string;
 }
 
-export interface IButtonLink extends IButtons {
+export interface IButtonLink extends IButtonText {
   url: string;
 }
 
-export interface IButtonCalendarEvent extends IButtons {
+export interface IButtonCalendarEvent extends IButtonText {
   startTime: string;
   endTime: string;
   title: string;
 }
 
-export interface IButtonDial extends IButtons {
+export interface IButtonDial extends IButtonText {
   phoneNumber: string;
 }
 
-export interface IButtonViewLocation extends IButtons {
+export interface IButtonViewLocation extends IButtonText {
   latitude: string;
   longitude: string;
   label?: string;
 }
 
-export interface IButtonSearchLocation extends IButtons {
+export interface IButtonSearchLocation extends IButtonText {
   query: string;
 }
 
 export interface IMedia {
   url: string;
-  disposition?: string;
+  disposition?: MediaDispositionType;
   caption?: string
 }
 
@@ -197,19 +198,18 @@ export interface ICardContent extends IContent {
   title?: string;
   text?: string;
   media?: IMedia;
-  buttons?: IButtons[];
-  quickReplyButtons?: IButtons[];
+  buttons?: Button;  
 }
 
 export interface ICarouselContent extends IContent {
   cardWidth?: CardWidthType;
   cards: ICardContent[];
-  quickReplyButtons?: IButtons[];
+  quickReplyButtons?: IButtonText[];
 }
 
 export interface IReplyableText extends IContent {
   text: string;
-  quickReplyButtons?: IButtons[];
+  quickReplyButtons?: IButtonText[];
 }
 
 export interface IMessageRequest {

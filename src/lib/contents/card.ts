@@ -1,4 +1,4 @@
-import { Buttons, IButtons, ICardContent, IMedia } from "../../types";
+import { Button, IButtonText, ICardContent, IMedia } from "../../types";
 import { AbstractContent } from "./abstract-content";
 
 /**
@@ -8,8 +8,8 @@ export class CardContent extends AbstractContent implements ICardContent {
     title?: string;
     text?: string;
     media?: IMedia;
-    buttons?: Buttons;
-    quickReplyButtons?: IButtons[];
+    buttons?: Button;
+    quickReplyButtons?: IButtonText[];
     
     /**
      * Returns a new `CardContent` that can be used to send an image, a GIF or a video to your customer.
@@ -20,7 +20,7 @@ export class CardContent extends AbstractContent implements ICardContent {
      * @param buttons List of buttons displayed inside a card.
      * @param quickReplyButtons Horizontal list of buttons displayed after the content.
      */
-    constructor(title?: string, text?: string, media?: IMedia, buttons?: Buttons, quickReplyButtons?: IButtons[]) {
+    constructor(title?: string, text?: string, media?: IMedia, buttons?: Button, quickReplyButtons?: IButtonText[]) {
         super('card');
         this.title = title;
         this.text = text;

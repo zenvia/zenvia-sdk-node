@@ -1237,13 +1237,6 @@ describe('Client', () => {
                   text: 'Test carousel',
                   payload: 'Test'
                 }
-              ],
-              quickReplyButtons: [
-                {
-                  type: 'text',
-                  text: 'Test carousel',
-                  payload: 'Test'
-                }
               ]
             },
             {
@@ -1261,15 +1254,7 @@ describe('Client', () => {
                   text: 'Test carousel',
                   payload: 'Test'
                 }
-              ],
-              quickReplyButtons: [
-                {
-                  type: 'text',
-                  text: 'Test carousel',
-                  payload: 'Test'
-                }
               ]
-
             }
           ],
           "SMALL",
