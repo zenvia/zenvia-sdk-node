@@ -204,12 +204,12 @@ export interface ICardContent extends IContent {
 export interface ICarouselContent extends IContent {
   cardWidth?: CardWidthType;
   cards: ICardContent[];
-  quickReplyButtons?: IButtonText[];
+  quickReplyButtons?: Buttons;
 }
 
 export interface IReplyableText extends IContent {
   text: string;
-  quickReplyButtons?: IButtonText[];
+  quickReplyButtons?: Buttons;
 }
 
 export interface IMessageRequest {
