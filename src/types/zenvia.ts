@@ -48,7 +48,7 @@ export {
 export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs' | 'instagram' | 'telegram' | 'gbm' | 'email';
 export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email' | 'card' | 'carousel' | 'replyable_text';
 export type ButtonType = 'text' | 'link' | 'dial' | 'share_location' | 'view_location' | 'search_location';
-export type Button = (IButtonText | IButtonLink | IButtonCalendarEvent | IButtonDial | IButtonSearchLocation | IButtonViewLocation)[]
+export type Buttons = (IButtonText | IButtonLink | IButtonCalendarEvent | IButtonDial | IButtonSearchLocation | IButtonViewLocation)[]
 export type MediaDispositionType = 'ON_THE_TOP_SHORT_HEIGHT' | 'ON_THE_TOP_MEDIUM_HEIGHT' | 'ON_THE_TOP_TALL_HEIGHT' | 'ON_THE_LEFT' | 'ON_THE_RIGHT'
 export type CardWidthType = 'MEDIUM' | 'SMALL'
 export type MessageType = 'message' | 'notification';
@@ -198,7 +198,7 @@ export interface ICardContent extends IContent {
   title?: string;
   text?: string;
   media?: IMedia;
-  buttons?: Button;  
+  buttons?: Buttons;  
 }
 
 export interface ICarouselContent extends IContent {

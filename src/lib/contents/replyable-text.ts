@@ -1,4 +1,4 @@
-import { IButtonText, IReplyableText } from "../../types";
+import { Buttons, IReplyableText } from "../../types";
 import { AbstractContent } from "./abstract-content";
 
 /**
@@ -6,7 +6,7 @@ import { AbstractContent } from "./abstract-content";
  */
 export class ReplyableTextContent extends AbstractContent implements IReplyableText {
     text: string;
-    quickReplyButtons?: IButtonText[];
+    quickReplyButtons?: Buttons;
 
     /**
      * Returns a new `ReplyableTextContent` that can be used to send text and reply buttons to your customer.
@@ -14,7 +14,7 @@ export class ReplyableTextContent extends AbstractContent implements IReplyableT
      * @param text Text to be sent.
      * @param quickReployButtons Horizontal list of buttons displayed after the content.
      */
-    constructor(text: string, quickReplyButtons?: IButtonText[]) {
+    constructor(text: string, quickReplyButtons?: Buttons) {
         super('replyable_text');
         this.text = text;
         this.quickReplyButtons = quickReplyButtons;
