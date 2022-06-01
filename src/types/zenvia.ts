@@ -194,16 +194,20 @@ export interface IEmailContent extends IContent {
   bcc?: string[];
 }
 
-export interface ICardContent extends IContent {
+export interface ICard extends IContent {
   title?: string;
   text?: string;
   media?: IMedia;
   buttons?: Buttons;  
 }
 
+export interface ICardContent extends ICard {
+  quickReplyButtons?: Buttons
+}
+
 export interface ICarouselContent extends IContent {
   cardWidth?: CardWidthType;
-  cards: ICardContent[];
+  cards: ICard[];
   quickReplyButtons?: Buttons;
 }
 
