@@ -169,7 +169,7 @@ The channels that can be used to send the content are:
 |----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |     :---:    |     :---:   |     :---:       |        :---:         |
 | SMS      | X           |             |                 |                 |                 |              |             |                 |                      |
 | RCS      | X           | X           |                 |                 |                 |              | X           | X               | X                    |
-| WhatsApp | X           | X           | X               | X               | X               |              |             |                 | X                    |
+| WhatsApp | X           | X           | X               | X               | X               |              |             |                 |                      |
 | Facebook | X           | X           |                 |                 |                 |              | X           | X               | X                    |
 | Instagram| X           | X           |                 |                 |                 |              |             |                 | X                    |
 | Email    |             |             |                 |                 |                 | X            |             |                 |                      |
