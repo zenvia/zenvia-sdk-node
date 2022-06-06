@@ -168,13 +168,13 @@ The channels that can be used to send the content are:
 | Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent | EmailContent | CardContent | CarouselContent | ReplyableTextContent |
 |----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |     :---:    |     :---:   |     :---:       |        :---:         |
 | SMS      | X           |             |                 |                 |                 |              |             |                 |                      |
-| RCS      | X           | X           |                 |                 |                 |              |             |                 |                      |
-| WhatsApp | X           | X           | X               | X               | X               |              |             |                 |                      |
-| Facebook | X           | X           |                 |                 |                 |              |             |                 |                      |
-| Instagram| X           | X           |                 |                 |                 |              |             |                 |                      |
+| RCS      | X           | X           |                 |                 |                 |              | X           | X               | X                    |
+| WhatsApp | X           | X           | X               | X               | X               |              |             |                 | X                    |
+| Facebook | X           | X           |                 |                 |                 |              | X           | X               | X                    |
+| Instagram| X           | X           |                 |                 |                 |              |             |                 | X                    |
 | Email    |             |             |                 |                 |                 | X            |             |                 |                      |
 | GBM      | X           | X           |                 |                 |                 |              | X           | X               | X                    |
-| Telegram | X           | X           |                 |                 |                 |              |             |                 |                      |
+| Telegram | X           | X           |                 |                 |                 |              |             |                 | X                    |
 
 Use the `sendMessage` method to messages to your customers.
 
