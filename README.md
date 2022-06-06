@@ -36,6 +36,12 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 ## Changelog
 
+### 2.4.0
+* Added
+    * Card content
+    * Carousel content
+    * Replyable text content
+
 ### 2.3.0
 * Added
     * Email content
@@ -70,6 +76,9 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 - [x] Contacts message content
 - [x] Template message content
 - [x] Email message content
+- [x] Card message content
+- [x] Carousel message content
+- [x] Replyable text message content
 - [x] Send batches
 - [x] Subscription handling
 - [x] Get reports
@@ -150,19 +159,22 @@ The content types that can be sent are:
 | ContactsContent | Used to send contacts messages to your customer. |
 | TemplateContent | Used to send template messages to your customer. |
 | EmailContent    | Used to send e-mail messages to your customer.   |
+| CardContent     | Used to send card messages to your customer.
+| CarouselContent | Used to send carousel messages to your customer.
+| ReplyableTextContent | Used to send replyable text messages to your customer.
 
 The channels that can be used to send the content are:
 
-| Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent | EmailContent |
-|----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |     :---:    |
-| SMS      | X           |             |                 |                 |                 |              |
-| RCS      | X           | X           |                 |                 |                 |              |
-| WhatsApp | X           | X           | X               | X               | X               |              |
-| Facebook | X           | X           |                 |                 |                 |              |
-| Instagram| X           | X           |                 |                 |                 |              |
-| Email    |             |             |                 |                 |                 | X            |
-| GBM      | X           | X           |                 |                 |                 |              |
-| Telegram | X           | X           |                 |                 |                 |              |
+| Channel  | TextContent | FileContent | LocationContent | ContactsContent | TemplateContent | EmailContent | CardContent | CarouselContent | ReplyableTextContent |
+|----------|    :---:    |    :---:    |      :---:      |      :---:      |      :---:      |     :---:    |     :---:   |     :---:       |        :---:         |
+| SMS      | X           |             |                 |                 |                 |              |             |                 |                      |
+| RCS      | X           | X           |                 |                 |                 |              |             |                 |                      |
+| WhatsApp | X           | X           | X               | X               | X               |              |             |                 |                      |
+| Facebook | X           | X           |                 |                 |                 |              |             |                 |                      |
+| Instagram| X           | X           |                 |                 |                 |              |             |                 |                      |
+| Email    |             |             |                 |                 |                 | X            |             |                 |                      |
+| GBM      | X           | X           |                 |                 |                 |              | X           | X               | X                    |
+| Telegram | X           | X           |                 |                 |                 |              |             |                 |                      |
 
 Use the `sendMessage` method to messages to your customers.
 
