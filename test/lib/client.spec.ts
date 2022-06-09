@@ -87,19 +87,6 @@ describe('Client', () => {
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
 
-      it('should fail when trying to send template content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const sms = client.getChannel('sms');
-        const content = new TemplateContent('templateId', {});
-
-        try {
-          await sms.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type template is not supported in SMS channel');
-        }
-      });
-
       it('should fail when trying to send file content', async () => {
         const client = new Client('SOME_TOKEN');
         const sms = client.getChannel('sms');
@@ -244,19 +231,6 @@ describe('Client', () => {
         const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
-      });
-
-      it('should fail when trying to send template content', async () => {
-        const client = new Client('SOME_TOKEN');
-        const rcs = client.getChannel('rcs');
-        const content = new TemplateContent('templateId', {});
-
-        try {
-          await rcs.sendMessage('FROM', 'TO', content);
-          throw new Error('An expected error was not thrown');
-        } catch (error) {
-          error.message.should.be.deep.equal('Content of type template is not supported in RCS channel');
-        }
       });
 
       it('should fail when trying to send location content', async () => {
@@ -1068,9 +1042,9 @@ describe('Client', () => {
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
         const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content)
         zenviaNock.isDone().should.be.true;
-        actualMessageResponse.should.be.deep.equal(expectedMessage);
+        
       });
 
       it('should send a card that displays media', async () => {
@@ -1091,7 +1065,7 @@ describe('Client', () => {
                 {
                   type: 'dial',
                   text: 'background-zenvia',
-                  playload: 'This is a background',
+                  payload: 'This is a background',
                   phoneNumber: '5535997096113'
                 }
               ],
@@ -1099,44 +1073,42 @@ describe('Client', () => {
                 {
                   type: 'text',
                   text: 'background-zenvia',
-                  playload: 'This is a background',
+                  payload: 'This is a background'
                 }
               ]
             }
           ]
         }
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/channels/gbm/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
+
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
-        const contents = [new CardContent(
-          'Card image Test',
-          'Any image',
+        const content = new CardContent('Card Image Test', 'Any image', 
+        {
+          url: 'https://ibb.co/4JqMKMc',
+          disposition: 'ON_THE_TOP_SHORT_HEIGHT',
+          caption: 'Background'
+        }, 
+        [
           {
-            url: 'https://ibb.co/4JqMKMc',
-            disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-            caption: 'Background'
+            type: 'dial',
+            text: 'background-zenvia',
+            payload: 'This is a background',
+            phoneNumber: '5535997096113'
           }
-          ,
-          [
-            {
-              type: 'dial',
-              text: 'background-zenvia',
-              payload: 'This is a background',
-              phoneNumber: '5535997096113'
-            }
-          ],
-          [
-            {
-              type: 'text',
-              text: 'background-zenvia',
-              payload: 'This is a background',
-            }
-          ]
-        )];
-        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
+        ],
+        [
+          {
+            type: 'text',
+            text: 'background-zenvia',
+            payload: 'This is a background'
+          }
+        ])
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       })
@@ -1151,6 +1123,7 @@ describe('Client', () => {
               cardWidth: 'SMALL',
               cards: [
                 {
+                  type: 'card',
                   title: 'First image of carousel',
                   text: 'Testing carousel',
                   media: {
@@ -1164,22 +1137,16 @@ describe('Client', () => {
                       text: 'Test carousel',
                       payload: 'Test'
                     }
-                  ],
-                  quickReplyButtons: [
-                    {
-                      type: 'text',
-                      text: 'Test carousel',
-                      payload: 'Test'
-                    }
                   ]
                 },
                 {
+                  type: 'card',
                   title: 'Second image of carousel',
                   text: 'Testing carousel',
                   media: {
-                    url: 'https://ibb.co/4JqMKMc',
-                    disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-                    caption: 'Background'
+                      url: 'https://ibb.co/4JqMKMc',
+                      disposition: 'ON_THE_TOP_SHORT_HEIGHT',
+                      caption: 'Background'
                   },
                   buttons: [
                     {
@@ -1199,8 +1166,7 @@ describe('Client', () => {
                 {
                   type: 'text',
                   text: 'Test carousel',
-                  payload: 'Test'
-
+                  payload: 'Test'    
                 }
               ]
             }
@@ -1210,67 +1176,66 @@ describe('Client', () => {
         .post('/v2/channels/gbm/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
+
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
-        const contents = [new CarouselContent(
-          [
-            {
-              type: 'card',
-              title: 'First image of carousel',
-              text: 'Testing carousel',
-              media: {
+        const content = new CarouselContent([
+          {
+            type: 'card',
+            title: 'First image of carousel',
+            text: 'Testing carousel',
+            media: {
+              url: 'https://ibb.co/4JqMKMc',
+              disposition: 'ON_THE_TOP_SHORT_HEIGHT',
+              caption: 'Background'
+            },
+            buttons: [
+              {
+                type: 'text',
+                text: 'Test carousel',
+                payload: 'Test'
+              }
+            ]
+          },
+          {
+            type: 'card',
+            title: 'Second image of carousel',
+            text: 'Testing carousel',
+            media: {
                 url: 'https://ibb.co/4JqMKMc',
                 disposition: 'ON_THE_TOP_SHORT_HEIGHT',
                 caption: 'Background'
-              },
-              buttons: [
-                {
-                  type: 'text',
-                  text: 'Test carousel',
-                  payload: 'Test'
-                }
-              ]
-            },
-            {
-              type: 'card',
-              title: 'Second image of carousel',
-              text: 'Testing carousel',
-              media: {
-                url: 'https://ibb.co/4JqMKMc',
-                disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-                caption: 'Background'
-              },
-              buttons: [
-                {
-                  type: 'text',
-                  text: 'Test carousel',
-                  payload: 'Test'
-                }
-              ]
             }
-          ],
-          "SMALL",
-          [
-            {
-              type: 'text',
-              text: 'Test carousel',
-              payload: 'Test'
-            },
-            {
-              type: 'text',
-              text: 'Test carousel',
-              payload: 'Test'
-
-            }
-          ]
-
-        )];
-        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
+            ,
+            buttons: [
+              {
+                type: 'text',
+                text: 'Test carousel',
+                payload: 'Test'
+              }
+            ]
+          }
+        ],
+        'SMALL',
+        [
+          {
+            type: 'text',
+            text: 'Test carousel',
+            payload: 'Test'
+          },
+          {
+            type: 'text',
+            text: 'Test carousel',
+            payload: 'Test'    
+          }
+        ]
+        )
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content)
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
       })
 
-      it('should send replyable text', async () => {
+      it('should send replyable texts', async () => {
         const expectedMessage = {
           from: 'FROM',
           to: 'TO',
@@ -1283,31 +1248,30 @@ describe('Client', () => {
                   type: 'text',
                   text: 'Test',
                   payload: 'Test payload'
-                }
+                }               
               ]
             }
           ]
-        }
+        };
+
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/channels/gbm/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
         .reply(200, expectedMessage);
+
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
-        const contents = [new ReplyableTextContent(
-          'Replyable text',
-          [
-            {
-              type: 'text',
-              text: 'Test',
-              payload: 'Test payload'
-
-            }
-          ])]
-        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', ...contents);
+        const content = new ReplyableTextContent('Replyable text ex', 
+        [
+          {
+            type: 'text',
+            text: 'Test',
+            payload: 'Test payload'
+          }               
+        ])
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
-
       })
 
       it('should fail when trying to send template content', async () => {
