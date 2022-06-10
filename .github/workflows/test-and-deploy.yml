@@ -28,6 +28,11 @@ jobs:
     - name: Run build
       run: npm run build
 
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
   deploy:
     if: success()
     runs-on: ubuntu-latest
@@ -38,11 +43,6 @@ jobs:
           node-version: '10.x'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - name: Coveralls GitHub Action
-        uses: coverallsapp/github-action@master
-        with: 
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{ github.workspace }}/coverage/lcov.info
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
