@@ -28,6 +28,10 @@ jobs:
     - name: Run build
       run: npm run build
 
+    - name: Coveralls GitHub Action
+      run: npm run test:coveralls
+
+
   deploy:
     if: success()
     runs-on: ubuntu-latest
