@@ -16,7 +16,7 @@ export class FacebookChannel extends AbstractChannel {
    */
   constructor(token: string, loggerInstance: ILoggerInstance, options: IClientOptions) {
     super(token, 'facebook', loggerInstance, options);
-    this.supportedContents = ['text', 'file'];
+    this.supportedContents = ['text', 'file', 'card', 'carousel', 'replyable_text'];
   }
 
   protected contentSupportValidation(content: IContent): void | never {

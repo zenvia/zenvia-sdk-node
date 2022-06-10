@@ -16,7 +16,7 @@ export class SmsChannel extends AbstractChannel {
    */
   constructor(token: string, loggerInstance: ILoggerInstance, options: IClientOptions) {
     super(token, 'sms', loggerInstance, options);
-    this.supportedContents = ['text'];
+    this.supportedContents = ['text', 'template'];
   }
 
   protected contentSupportValidation(content: IContent): void | never {

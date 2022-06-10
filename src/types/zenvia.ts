@@ -13,6 +13,9 @@ import { ContactsContent } from '../lib/contents/contacts';
 import { TemplateContent } from '../lib/contents/template';
 import { LocationContent } from '../lib/contents/location';
 import { EmailContent } from '../lib/contents/email';
+import { CardContent } from '../lib/contents/card';
+import { CarouselContent } from '../lib/contents/carousel';
+import { ReplyableTextContent } from '../lib/contents/replyable-text';
 import { Template } from '../lib/templates/base';
 import { PartialTemplate } from '../lib/templates/partial';
 import { MessageSubscription } from '../lib/subscriptions/message';
@@ -30,6 +33,9 @@ export {
   TextContent,
   FileContent,
   EmailContent,
+  CardContent,
+  CarouselContent,
+  ReplyableTextContent,
   Template,
   PartialTemplate,
   LocationContent,
@@ -40,7 +46,11 @@ export {
 };
 
 export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs' | 'instagram' | 'telegram' | 'gbm' | 'email';
-export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email';
+export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email' | 'card' | 'carousel' | 'replyable_text';
+export type ButtonType = 'text' | 'link' | 'dial' | 'share_location' | 'view_location' | 'search_location';
+export type Buttons = (IButtonText | IButtonLink | IButtonCalendarEvent | IButtonDial | IButtonSearchLocation | IButtonViewLocation)[]
+export type MediaDispositionType = 'ON_THE_TOP_SHORT_HEIGHT' | 'ON_THE_TOP_MEDIUM_HEIGHT' | 'ON_THE_TOP_TALL_HEIGHT' | 'ON_THE_LEFT' | 'ON_THE_RIGHT'
+export type CardWidthType = 'MEDIUM' | 'SMALL'
 export type MessageType = 'message' | 'notification';
 export type MessageDirection = 'IN' | 'OUT';
 export type EventType = 'MESSAGE' | 'MESSAGE_STATUS';
@@ -57,6 +67,42 @@ export interface IChannel {
 
 export interface IContent {
   type: ContentType;
+}
+
+export interface IButtonText {
+  type: ButtonType;
+  text: string;
+  payload?: string;
+}
+
+export interface IButtonLink extends IButtonText {
+  url: string;
+}
+
+export interface IButtonCalendarEvent extends IButtonText {
+  startTime: string;
+  endTime: string;
+  title: string;
+}
+
+export interface IButtonDial extends IButtonText {
+  phoneNumber: string;
+}
+
+export interface IButtonViewLocation extends IButtonText {
+  latitude: string;
+  longitude: string;
+  label?: string;
+}
+
+export interface IButtonSearchLocation extends IButtonText {
+  query: string;
+}
+
+export interface IMedia {
+  url: string;
+  disposition?: MediaDispositionType;
+  caption?: string
 }
 
 export interface ITextContent extends IContent {
@@ -146,6 +192,28 @@ export interface IEmailContent extends IContent {
   attachments?: IFile[];
   cc?: string[];
   bcc?: string[];
+}
+
+export interface ICard extends IContent {
+  title?: string;
+  text?: string;
+  media?: IMedia;
+  buttons?: Buttons;  
+}
+
+export interface ICardContent extends ICard {
+  quickReplyButtons?: Buttons
+}
+
+export interface ICarouselContent extends IContent {
+  cardWidth?: CardWidthType;
+  cards: ICard[];
+  quickReplyButtons?: Buttons;
+}
+
+export interface IReplyableText extends IContent {
+  text: string;
+  quickReplyButtons?: Buttons;
 }
 
 export interface IMessageRequest {
