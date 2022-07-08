@@ -36,6 +36,11 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 ## Changelog
 
+### 2.4.1
+* Added
+    * Card content to Instagram
+    * Carousel content to Instagram
+
 ### 2.4.0
 * Added
     * Card content
@@ -171,7 +176,7 @@ The channels that can be used to send the content are:
 | RCS      | X           | X           |                 |                 | X               |              | X           | X               | X                    |
 | WhatsApp | X           | X           | X               | X               | X               |              |             |                 |                      |
 | Facebook | X           | X           |                 |                 |                 |              | X           | X               | X                    |
-| Instagram| X           | X           |                 |                 |                 |              |             |                 | X                    |
+| Instagram| X           | X           |                 |                 |                 |              | X           | X               | X                    |
 | Email    |             |             |                 |                 |                 | X            |             |                 |                      |
 | GBM      | X           | X           |                 |                 |                 |              | X           | X               | X                    |
 | Telegram | X           | X           |                 |                 |                 |              |             |                 |                      |
