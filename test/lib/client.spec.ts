@@ -51,7 +51,7 @@ describe('Client', () => {
         .matchHeader('CUSTOM', 'SOME_VALUE')
         .reply(200, expectedMessage);
 
-        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const client = new Client('SOME_TOKEN', undefined, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const sms = client.getChannel('sms');
         const content = new TextContent('some text message');
         const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
@@ -171,7 +171,7 @@ describe('Client', () => {
         .matchHeader('CUSTOM', 'SOME_VALUE')
         .reply(200, expectedMessage);
 
-        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const client = new Client('SOME_TOKEN', undefined, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const rcs = client.getChannel('rcs');
         const content = new TextContent('some text message');
         const actualMessageResponse = await rcs.sendMessage('FROM', 'TO', content);
@@ -304,7 +304,7 @@ describe('Client', () => {
         .matchHeader('CUSTOM', 'SOME_VALUE')
         .reply(200, expectedMessage);
 
-        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const client = new Client('SOME_TOKEN', undefined, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const channel = client.getChannel('instagram');
         const content = new TextContent('some text message');
         const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
@@ -670,7 +670,7 @@ describe('Client', () => {
         .matchHeader('CUSTOM', 'SOME_VALUE')
         .reply(200, expectedMessage);
 
-        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const client = new Client('SOME_TOKEN', undefined, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const facebook = client.getChannel('facebook');
         const content = new TextContent('some text message');
         const actualMessageResponse = await facebook.sendMessage('FROM', 'TO', content);
@@ -801,7 +801,7 @@ describe('Client', () => {
         .matchHeader('CUSTOM', 'SOME_VALUE')
         .reply(200, expectedMessage);
 
-        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const client = new Client('SOME_TOKEN', undefined, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const sms = client.getChannel('whatsapp');
         const content = new TextContent('some text message');
         const actualMessageResponse = await sms.sendMessage('FROM', 'TO', content);
@@ -1059,7 +1059,7 @@ describe('Client', () => {
         .matchHeader('CUSTOM', 'SOME_VALUE')
         .reply(200, expectedMessage);
 
-        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const client = new Client('SOME_TOKEN', undefined, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const channel = client.getChannel('telegram');
         const content = new TextContent('some text message');
         const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
@@ -1205,7 +1205,7 @@ describe('Client', () => {
         .matchHeader('CUSTOM', 'SOME_VALUE')
         .reply(200, expectedMessage);
 
-        const client = new Client('SOME_TOKEN', null, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
+        const client = new Client('SOME_TOKEN', undefined, { customHeaders: { CUSTOM: 'SOME_VALUE' } });
         const channel = client.getChannel('gbm');
         const content = new TextContent('some text message');
         const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
@@ -1262,9 +1262,9 @@ describe('Client', () => {
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
         const content = new FileContent('http://server.com/file.jpeg', 'image/jpeg', 'some file caption');
-        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content)
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
-        
+        actualMessageResponse.should.be.deep.equal(expectedMessage);
       });
 
       it('should send a card that displays media', async () => {
@@ -1279,26 +1279,26 @@ describe('Client', () => {
               media: {
                 url: 'https://ibb.co/4JqMKMc',
                 disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-                caption: 'Background'
+                caption: 'Background',
               },
               buttons: [
                 {
                   type: 'dial',
                   text: 'background-zenvia',
                   payload: 'This is a background',
-                  phoneNumber: '5535997096113'
-                }
+                  phoneNumber: '5535997096113',
+                },
               ],
               quickReplyButtons: [
                 {
                   type: 'text',
                   text: 'background-zenvia',
-                  payload: 'This is a background'
-                }
-              ]
-            }
-          ]
-        }
+                  payload: 'This is a background',
+                },
+              ],
+            },
+          ],
+        };
 
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/channels/gbm/messages', expectedMessage)
@@ -1307,31 +1307,28 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
-        const content = new CardContent('Card Image Test', 'Any image', 
-        {
+        const content = new CardContent('Card Image Test', 'Any image', {
           url: 'https://ibb.co/4JqMKMc',
           disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-          caption: 'Background'
-        }, 
-        [
+          caption: 'Background',
+        }, [
           {
             type: 'dial',
             text: 'background-zenvia',
             payload: 'This is a background',
-            phoneNumber: '5535997096113'
-          }
-        ],
-        [
+            phoneNumber: '5535997096113',
+          },
+        ], [
           {
             type: 'text',
             text: 'background-zenvia',
-            payload: 'This is a background'
-          }
-        ])
+            payload: 'This is a background',
+          },
+        ]);
         const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
-      })
+      });
 
       it('should send a carousel of media cards', async () => {
         const expectedMessage = {
@@ -1349,49 +1346,49 @@ describe('Client', () => {
                   media: {
                     url: 'https://ibb.co/4JqMKMc',
                     disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-                    caption: 'Background'
+                    caption: 'Background',
                   },
                   buttons: [
                     {
                       type: 'text',
                       text: 'Test carousel',
-                      payload: 'Test'
-                    }
-                  ]
+                      payload: 'Test',
+                    },
+                  ],
                 },
                 {
                   type: 'card',
                   title: 'Second image of carousel',
                   text: 'Testing carousel',
                   media: {
-                      url: 'https://ibb.co/4JqMKMc',
-                      disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-                      caption: 'Background'
+                    url: 'https://ibb.co/4JqMKMc',
+                    disposition: 'ON_THE_TOP_SHORT_HEIGHT',
+                    caption: 'Background',
                   },
                   buttons: [
                     {
                       type: 'text',
                       text: 'Test carousel',
-                      payload: 'Test'
-                    }
-                  ]
-                }
+                      payload: 'Test',
+                    },
+                  ],
+                },
               ],
               quickReplyButtons: [
                 {
                   type: 'text',
                   text: 'Test carousel',
-                  payload: 'Test'
+                  payload: 'Test',
                 },
                 {
                   type: 'text',
                   text: 'Test carousel',
-                  payload: 'Test'    
-                }
-              ]
-            }
-          ]
-        }
+                  payload: 'Test',
+                },
+              ],
+            },
+          ],
+        };
         const zenviaNock = nock('https://api.zenvia.com')
         .post('/v2/channels/gbm/messages', expectedMessage)
         .matchHeader('X-API-Token', 'SOME_TOKEN')
@@ -1407,53 +1404,51 @@ describe('Client', () => {
             media: {
               url: 'https://ibb.co/4JqMKMc',
               disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-              caption: 'Background'
+              caption: 'Background',
             },
             buttons: [
               {
                 type: 'text',
                 text: 'Test carousel',
-                payload: 'Test'
-              }
-            ]
+                payload: 'Test',
+              },
+            ],
           },
           {
             type: 'card',
             title: 'Second image of carousel',
             text: 'Testing carousel',
             media: {
-                url: 'https://ibb.co/4JqMKMc',
-                disposition: 'ON_THE_TOP_SHORT_HEIGHT',
-                caption: 'Background'
+              url: 'https://ibb.co/4JqMKMc',
+              disposition: 'ON_THE_TOP_SHORT_HEIGHT',
+              caption: 'Background',
             }
             ,
             buttons: [
               {
                 type: 'text',
                 text: 'Test carousel',
-                payload: 'Test'
-              }
-            ]
-          }
+                payload: 'Test',
+              },
+            ],
+          },
         ],
-        'SMALL',
-        [
+        'SMALL', [
           {
             type: 'text',
             text: 'Test carousel',
-            payload: 'Test'
+            payload: 'Test',
           },
           {
             type: 'text',
             text: 'Test carousel',
-            payload: 'Test'    
-          }
-        ]
-        )
-        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content)
+            payload: 'Test',
+          },
+        ]);
+        const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
-      })
+      });
 
       it('should send replyable texts', async () => {
         const expectedMessage = {
@@ -1467,11 +1462,11 @@ describe('Client', () => {
                 {
                   type: 'text',
                   text: 'Test',
-                  payload: 'Test payload'
-                }               
-              ]
-            }
-          ]
+                  payload: 'Test payload',
+                },
+              ],
+            },
+          ],
         };
 
         const zenviaNock = nock('https://api.zenvia.com')
@@ -1481,18 +1476,17 @@ describe('Client', () => {
 
         const client = new Client('SOME_TOKEN');
         const channel = client.getChannel('gbm');
-        const content = new ReplyableTextContent('Replyable text ex', 
-        [
+        const content = new ReplyableTextContent('Replyable text ex', [
           {
             type: 'text',
             text: 'Test',
-            payload: 'Test payload'
-          }               
-        ])
+            payload: 'Test payload',
+          },
+        ]);
         const actualMessageResponse = await channel.sendMessage('FROM', 'TO', content);
         zenviaNock.isDone().should.be.true;
         actualMessageResponse.should.be.deep.equal(expectedMessage);
-      })
+      });
 
       it('should fail when trying to send template content', async () => {
         const client = new Client('SOME_TOKEN');
