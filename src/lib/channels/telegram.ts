@@ -16,7 +16,7 @@ export class TelegramChannel extends AbstractChannel {
    */
   constructor(token: string, loggerInstance: ILoggerInstance, options: IClientOptions) {
     super(token, 'telegram', loggerInstance, options);
-    this.supportedContents = ['text', 'file'];
+    this.supportedContents = ['text', 'file', 'card', 'replyable_text'];
   }
 
   protected contentSupportValidation(content: IContent): void | never {
