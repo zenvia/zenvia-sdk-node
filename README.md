@@ -35,7 +35,9 @@ This SDK for [Node.js](https://nodejs.org/) was created based on the [Zenvia](ht
 
 
 ## Changelog
-
+### 2.4.4
+* Fixed 
+    * Table of contents marks
 ### 2.4.3
 * Added
     * Card content to Telegram
