@@ -187,7 +187,7 @@ The channels that can be used to send the content are:
 | Instagram| X           | X           |                 |                 |                 |              | X           | X               | X                    |
 | Email    |             |             |                 |                 |                 | X            |             |                 |                      |
 | GBM      | X           | X           |                 |                 |                 |              | X           | X               | X                    |
-| Telegram | X           | X           |                 |                 |                 |              |             |                 |                      |
+| Telegram | X           | X           |                 |                 |                 |              |X            |                 | X                    |
 
 Use the `sendMessage` method to messages to your customers.
 
