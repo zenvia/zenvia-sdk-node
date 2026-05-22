@@ -24,7 +24,7 @@
 | Directory | Purpose |
 |-----------|---------|
 | `channels/` | SMS, RCS, Facebook, WhatsApp, Instagram, Telegram, GBM, Email |
-| `contents/` | Message content types (Text, File, Location, Contacts, Template, Email, Card, Carousel, ReplyableText) |
+| `contents/` | Message content types (Text, File, Location, Contacts, Template, Email, Card, Carousel, ReplyableText, Button, List, Product, ProductList, Flow, OrderDetails, OrderStatus, OptInRequest) |
 | `message-batches/` | SMS and WhatsApp batch sending |
 | `reports/` | Flow and message reporting |
 | `subscriptions/` | Webhook subscription management |
