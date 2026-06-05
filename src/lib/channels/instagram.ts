@@ -16,7 +16,7 @@ export class InstagramChannel extends AbstractChannel {
    */
   constructor(token: string, loggerInstance: ILoggerInstance, options: IClientOptions) {
     super(token, 'instagram', loggerInstance, options);
-    this.supportedContents = ['text', 'file', 'replyable_text', 'card', 'carousel'];
+    this.supportedContents = ['text', 'file', 'replyable_text', 'card', 'carousel', 'optin_request'];
   }
 
   protected contentSupportValidation(content: IContent): void | never {

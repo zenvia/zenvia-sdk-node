@@ -16,6 +16,14 @@ import { EmailContent } from '../lib/contents/email';
 import { CardContent } from '../lib/contents/card';
 import { CarouselContent } from '../lib/contents/carousel';
 import { ReplyableTextContent } from '../lib/contents/replyable-text';
+import { ButtonContent } from '../lib/contents/button';
+import { ListContent } from '../lib/contents/list';
+import { ProductContent } from '../lib/contents/product';
+import { ProductListContent } from '../lib/contents/product-list';
+import { FlowContent } from '../lib/contents/flow';
+import { OrderDetailsContent } from '../lib/contents/order-details';
+import { OrderStatusContent } from '../lib/contents/order-status';
+import { OptInRequestContent } from '../lib/contents/optin-request';
 import { Template } from '../lib/templates/base';
 import { PartialTemplate } from '../lib/templates/partial';
 import { MessageSubscription } from '../lib/subscriptions/message';
@@ -43,10 +51,18 @@ export {
   TemplateContent,
   MessageSubscription,
   MessageStatusSubscription,
+  ButtonContent,
+  ListContent,
+  ProductContent,
+  ProductListContent,
+  FlowContent,
+  OrderDetailsContent,
+  OrderStatusContent,
+  OptInRequestContent,
 };
 
 export type Channel = 'sms' | 'whatsapp' | 'facebook' | 'rcs' | 'instagram' | 'telegram' | 'gbm' | 'email';
-export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email' | 'card' | 'carousel' | 'replyable_text';
+export type ContentType = 'text' | 'file' | 'template' | 'contacts' | 'location' | 'json' | 'email' | 'card' | 'carousel' | 'replyable_text' | 'button' | 'list' | 'product' | 'product_list' | 'flow' | 'order_details' | 'order_status' | 'optin_request';
 export type ButtonType = 'text' | 'link' | 'dial' | 'share_location' | 'view_location' | 'search_location';
 export type Buttons = (IButtonText | IButtonLink | IButtonCalendarEvent | IButtonDial | IButtonSearchLocation | IButtonViewLocation)[]
 export type MediaDispositionType = 'ON_THE_TOP_SHORT_HEIGHT' | 'ON_THE_TOP_MEDIUM_HEIGHT' | 'ON_THE_TOP_TALL_HEIGHT' | 'ON_THE_LEFT' | 'ON_THE_RIGHT'
@@ -477,4 +493,167 @@ export interface IWhatsAppMessageBatch extends IMessageBatch {
     from: string,
     contents: IBatchTemplateContent[],
   };
+}
+
+export interface IButtonContent extends IContent {
+  header?: IFile | string;
+  body: string;
+  footer?: string;
+  buttons: {
+    id: string;
+    title: string;
+  }[];
+}
+
+export interface IListContent extends IContent {
+  header?: string;
+  body: string;
+  footer?: string;
+  button: string;
+  sections: {
+    title: string;
+    rows: {
+      id: string;
+      title: string;
+      description?: string;
+    }[];
+  }[];
+}
+
+export interface IProductContent extends IContent {
+  body: string;
+  footer?: string;
+  catalogId: string;
+  productId: string;
+}
+
+export interface IProductListContent extends IContent {
+  header?: string;
+  body: string;
+  footer?: string;
+  catalogId: string;
+  sections: {
+    title: string;
+    productItems: {
+      productId: string;
+    }[];
+  }[];
+}
+
+export interface IFlowContent extends IContent {
+  header?: string;
+  body: string;
+  footer?: string;
+  flow: {
+    mode?: string;
+    token?: string;
+    id: string;
+    buttonText: string;
+    action?: {
+      type: string;
+      screen?: string;
+      data?: {
+        [key: string]: string;
+      };
+    };
+  };
+}
+
+export interface IPaymentSettingsBoleto {
+  type: 'boleto';
+  digitableLine: string;
+}
+
+export interface IPaymentSettingsPaymentLink {
+  type: 'payment_link';
+  paymentLink: string;
+}
+
+export interface IPaymentSettingsPix {
+  type: 'pix_dynamic_code';
+  code?: string;
+  merchantName?: string;
+  key?: string;
+  keyType?: 'CPF' | 'CNPJ' | 'EMAIL' | 'PHONE' | 'EVP';
+}
+
+export type PaymentSettings = IPaymentSettingsBoleto | IPaymentSettingsPaymentLink | IPaymentSettingsPix;
+
+export interface IOrderItem {
+  productId: string;
+  name: string;
+  amount: number;
+  quantity: number;
+  saleAmount?: number;
+}
+
+export interface IOrderExpiration {
+  timestamp: string;
+  description: string;
+}
+
+export interface IOrderTax {
+  value: number;
+  description?: string;
+}
+
+export interface IOrderShipping {
+  value: number;
+  description?: string;
+}
+
+export interface IOrderDiscount {
+  value: number;
+  description?: string;
+  discountProgramName?: string;
+}
+
+export interface IOrderDetails {
+  catalogId?: string;
+  expiration?: IOrderExpiration;
+  items: IOrderItem[];
+  subtotal: number;
+  tax: IOrderTax;
+  shipping?: IOrderShipping;
+  discount?: IOrderDiscount;
+}
+
+export interface IOrderDetailsContent extends IContent {
+  body: string;
+  footer?: string;
+  parameters: {
+    referenceId?: string;
+    type?: 'digital_goods' | 'physical_goods';
+    paymentSettings: PaymentSettings[];
+    totalAmount: number;
+    order: IOrderDetails;
+  };
+}
+
+export type OrderStatusType = 'pending' | 'processing' | 'partially-shipped' | 'shipped' | 'completed' | 'canceled';
+
+export interface IOrderStatusOrder {
+  status: OrderStatusType;
+  description?: string;
+}
+
+export interface IOrderStatusContent extends IContent {
+  body: string;
+  footer?: string;
+  parameters: {
+    referenceId: string;
+    order: IOrderStatusOrder;
+  };
+}
+
+export type OptInFrequency = 'DAILY' | 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY';
+export type OptInReOptIn = 'ENABLED' | 'DISABLED';
+
+export interface IOptInRequestContent extends IContent {
+  mediaUrl?: string;
+  title?: string;
+  frequency?: OptInFrequency;
+  reOptIn?: OptInReOptIn;
+  payload?: string;
+  timezone?: string;
 }
